@@ -102,7 +102,7 @@ class EmpresaController extends Controller
      */
     public function edit(Empresa $empresa)
     {
-        //
+        return view('admin.empresas.edit', compact('empresa'));
     }
 
     /**
@@ -112,26 +112,33 @@ class EmpresaController extends Controller
      * @param  \App\Models\Empresa  $empresa
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Empresa $empresa)
+    public function update(Request $request, $id)
     {
-        $empresa = Empresa::findOrFail($empresa->id);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'website' => 'required|url|max:255',
+            'description' => 'nullable|string',
+            'logo' => 'nullable|image|max:2048'
+        ]);
 
-        $empresa->name = $request->input('name');
-        $empresa->address = $request->input('address');
-        $empresa->phone = $request->input('phone');
-        $empresa->email = $request->input('email');
-        $empresa->website = $request->input('website');
-        $empresa->description = $request->input('description');
+        $empresa = Empresa::findOrFail($id);
+        $empresa->name = $request->name;
+        $empresa->address = $request->address;
+        $empresa->phone = $request->phone;
+        $empresa->email = $request->email;
+        $empresa->website = $request->website;
+        $empresa->description = $request->description;
 
         if ($request->hasFile('logo')) {
-            // Manejo de archivo para el logo si es necesario
-            $logoPath = $request->file('logo')->store('logos');
-            $empresa->logo = $logoPath;
+            $empresa->logo = $request->file('logo')->store('empresas', 'public');
         }
 
         $empresa->save();
 
-        return response()->json(['message' => 'Empresa actualizada con éxito']);
+        return response()->json(['success' => true]);
     }
 
     /**

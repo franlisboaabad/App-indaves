@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Administrador',
                 'email' => 'admin@gmail.com',
                 'email_verified_at' => now(),
-                'password' => bcrypt('triki123***@'), // password
+                'password' => bcrypt('secret'), // password
             ]
         )->assignRole('Admin');
 

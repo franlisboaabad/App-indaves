@@ -10,9 +10,7 @@
     <div class="card">
         <div class="card-body">
             <!-- Botón para abrir el modal -->
-            <a class="btn btn-primary btn-sm" href="#" id="openModal">Añadir Empresa</a>
-
-            <hr>
+            {{-- <a class="btn btn-primary btn-sm" href="#" id="openModal">Añadir Empresa</a> --}}
 
             <table class="table" id="table-clientes">
                 <thead>
@@ -42,12 +40,7 @@
                                 @endif
                             </td>
                             <td>
-                                <form action="#" method="POST" class="d-inline" id="editForm">
-                                    @csrf
-                                    @method('GET')
-                                    <button type="button" class="btn btn-info btn-sm"
-                                        onclick="editEmpresa({{ $empresa->id }})">Editar</button>
-                                </form>
+                                <a href="{{ route('empresas.edit', $empresa ) }}" class="btn btn-info btn-sm">Editar</a>
                             </td>
 
                         </tr>
@@ -167,7 +160,7 @@
                         </div>
 
                         <div class="form-group text-right">
-                            <button type="submit" class="btn btn-success">Guardar</button>
+                            <button type="submit" class="btn btn-success">Editar</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         </div>
                     </form>
@@ -221,7 +214,7 @@
                         }).then(function() {
                             $('#addEmpresaModal').modal('hide');
                             location
-                        .reload(); // Recarga la página para mostrar los cambios
+                                .reload(); // Recarga la página para mostrar los cambios
                         });
                     },
                     error: function(xhr) {
@@ -237,51 +230,6 @@
         });
     </script>
 
-    <script>
-        function editEmpresa(empresaId) {
-            $.get(`/empresas/${empresaId}`, function(data) {
-                $('#editEmpresaModal').modal('show');
-                $('#empresaId').val(data.id);
-                $('#editName').val(data.name);
-                $('#editAddress').val(data.address);
-                $('#editPhone').val(data.phone);
-                $('#editEmail').val(data.email);
-                $('#editWebsite').val(data.website);
-                $('#editDescription').val(data.description);
-                // No incluimos el logo en el formulario para evitar la sobreescritura
-            });
-        }
-
-        $('#editEmpresaForm').on('submit', function(e) {
-            e.preventDefault();
-            var form = $(this);
-            var formData = new FormData(this);
-            var empresaId = $('#empresaId').val();
-            $.ajax({
-                url: `/empresas/${empresaId}`,
-                type: 'PUT',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    $('#editEmpresaModal').modal('hide');
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Éxito',
-                        text: 'Los datos de la empresa se han actualizado correctamente.',
-                    });
-                    location.reload(); // Recargar la página para ver los cambios
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudo actualizar la empresa. Inténtelo de nuevo.',
-                    });
-                }
-            });
-        });
-    </script>
 
 
 @stop
