@@ -366,6 +366,13 @@ return [
                     'can'  => 'admin.usuarios.index',
                 ],
 
+                [
+                    'text'        => 'Clientes',
+                    'route'         => 'clientes.index',
+                    'can'  => 'admin.clientes.index',
+                ],
+
+
             ],
 
 

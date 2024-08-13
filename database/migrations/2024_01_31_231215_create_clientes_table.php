@@ -15,16 +15,16 @@ return new class extends Migration
     {
         Schema::create('clientes', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('apellidos');
-            $table->string('dni')->unique();
-            $table->string('celular')->unique();
-            $table->string('email')->unique();
-            $table->string('nombre_tienda');
-            $table->string('direccion');
-            $table->string('geolocalizacion')->nullable();
-            $table->string('latitud')->nullable();
-            $table->string('longitud')->nullable();
+            $table->string('tipo_documento');
+            $table->string('documento');
+            $table->string('nombre_comercial');
+            $table->string('razon_social')->nullable();
+            $table->string('direccion')->nullable();
+            $table->string('departamento')->nullable();
+            $table->string('provincia')->nullable();
+            $table->string('distrito')->nullable();
+            $table->string('email')->nullable();
+            $table->string('celular')->nullable();
             $table->boolean('estado')->default(true);
             $table->timestamps();
         });

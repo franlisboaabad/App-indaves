@@ -61,6 +61,7 @@ Route::resource('usuarios',UserController::class)->middleware('auth');
 Route::resource('invitados', InvitadoController::class)->middleware('auth');
 Route::resource('roles', RoleController::class)->middleware('auth');
 Route::resource('clientes',ClienteController::class)->middleware('auth');
+Route::post('/clientes/search', [ClienteController::class, 'searchDocument'])->name('clientes.search');
 /** rutas soft v2.0 */
 
 Route::resource('proyectos', ProyectoController::class)->middleware('auth');

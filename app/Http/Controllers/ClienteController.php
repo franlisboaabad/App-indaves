@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class ClienteController extends Controller
@@ -37,7 +38,6 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        //
         return view('admin.clientes.create');
     }
 
@@ -50,38 +50,19 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
 
-        // Validación
-        $validator = Validator::make($request->all(), [
-            'nombre' => 'required',
-            'apellidos' => 'required',
-            'dni' => 'required|unique:clientes,dni',
-            'celular' => 'required',
-            'email' => 'required|email|unique:clientes,email',
-            'direccion' => 'required',
-            'nombre_tienda' => 'required',
+        // Validación de los datos del formulario
+        $request->validate([
+            'tipo_documento' => 'required|integer',
+            'documento' => 'required|string|max:255',
+            'nombre_comercial' => 'required|string|max:255',
+            'razon_social' => 'required|string|max:255'
         ]);
 
-        if ($validator->fails()) {
-            // Si la validación falla, devuelve un estado HTTP 422 (Entidad No Procesable)
-            // junto con los mensajes de error.
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
+        // Crear el cliente
+        Cliente::create($request->all());
 
-        // Si la validación tiene éxito, crea el nuevo cliente.
-        $cliente = Cliente::create($request->all());
-
-
-        // Devuelve una respuesta JSON con un mensaje de éxito.
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Cliente registrado correctamente.',
-            'data' => $cliente // Opcionalmente, puedes enviar los datos del cliente creado.
-        ]);
-
-
+        // Responder con JSON
+        return response()->json(['success' => true]);
     }
 
     /**
@@ -116,8 +97,8 @@ class ClienteController extends Controller
      */
     public function update(Request $request, Cliente $cliente)
     {
-         // Validación
-         $validator = Validator::make($request->all(), [
+        // Validación
+        $validator = Validator::make($request->all(), [
             'nombre_empresa' => 'required',
             'nombre' => 'required',
             'apellidos' => 'required',
@@ -138,15 +119,12 @@ class ClienteController extends Controller
 
         $cliente->update($request->all());
 
-         // Devuelve una respuesta JSON con un mensaje de éxito.
-         return response()->json([
+        // Devuelve una respuesta JSON con un mensaje de éxito.
+        return response()->json([
             'status' => 'success',
             'message' => 'Cliente editado correctamente.',
             'data' => $cliente // Opcionalmente, puedes enviar los datos del cliente creado.
         ]);
-
-
-
     }
 
     /**
@@ -157,14 +135,73 @@ class ClienteController extends Controller
      */
     public function destroy(Cliente $cliente)
     {
+        // Asegúrate de que el cliente exista
+        if (!$cliente) {
+            return response()->json(['success' => false, 'message' => 'Cliente no encontrado.']);
+        }
 
-        $cliente->delete();
+        // Actualizar el estado del cliente a 0
+        $cliente->estado = 0; // Cambia 'estado' por el nombre real de la columna en tu base de datos
+        $cliente->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Cliente eliminado correctamente',
-            'data' => $cliente // Opcionalmente, puedes enviar los datos del cliente creado.
-        ]);
-
+        return response()->json(['success' => true, 'message' => 'Cliente desactivado correctamente.']);
     }
+
+
+     /**
+     * Search for a document based on its type.
+     */
+    public function searchDocument(Request $request)
+    {
+        $documento = $request->input('documento');
+        $tipo_documento = $request->input('tipo_documento');
+        $token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImlkZWFzc29mdHBlcnVAZ21haWwuY29tIn0.A2ycg_-A-CeINUKEoUnfG9KEixZzp1RZ-oEOaHxpM5U';
+
+        $response = null;
+
+        if ($tipo_documento == 1) { // DNI
+            $response = Http::get("https://dniruc.apisperu.com/api/v1/dni/{$documento}", [
+                'token' => $token
+            ]);
+        } elseif ($tipo_documento == 2) { // RUC
+            $response = Http::get("https://dniruc.apisperu.com/api/v1/ruc/{$documento}", [
+                'token' => $token
+            ]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Tipo de documento no válido.']);
+        }
+
+        if ($response->successful()) {
+            $data = $response->json();
+
+            if ($tipo_documento == 1) { // DNI
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'nombre_comercial' => $data['nombres'] . ' ' . $data['apellidoPaterno'] . ' ' . $data['apellidoMaterno'],
+                        'razon_social' => $data['nombres'] . ' ' . $data['apellidoPaterno'] . ' ' . $data['apellidoMaterno'],
+                        'direccion' => '',
+                        'departamento' => '',
+                        'provincia' => '',
+                        'distrito' => '',
+                    ]
+                ]);
+            } elseif ($tipo_documento == 2) { // RUC
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'nombre_comercial' => $data['nombreComercial'] ?? '',
+                        'razon_social' => $data['razonSocial'],
+                        'direccion' => $data['direccion'],
+                        'departamento' => $data['departamento'],
+                        'provincia' => $data['provincia'],
+                        'distrito' => $data['distrito'],
+                    ]
+                ]);
+            }
+        } else {
+            return response()->json(['success' => false, 'message' => 'Documento no encontrado o error en la API.']);
+        }
+    }
+
 }
