@@ -34,6 +34,19 @@ class DatabaseSeeder extends Seeder
             ]
         )->assignRole('Admin');
 
+        //Empresa default
+
+        \App\Models\Empresa::factory()->create([
+            'name' => 'Empresa Ejemplo',
+            'address' => '1234 Calle Principal',
+            'phone' => '555-1234',
+            'email' => 'info@empresa.com',
+            'website' => 'https://www.empresa.com',
+            'description' => 'Descripción de la empresa de ejemplo.',
+            'status' => true,
+        ]);
+
+
         // Invitado::factory()->count(30)->create();
         // User::factory()->count(10)->create();
         // Cliente::factory()->count(10)->create();

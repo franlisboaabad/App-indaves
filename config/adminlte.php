@@ -349,6 +349,12 @@ return [
             'icon' => 'fas fa-fw fa-lock',
             'submenu' => [
                 [
+                    'text' => 'Empresa',
+                    'route'  => 'empresas.index',
+                    'can' => 'admin.empresas.index'
+                ],
+
+                [
                     'text' => 'Roles',
                     'route'  => 'roles.index',
                     'can' => 'admin.roles.index'

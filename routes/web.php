@@ -5,12 +5,14 @@ use App\Models\OrdenDeServicio;
 use App\Http\Controllers\Dashboard;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\CajaController;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\TareaController;
 use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\SorteoController;
 use App\Http\Controllers\ArtistaController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\InvitadoController;
 use App\Http\Controllers\ProyectoController;
@@ -18,7 +20,6 @@ use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\ActividadController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\CajaController;
 use App\Http\Controllers\OrdenDeServicioController;
 
 
@@ -97,6 +98,7 @@ Route::get('invitados/generar-pdf/{invitado}', [InvitadoController::class, 'gene
  * App indaves
  */
 Route::resource('cajas', CajaController::class)->middleware('auth');
+Route::resource('empresas', EmpresaController::class)->middleware('auth');
 
 
 
