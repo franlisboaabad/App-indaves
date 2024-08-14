@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>EL TRIKI</b>',
+    'logo' => '<b>INDAVES</b>',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -320,6 +320,14 @@ return [
         ],
 
         [
+            'text'        => 'Orden Ingreso',
+            'route'         => 'ordenes-ingreso.index', //apunta a ruta url route
+            'icon'        => 'fa fa-truck',
+            'can'  => 'admin.ordenes-ingreso.index',
+        ],
+
+
+        [
             'text'        => 'Caja',
             'route'         => 'cajas.index', //apunta a ruta url route
             'icon'        => 'fa fa-box',
@@ -328,19 +336,20 @@ return [
 
 
 
-        [
-            'text'        => 'Sorteos',
-            'route'         => 'sorteos.index', //apunta a ruta url route
-            'icon'        => 'fa fa-th',
-            'can'  => 'admin.sorteos.index',
-        ],
 
-        [
-            'text'        => 'Registros',
-            'route'         => 'registros.index', //apunta a ruta url route
-            'icon'        => 'fa fa-edit',
-            'can'  => 'admin.registros.index',
-        ],
+        // [
+        //     'text'        => 'Sorteos',
+        //     'route'         => 'sorteos.index', //apunta a ruta url route
+        //     'icon'        => 'fa fa-th',
+        //     'can'  => 'admin.sorteos.index',
+        // ],
+
+        // [
+        //     'text'        => 'Registros',
+        //     'route'         => 'registros.index', //apunta a ruta url route
+        //     'icon'        => 'fa fa-edit',
+        //     'can'  => 'admin.registros.index',
+        // ],
 
 
         ['header' => 'account_settings'],
@@ -348,11 +357,7 @@ return [
             'text' => 'Configuracion',
             'icon' => 'fas fa-fw fa-lock',
             'submenu' => [
-                [
-                    'text' => 'Empresa',
-                    'route'  => 'empresas.index',
-                    'can' => 'admin.empresas.index'
-                ],
+
 
                 [
                     'text' => 'Roles',
@@ -371,6 +376,13 @@ return [
                     'route'         => 'clientes.index',
                     'can'  => 'admin.clientes.index',
                 ],
+
+                [
+                    'text' => 'Empresa',
+                    'route'  => 'empresas.index',
+                    'can' => 'admin.empresas.index'
+                ],
+
 
 
             ],

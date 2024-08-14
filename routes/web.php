@@ -21,7 +21,8 @@ use App\Http\Controllers\ActividadController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\OrdenDeServicioController;
-
+use App\Http\Controllers\OrdenIngresoController;
+use App\Models\OrdenIngreso;
 
 /*
 |--------------------------------------------------------------------------
@@ -100,6 +101,7 @@ Route::get('invitados/generar-pdf/{invitado}', [InvitadoController::class, 'gene
  */
 Route::resource('cajas', CajaController::class)->middleware('auth');
 Route::resource('empresas', EmpresaController::class)->middleware('auth');
+Route::resource('ordenes-ingreso', OrdenIngresoController::class )->middleware('auth')->parameters(['ordenes-ingreso' => 'ordenIngreso']);
 
 
 

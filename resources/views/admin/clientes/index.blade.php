@@ -54,13 +54,13 @@
                                     @endcan --}}
 
                                     @can('admin.clientes.edit')
-                                        <a href="{{ route('clientes.edit', $cliente) }}" class="btn btn-xs btn-info">Editar</a>
+                                        <a href="{{ route('clientes.edit', $cliente) }}" class="btn btn-sm btn-info">Editar</a>
                                     @endcan
 
                                     @can('admin.clientes.destroy')
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" class="btn btn-danger btn-xs btn-delete"
+                                        <button type="button" class="btn btn-danger btn-sm btn-delete"
                                             data-url="{{ route('clientes.destroy', $cliente) }}">Eliminar</button>
                                     @endcan
                                 </form>

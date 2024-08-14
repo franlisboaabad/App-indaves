@@ -99,7 +99,7 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.registros.destroy', 'description' => 'Eliminar registro'])->syncRoles($RoleAdmin);
 
 
-        //Indaves
+        //INDAVES
 
 
         Permission::create(['name' => 'admin.cajas.index', 'description' => 'Lista de cajas'])->syncRoles($RoleAdmin);
@@ -115,6 +115,12 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.empresas.show', 'description' => 'Ver empresa'])->syncRoles($RoleAdmin);
         Permission::create(['name' => 'admin.empresas.destroy', 'description' => 'Eliminar empresa'])->syncRoles($RoleAdmin);
 
+
+        Permission::create(['name' => 'admin.ordenes-ingreso.index', 'description' => 'Lista de ordenes-ingreso'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.ordenes-ingreso.create', 'description' => 'Registrar orden ingreso'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.ordenes-ingreso.edit', 'description' => 'Editar orden ingreso'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.ordenes-ingreso.show', 'description' => 'Ver orden ingreso'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.ordenes-ingreso.destroy', 'description' => 'Eliminar orden ingreso'])->syncRoles($RoleAdmin);
 
 
 
