@@ -21,7 +21,10 @@ use App\Http\Controllers\ActividadController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\OrdenDeServicioController;
+use App\Http\Controllers\OrdenDespachoController;
 use App\Http\Controllers\OrdenIngresoController;
+use App\Http\Controllers\VentaController;
+use App\Models\OrdenDespacho;
 use App\Models\OrdenIngreso;
 
 /*
@@ -63,6 +66,10 @@ Route::resource('invitados', InvitadoController::class)->middleware('auth');
 Route::resource('roles', RoleController::class)->middleware('auth');
 Route::resource('clientes',ClienteController::class)->middleware('auth');
 Route::post('/clientes/search', [ClienteController::class, 'searchDocument'])->name('clientes.search');
+Route::get('/clientes/list', [ClienteController::class, 'getClientes'])->name('clientes.list');
+
+
+
 /** rutas soft v2.0 */
 
 Route::resource('proyectos', ProyectoController::class)->middleware('auth');
@@ -102,6 +109,9 @@ Route::get('invitados/generar-pdf/{invitado}', [InvitadoController::class, 'gene
 Route::resource('cajas', CajaController::class)->middleware('auth');
 Route::resource('empresas', EmpresaController::class)->middleware('auth');
 Route::resource('ordenes-ingreso', OrdenIngresoController::class )->middleware('auth')->parameters(['ordenes-ingreso' => 'ordenIngreso']);
+Route::resource('ventas', VentaController::class);
+Route::resource('ordenes-de-despacho',OrdenDespachoController::class)->middleware('auth')->parameters(['ordenes-de-despacho' => 'ordenDespacho']);;
+
 
 
 

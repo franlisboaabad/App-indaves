@@ -2,13 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\Artista;
 use App\Models\User;
+use App\Models\Serie;
+use App\Models\Artista;
 use App\Models\Cliente;
 use App\Models\Customer;
 use App\Models\Invitado;
+use App\Models\MetodoPago;
 use App\Models\TipoEquipo;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
@@ -47,10 +50,26 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        // Invitado::factory()->count(30)->create();
-        // User::factory()->count(10)->create();
-        // Cliente::factory()->count(10)->create();
-        // TipoEquipo::factory()->count(10)->create();
-        // Artista::factory()->count(10)->create();
+
+        //series
+        $dataSeries = [
+            ['number' => 'NV01', 'serie' => '1'],
+            ['number' => 'OD01', 'serie' => '1'],
+        ];
+
+        // Inserta los datos en la tabla 'series'
+        DB::table('series')->insert($dataSeries);
+
+
+        // Metodos de pago +
+
+        $descripciones = ['Efectivo', 'Transferencia', 'Yape', 'Plin'];
+
+        foreach ($descripciones as $descripcion) {
+            DB::table('metodo_pagos')->insert([
+                'descripcion' => $descripcion,
+                // Agrega aquí otros campos si es necesario
+            ]);
+        }
     }
 }

@@ -123,6 +123,20 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.ordenes-ingreso.destroy', 'description' => 'Eliminar orden ingreso'])->syncRoles($RoleAdmin);
 
 
+        Permission::create(['name' => 'admin.ventas.index', 'description' => 'Lista de ventas'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.ventas.create', 'description' => 'Registrar orden ingreso'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.ventas.edit', 'description' => 'Editar orden ingreso'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.ventas.show', 'description' => 'Ver orden ingreso'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.ventas.destroy', 'description' => 'Eliminar orden ingreso'])->syncRoles($RoleAdmin);
+
+
+
+        Permission::create(['name' => 'admin.ordenes-despacho.index', 'description' => 'Lista de ordenes despacho'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.ordenes-despacho.create', 'description' => 'Registrar orden despacho'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.ordenes-despacho.edit', 'description' => 'Editar orden despacho'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.ordenes-despacho.show', 'description' => 'Ver orden despacho'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.ordenes-despacho.destroy', 'description' => 'Eliminar orden despacho'])->syncRoles($RoleAdmin);
+
 
     }
 }

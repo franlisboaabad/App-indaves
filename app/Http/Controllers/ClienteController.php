@@ -49,7 +49,6 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-
         // Validación de los datos del formulario
         $request->validate([
             'tipo_documento' => 'required|integer',
@@ -58,11 +57,19 @@ class ClienteController extends Controller
             'razon_social' => 'required|string|max:255'
         ]);
 
-        // Crear el cliente
-        Cliente::create($request->all());
+        // Verificar si ya existe un cliente con el mismo documento
+        $existingCliente = Cliente::where('documento', $request->input('documento'))->first();
 
-        // Responder con JSON
-        return response()->json(['success' => true]);
+        if ($existingCliente) {
+            // Si el cliente ya existe, responder con un error
+            return response()->json(['success' => false, 'message' => 'Cliente con el mismo documento ya existe.'], 400);
+        }
+
+        // Crear el cliente
+        $cliente = Cliente::create($request->all());
+
+        // Responder con el cliente creado
+        return response()->json(['success' => true, 'cliente' => $cliente]);
     }
 
     /**
@@ -148,7 +155,7 @@ class ClienteController extends Controller
     }
 
 
-     /**
+    /**
      * Search for a document based on its type.
      */
     public function searchDocument(Request $request)
@@ -204,4 +211,20 @@ class ClienteController extends Controller
         }
     }
 
+
+    //actualizacion para select
+    public function getClientes()
+    {
+        // Recuperar todos los clientes
+        $clientes = Cliente::all();
+
+        // Verificar si hay resultados
+        if ($clientes->isEmpty()) {
+            // Si no hay clientes, devolver una respuesta vacía o con un mensaje adecuado
+            return response()->json([], 200);
+        }
+
+        // Devolver los clientes en formato JSON
+        return response()->json($clientes, 200);
+    }
 }

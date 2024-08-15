@@ -334,6 +334,42 @@ return [
             'can'  => 'admin.cajas.index',
         ],
 
+        [
+            'text' => 'Orden Despacho',
+            'icon' => 'fa fa-cart-plus',
+            'submenu' => [
+                [
+                    'text' => 'Nueva Orden',
+                    'route'  => 'ordenes-de-despacho.create',
+                ],
+                [
+                    'text' => 'Lista de Ordenes',
+                    'route'  => 'ordenes-de-despacho.index',
+                ],
+            ],
+
+
+        ],
+
+
+        [
+            'text' => 'Ventas',
+            'icon' => 'fa fa-edit',
+            'submenu' => [
+                [
+                    'text' => 'Nueva Venta',
+                    'route'  => 'ventas.create',
+                ],
+                [
+                    'text' => 'Lista de Ventas',
+                    'route'  => 'ventas.index',
+                ],
+            ],
+
+
+        ],
+
+
 
 
 
