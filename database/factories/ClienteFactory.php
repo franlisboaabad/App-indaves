@@ -17,13 +17,6 @@ class ClienteFactory extends Factory
     public function definition()
     {
         return [
-            'nombre_empresa' => $this->faker->firstName,
-            'nombre' => $this->faker->firstName,
-            'apellidos' => $this->faker->lastName,
-            'dni' => $this->faker->unique()->numerify('########'),
-            'celular' => $this->faker->unique()->phoneNumber,
-            'email' => $this->faker->unique()->safeEmail,
-            'direccion' => $this->faker->address,
         ];
     }
 }

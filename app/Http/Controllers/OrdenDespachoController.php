@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Caja;
 use App\Models\Serie;
 use App\Models\Cliente;
+use App\Models\Empresa;
 use Illuminate\Http\Request;
 use App\Models\OrdenDespacho;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +31,16 @@ class OrdenDespachoController extends Controller
      */
     public function index()
     {
-        //
+        // Obtener todas las órdenes de despacho
+        $ordenes = OrdenDespacho::all();
+
+        // Convertir fechas a instancias de Carbon (si es necesario)
+        foreach ($ordenes as $orden) {
+            $orden->fecha_despacho = \Carbon\Carbon::parse($orden->fecha_despacho);
+        }
+
+        // Pasar las órdenes a la vista
+        return view('admin.ordenes_despacho.index', compact('ordenes'));
     }
 
     /**
@@ -104,6 +114,15 @@ class OrdenDespachoController extends Controller
 
             DB::commit(); // Confirmar la transacción
 
+            // Obtener la empresa para el encabezado
+            $empresa = Empresa::first(); // O el método que utilices para obtener la empresa
+
+            // Generar el PDF
+            $pdf = PDF::loadView('ordenes.pdf', [
+                'orden' => $ordenDespacho,
+                'empresa' => $empresa
+            ]);
+
             // Responder con éxito
             return response()->json(['message' => 'Orden de despacho registrada exitosamente.']);
         } catch (\Exception $e) {
@@ -124,7 +143,11 @@ class OrdenDespachoController extends Controller
      */
     public function show(OrdenDespacho $ordenDespacho)
     {
-        //
+        // Obtener la orden de despacho con el ID dado
+        $orden = OrdenDespacho::with('detalles')->findOrFail($ordenDespacho->id);
+
+        // Pasar la orden y sus detalles a la vista
+        return view('admin.ordenes_despacho.show', compact('orden'));
     }
 
     /**

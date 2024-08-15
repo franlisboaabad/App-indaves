@@ -38,7 +38,6 @@ class DatabaseSeeder extends Seeder
         )->assignRole('Admin');
 
         //Empresa default
-
         \App\Models\Empresa::factory()->create([
             'name' => 'Empresa Ejemplo',
             'address' => '1234 Calle Principal',
@@ -49,7 +48,14 @@ class DatabaseSeeder extends Seeder
             'status' => true,
         ]);
 
-
+        //Cliente por defecto
+        \App\Models\Cliente::factory()->create([
+            'tipo_documento' => 0,
+            'documento' => '99999999',
+            'nombre_comercial' => 'CLIENTE VARIOS',
+            'razon_social' => 'CLIENTE VARIOS',
+            'estado' => true,
+        ]);
 
         //series
         $dataSeries = [
