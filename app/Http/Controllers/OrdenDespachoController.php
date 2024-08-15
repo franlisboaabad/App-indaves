@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\OrdenDespacho;
 use Illuminate\Support\Facades\DB;
 use App\Models\DetalleOrdenDespacho;
+use Illuminate\Support\Facades\Storage;
 
 class OrdenDespachoController extends Controller
 {
@@ -116,20 +117,34 @@ class OrdenDespachoController extends Controller
                 ]);
             }
 
-            // Generar el PDF y obtener la ruta del archivo
-            $pdfFileName = $this->generatePdf($ordenDespacho->id);
-            $pdfFilePath = 'storage/ordenes/' . $pdfFileName;
 
-            // Almacenar la ruta del PDF en el modelo
-            $ordenDespacho->url_orden_documento = $pdfFilePath;
+            // Generar los PDFs
+            $pdfFileNameA4 = $this->generatePdf_A4($ordenDespacho->id);
+            $pdfFilePathA4 = 'ordenesA4/' . $pdfFileNameA4;
+
+            $pdfFileNameTicket = $this->generatePdf_Ticket($ordenDespacho->id);
+            $pdfFilePathTicket = 'ordenesTicket/' . $pdfFileNameTicket;
+
+            // Almacenar las rutas del PDF en el modelo
+            $ordenDespacho->url_orden_documento_a4 = $pdfFilePathA4;
+            $ordenDespacho->url_orden_documento_ticket = $pdfFilePathTicket;
             $ordenDespacho->save();
 
-            DB::commit(); // Confirmar la transacción
+            // Generar las URL públicas
+            $pdfUrlA4 = Storage::url($pdfFilePathA4);
+            $pdfUrlTicket = Storage::url($pdfFilePathTicket);
+
+            // Confirmar la transacción
+            DB::commit();
+
+            // Responder con éxito y proporcionar las URLs del PDF
+            return response()->json([
+                'message' => 'Orden de despacho registrada exitosamente.',
+                'pdf_url_a4' => $pdfUrlA4,
+                'pdf_url_ticket' => $pdfUrlTicket,
+            ], 200);
 
 
-
-            // Responder con éxito
-            return response()->json(['message' => 'Orden de despacho registrada exitosamente.']);
         } catch (\Exception $e) {
             DB::rollBack(); // Revertir la transacción en caso de error
             // Responder con error
@@ -189,7 +204,7 @@ class OrdenDespachoController extends Controller
         //
     }
 
-    private function generatePdf($id)
+    private function generatePdf_A4($id)
     {
         // Obtener la orden y la empresa
         $ordenDespacho = OrdenDespacho::find($id);
@@ -202,7 +217,7 @@ class OrdenDespachoController extends Controller
         $dompdf = new Dompdf($options);
 
         // Cargar la vista Blade
-        $html = view('pdf.orden', [
+        $html = view('pdf.orden_a4', [
             'orden' => $ordenDespacho,
             'empresa' => $empresa
         ])->render();
@@ -220,7 +235,52 @@ class OrdenDespachoController extends Controller
         $fileName = 'orden_despacho_' . $id . '.pdf';
 
         // Ruta donde se almacenará el archivo PDF
-        $storagePath = storage_path('app/public/ordenes/' . $fileName);
+        $storagePath = storage_path('app/public/ordenesA4/' . $fileName);
+
+        // Crear el directorio si no existe
+        if (!is_dir(dirname($storagePath))) {
+            mkdir(dirname($storagePath), 0755, true);
+        }
+
+        // Guardar el PDF en la carpeta especificada
+        file_put_contents($storagePath, $dompdf->output());
+
+        return $fileName; // Devuelve el nombre del archivo generado
+    }
+
+
+    private function generatePdf_Ticket($id)
+    {
+        // Obtener la orden y la empresa
+        $ordenDespacho = OrdenDespacho::find($id);
+        $empresa = Empresa::first(); // O el método que utilices para obtener la empresa
+
+        // Configurar Dompdf
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isPhpEnabled', true); // Habilitar PHP si es necesario
+        $dompdf = new Dompdf($options);
+
+        // Cargar la vista Blade
+        $html = view('pdf.orden_ticket', [
+            'orden' => $ordenDespacho,
+            'empresa' => $empresa
+        ])->render();
+
+        // Cargar HTML en Dompdf
+        $dompdf->loadHtml($html);
+
+        // (Opcional) Configurar tamaño de página y orientación
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Renderizar el PDF
+        $dompdf->render();
+
+        // Generar un nombre único para el archivo
+        $fileName = 'orden_despacho_' . $id . '.pdf';
+
+        // Ruta donde se almacenará el archivo PDF
+        $storagePath = storage_path('app/public/ordenesTicket/' . $fileName);
 
         // Crear el directorio si no existe
         if (!is_dir(dirname($storagePath))) {

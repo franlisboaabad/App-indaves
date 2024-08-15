@@ -110,7 +110,8 @@ Route::resource('cajas', CajaController::class)->middleware('auth');
 Route::resource('empresas', EmpresaController::class)->middleware('auth');
 Route::resource('ordenes-ingreso', OrdenIngresoController::class )->middleware('auth')->parameters(['ordenes-ingreso' => 'ordenIngreso']);
 Route::resource('ventas', VentaController::class);
-Route::resource('ordenes-de-despacho',OrdenDespachoController::class)->middleware('auth')->parameters(['ordenes-de-despacho' => 'ordenDespacho']);;
+Route::resource('ordenes-de-despacho',OrdenDespachoController::class)->middleware('auth')->parameters(['ordenes-de-despacho' => 'ordenDespacho']);
+
 
 
 

@@ -275,6 +275,31 @@
         </div>
     </div>
 
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="selectDocumentTypeModal" tabindex="-1" aria-labelledby="selectDocumentTypeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="selectDocumentTypeModalLabel">Seleccionar Tipo de Documento</h5>
+                    <!-- Button to close the modal -->
+                    {{-- <button type="button" class="btn-close" id="btnCloseModal" aria-label="Close"></button> --}}
+                </div>
+                <div class="modal-body">
+                    <p>Seleccione el tipo de documento que desea generar:</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnDocumentA4">Documento A4</button>
+                    <button type="button" class="btn btn-secondary" id="btnDocumentTicket">Documento Ticket</button>
+                    <!-- Button to close the modal and reload the page -->
+                    <button type="button" class="btn btn-danger" id="btnReloadPage">Cerrar y Recargar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @stop
 
 @section('css')
@@ -288,9 +313,9 @@
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-
 
 
             let detailIndex = 1;
@@ -585,10 +610,12 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Éxito',
-                            text: 'Orden de despacho registrada exitosamente.',
+                            text: response.message,
+                            showConfirmButton: false,
+                            timer: 1500
                         }).then(() => {
-                            location
-                                .reload(); // Recargar la página después de mostrar el mensaje
+                            setPdfUrl(response.pdf_url_a4, response.pdf_url_ticket );
+                            $('#selectDocumentTypeModal').modal('show');
                         });
                     },
                     error: function(xhr, status, error) {
@@ -602,6 +629,39 @@
             });
 
             //fin button orde de despacho
+
+            //ruta de pdf
+            // Variable global para guardar la URL del PDF
+            let pdfUrl_a4 = '';
+            let pdfUrl_ticket = ''
+
+            // Suponiendo que la URL se obtiene cuando se registra el documento
+            function setPdfUrl(url_a4,url_ticket) {
+                pdfUrl_a4 = url_a4;
+                pdfUrl_ticket = url_ticket
+            }
+
+
+            document.getElementById('btnDocumentA4').addEventListener('click', function() {
+                if (pdfUrl_a4) {
+                    window.open(pdfUrl_a4, '_blank');
+                } else {
+                    alert('La URL del documento no está disponible.');
+                }
+            });
+
+
+            document.getElementById('btnDocumentTicket').addEventListener('click', function() {
+                if (pdfUrl_ticket) {
+                    window.open(pdfUrl_ticket, '_blank');
+                } else {
+                    alert('La URL del documento no está disponible.');
+                }
+            });
+
+            document.getElementById('btnReloadPage').addEventListener('click', function() {
+               location.reload();
+            });
 
 
             $('.select2').select2();

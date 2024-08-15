@@ -10,7 +10,7 @@ class OrdenDespacho extends Model
     use HasFactory;
 
     protected $fillable = [
-        'cliente_id', 'serie_orden', 'fecha_despacho','peso_total_bruto','cantidad_jabas','tara','peso_total_neto','url_orden_documento','estado_despacho','estado'];
+        'cliente_id', 'serie_orden', 'fecha_despacho','peso_total_bruto','cantidad_jabas','tara','peso_total_neto','url_orden_documento_a4','url_orden_documento_ticket','estado_despacho','estado'];
 
     public function detalles()
     {

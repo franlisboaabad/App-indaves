@@ -106,7 +106,7 @@
         function printOrder() {
             // Obtener la URL del PDF
             var pdfUrl =
-            "{{ asset($orden->url_orden_documento) }}"; // Cambia esto si es necesario para obtener la URL correcta
+            "{{ asset('storage/'.$orden->url_orden_documento_a4) }}"; // Cambia esto si es necesario para obtener la URL correcta
 
             // Establecer la URL del PDF en el iframe
             document.getElementById('pdfIframe').src = pdfUrl;
