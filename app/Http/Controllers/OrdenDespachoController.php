@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
+
 use App\Models\Caja;
 use App\Models\Serie;
 use App\Models\Cliente;
@@ -112,16 +116,17 @@ class OrdenDespachoController extends Controller
                 ]);
             }
 
+            // Generar el PDF y obtener la ruta del archivo
+            $pdfFileName = $this->generatePdf($ordenDespacho->id);
+            $pdfFilePath = 'storage/ordenes/' . $pdfFileName;
+
+            // Almacenar la ruta del PDF en el modelo
+            $ordenDespacho->url_orden_documento = $pdfFilePath;
+            $ordenDespacho->save();
+
             DB::commit(); // Confirmar la transacción
 
-            // Obtener la empresa para el encabezado
-            $empresa = Empresa::first(); // O el método que utilices para obtener la empresa
 
-            // Generar el PDF
-            $pdf = PDF::loadView('ordenes.pdf', [
-                'orden' => $ordenDespacho,
-                'empresa' => $empresa
-            ]);
 
             // Responder con éxito
             return response()->json(['message' => 'Orden de despacho registrada exitosamente.']);
@@ -182,5 +187,49 @@ class OrdenDespachoController extends Controller
     public function destroy(OrdenDespacho $ordenDespacho)
     {
         //
+    }
+
+    private function generatePdf($id)
+    {
+        // Obtener la orden y la empresa
+        $ordenDespacho = OrdenDespacho::find($id);
+        $empresa = Empresa::first(); // O el método que utilices para obtener la empresa
+
+        // Configurar Dompdf
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isPhpEnabled', true); // Habilitar PHP si es necesario
+        $dompdf = new Dompdf($options);
+
+        // Cargar la vista Blade
+        $html = view('pdf.orden', [
+            'orden' => $ordenDespacho,
+            'empresa' => $empresa
+        ])->render();
+
+        // Cargar HTML en Dompdf
+        $dompdf->loadHtml($html);
+
+        // (Opcional) Configurar tamaño de página y orientación
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Renderizar el PDF
+        $dompdf->render();
+
+        // Generar un nombre único para el archivo
+        $fileName = 'orden_despacho_' . $id . '.pdf';
+
+        // Ruta donde se almacenará el archivo PDF
+        $storagePath = storage_path('app/public/ordenes/' . $fileName);
+
+        // Crear el directorio si no existe
+        if (!is_dir(dirname($storagePath))) {
+            mkdir(dirname($storagePath), 0755, true);
+        }
+
+        // Guardar el PDF en la carpeta especificada
+        file_put_contents($storagePath, $dompdf->output());
+
+        return $fileName; // Devuelve el nombre del archivo generado
     }
 }

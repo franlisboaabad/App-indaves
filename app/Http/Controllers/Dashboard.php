@@ -13,10 +13,6 @@ class Dashboard extends Controller
 
     public function home()
     {
-        $totalSorteo = Sorteo::count();
-        $totalRegistros = Registro::where('estado', 1)->count();
-        $totalTickets = DetalleTicket::count();
-
-        return view('dashboard', compact('totalSorteo','totalRegistros','totalTickets'));
+        return view('dashboard');
     }
 }

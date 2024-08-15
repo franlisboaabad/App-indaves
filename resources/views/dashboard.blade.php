@@ -2,6 +2,7 @@
 
 @section('title', 'Dashboard | INDAVES')
 
+
 @section('content_header')
     <h1>Dashboard</h1>
 @stop
@@ -13,13 +14,13 @@
 
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3>{{ $totalSorteo }}</h3>
-                    <p>VENTAS</p>
+                    <h3></h3>
+                    <p>SORTEOS</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
                 </div>
-                <a href="{{ route('sorteos.index') }}" class="small-box-footer"> Lista de ventas <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="" class="small-box-footer"> Ver Sorteos <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -29,13 +30,14 @@
 
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <h3>{{ $totalRegistros }}</h3>
-                    <p>CLIENTES</p>
+                    <h3></h3>
+                    <p>REGISTROS</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
                 </div>
-                <a href="{{ route('registros.index') }}" class="small-box-footer"> Ver clientes <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="" class="small-box-footer"> Ver Registros <i
+                        class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -44,41 +46,38 @@
 
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>{{ $totalTickets }}</h3>
-                    <p>USUARIOS</p>
+                    <h3></h3>
+                    <p>TICKETS VENDIDOS</p>
                 </div>
                 <div class="icon">
-                    <i class="ion ion-person-add"></i>
+                    <i class="ion ion-stats-bars"></i>
                 </div>
-                <a href="{{ route('registros.index') }}" class="small-box-footer"> Ver usuarios <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="" class="small-box-footer"> Ver Registros <i
+                        class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
         <div class="col-lg-3 col-6">
 
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <h3>65</h3>
-                    <p>REPORTES</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-pie-graph"></i>
-                </div>
-                <a href="#" class="small-box-footer">Ver reportes<i class="fas fa-arrow-circle-right"></i></a>
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>65</h3>
+                <p>Unique Visitors</p>
             </div>
+            <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
-
     </div>
 
-
+    </div>
 @stop
 
 @section('css')
-<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 @stop
 
 @section('js')
-    <script>
-        console.log('Hi!');
-    </script>
+
 @stop

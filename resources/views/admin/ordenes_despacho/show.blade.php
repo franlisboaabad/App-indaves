@@ -10,7 +10,9 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Información de la Orden</h3>
+            <!-- Botón para abrir el modal -->
             <button class="btn btn-primary float-right" onclick="printOrder()">Imprimir Orden</button>
+
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -58,6 +60,33 @@
         <!-- /.card-body -->
     </div>
     <!-- /.card -->
+
+
+    {{-- Modal para imprimir --}}
+
+    <!-- Modal para mostrar el PDF -->
+    <div class="modal fade" id="printOrderModal" tabindex="-1" role="dialog" aria-labelledby="printOrderModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="printOrderModalLabel">Orden de Despacho</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="pdfIframe" src="" style="width: 100%; height: 500px;" frameborder="0"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="printPdf()">Imprimir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 @endsection
 
 @section('css')
@@ -75,7 +104,20 @@
 @section('js')
     <script>
         function printOrder() {
-            window.print();
+            // Obtener la URL del PDF
+            var pdfUrl =
+            "{{ asset($orden->url_orden_documento) }}"; // Cambia esto si es necesario para obtener la URL correcta
+
+            // Establecer la URL del PDF en el iframe
+            document.getElementById('pdfIframe').src = pdfUrl;
+
+            // Mostrar el modal
+            $('#printOrderModal').modal('show');
+        }
+
+        function printPdf() {
+            var iframe = document.getElementById('pdfIframe');
+            iframe.contentWindow.print(); // Imprimir el contenido del iframe
         }
     </script>
 @endsection
