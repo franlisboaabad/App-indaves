@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\DatosController;
+use App\Http\Middleware\CorsMiddleware;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Route::post('/guardar-datos', [DatosController::class, 'guardarDatos']);
 
-use App\Http\Middleware\CorsMiddleware;
-
+use App\Http\Controllers\Api\PesoController;
+use App\Http\Controllers\Api\DatosController;
 Route::post('/guardar-datos', [DatosController::class, 'guardarDatos'])->middleware(CorsMiddleware::class);
+
+//Indaves
+Route::post('/peso', [PesoController::class, 'guardarPeso'])->middleware(CorsMiddleware::class);
+Route::get('/peso', [PesoController::class, 'obtenerPeso'])->middleware(CorsMiddleware::class);
+

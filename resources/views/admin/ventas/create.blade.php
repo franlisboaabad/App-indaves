@@ -45,73 +45,28 @@
                     <div class="col-md-4">
 
                         <div class="form-group">
-                            <label for="cliente_id">Cliente</label>
-                            <select id="cliente_id" name="cliente_id" class="form-control select2" required>
-                                <option value="" disabled selected>Selecciona un cliente</option>
-                                @foreach ($clientes as $cliente)
-                                    <option value="{{ $cliente->id }}">{{ $cliente->nombre_comercial }}</option>
+                            <label for="cliente_id">Seleccionar Orden de despacho</label>
+                            <select id="orden_id" name="orden_id" class="form-control select2" required>
+                                <option value="" disabled selected>Selecciona una Orden</option>
+                                @foreach ($ordenes as $orden)
+                                    <option value="{{ $orden->id }}">{{ $orden->serie_orden }}</option>
                                 @endforeach
                             </select>
                             @error('cliente_id')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-
-
                     </div>
 
-                    <!-- Espacios vacíos para alineación -->
-                    <div class="col-md-6">
-                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createClientModal"
-                            style="margin-top: 35px">
-                            <i class="fa fa-user"></i> Nuevo Cliente
-                        </button>
-                    </div>
-                    <div class="col-md-2"></div>
-
-                    <!-- Cantidad de Pollos -->
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="cantidad_pollos">Cantidad de Pollos</label>
-                            <input type="number" id="cantidad_pollos" name="cantidad_pollos" class="form-control" required>
-                            @error('cantidad_pollos')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <!-- Peso Bruto -->
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="peso_bruto">Peso Bruto</label>
-                            <input type="number" step="0.01" id="peso_bruto" name="peso_bruto" class="form-control"
-                                required>
-                            @error('peso_bruto')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <!-- Número de Jabas -->
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="numero_jabas">Número de Jabas</label>
-                            <input type="number" id="numero_jabas" name="numero_jabas" class="form-control" required>
-                            @error('numero_jabas')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <!-- Botón para agregar detalles -->
-                    <div class="col-md-12">
-                        <button type="button" id="addDetailBtn" class="btn btn-primary">Agregar al Detalle</button>
-                    </div>
+                    <div class="col-md-8"></div>
 
 
                 </div>
 
+
+                <hr>
                 <!-- Tabla de Detalles -->
+                <h3>Detalle de Orden</h3>
                 <div class="mt-4">
                     <table class="table table-bordered" id="detailsTable">
                         <thead>
@@ -121,7 +76,6 @@
                                 <th>Cantidad de Jabas</th>
                                 <th>Tara</th>
                                 <th>Peso Neto</th>
-                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -134,16 +88,37 @@
                                 <th id="totalBoxes">0</th>
                                 <th id="totalTara">0.00</th>
                                 <th id="totalNetWeight">0.00</th>
-                                <th></th>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
 
 
-                <!-- Botón de Submit -->
-                <br>
-                <button type="submit" class="btn btn-success">Registrar Venta</button>
+
+
+                <!-- Información de Venta en Dos Columnas -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="precio_venta">Precio de Venta (por unidad)</label>
+                            <input type="text" id="precio_venta" name="precio_venta" class="form-control"
+                                placeholder="Ingrese el precio de venta">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="monto_pagar">Monto Total a Pagar</label>
+                            <input type="text" id="monto_pagar" name="monto_pagar" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botón de Enviar en el Footer -->
+                <div class="text-right mt-4">
+                    <button type="submit" class="btn btn-primary">Generar Venta</button>
+                </div>
+
+
             </form>
 
 
@@ -186,8 +161,7 @@
                                 <div class="form-group">
                                     <label for="documento">Documento</label>
                                     <div class="input-group">
-                                        <input type="text" id="documento" name="documento" class="form-control"
-                                            required>
+                                        <input type="text" id="documento" name="documento" class="form-control" required>
                                         <div class="input-group-append">
                                             <button type="button" id="searchDocumentBtn"
                                                 class="btn btn-outline-secondary">
@@ -292,14 +266,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-            //variables
-
-            // funciones
-
-            // metodos
-
-            let detailIndex = 1;
-
             // Función para obtener la fecha en formato YYYY-MM-DD en la zona horaria local
             function getLocalDateString() {
                 const today = new Date();
@@ -313,212 +279,82 @@
             document.getElementById('fecha_venta').value = getLocalDateString();
 
 
+            $('#orden_id').on('change', function() {
+                var ordenId = $(this).val();
+                if (ordenId) {
+                    $.ajax({
+                        url: '/ordenes/' + ordenId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data) {
+                                // Limpiar la tabla antes de agregar nuevas filas
+                                $('#detailsTable tbody').empty();
 
-            //funcionalidad para detalle de pedido
 
+                                // Agregar filas con los detalles de la orden
+                                data.detalles.forEach(function(detalle) {
+                                    var row = '<tr>' +
+                                        '<td>' + detalle.cantidad_pollos + '</td>' +
+                                        '<td>' + detalle.peso_bruto + '</td>' +
+                                        '<td>' + detalle.cantidad_jabas + '</td>' +
+                                        '<td>' + detalle.tara + '</td>' +
+                                        '<td>' + detalle.peso_neto + '</td>' +
+                                        '</tr>';
+                                    $('#detailsTable tbody').append(row);
+                                });
 
-            document.getElementById('addDetailBtn').addEventListener('click', function() {
-                // Obtener los valores de los inputs
-                var cantidadPollos = document.getElementById('cantidad_pollos').value;
-                var pesoBruto = document.getElementById('peso_bruto').value;
-                var numeroJabas = document.getElementById('numero_jabas').value;
+                                // Calcular y actualizar los totales
+                                updateTotals();
 
-                // Tara por defecto
-                var taraPorDefecto = 6; // 6 kg por jaba
+                                $('#orden-detalle').show();
 
-                // Validar que los campos no estén vacíos
-                if (!cantidadPollos || !pesoBruto || !numeroJabas) {
-                    alert('Por favor, complete todos los campos.');
-                    return;
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                } else {
+                    $('#orden-detalle').hide();
                 }
+            });
 
-                // Calcular la tara
-                var tara = numeroJabas * taraPorDefecto;
+            // Función para calcular y actualizar los totales
+            function updateTotals() {
+                var totalWeight = 0;
+                var totalBoxes = 0;
+                var totalTara = 0;
+                var totalNetWeight = 0;
 
-                // Calcular el peso neto
-                var pesoNeto = pesoBruto - tara;
+                $('#detailsTable tbody tr').each(function() {
+                    var cells = $(this).find('td');
+                    totalWeight += parseFloat($(cells[1]).text()) || 0;
+                    totalBoxes += parseInt($(cells[2]).text()) || 0;
+                    totalTara += parseFloat($(cells[3]).text()) || 0;
+                    totalNetWeight += parseFloat($(cells[4]).text()) || 0;
+                });
 
-                // Crear una nueva fila para la tabla de detalles
-                var tableBody = document.getElementById('detailsTable').getElementsByTagName('tbody')[0];
-                var newRow = tableBody.insertRow();
+                $('#totalWeight').text(totalWeight.toFixed(2));
+                $('#totalBoxes').text(totalBoxes);
+                $('#totalTara').text(totalTara.toFixed(2));
+                $('#totalNetWeight').text(totalNetWeight.toFixed(2));
+            }
 
-                // Insertar celdas en la nueva fila
-                newRow.insertCell(0).textContent = cantidadPollos;
-                newRow.insertCell(1).textContent = pesoBruto;
-                newRow.insertCell(2).textContent = numeroJabas;
-                newRow.insertCell(3).textContent = tara.toFixed(2);
-                newRow.insertCell(4).textContent = pesoNeto.toFixed(2);
-
-                // Crear el botón de eliminar y añadirlo a la última celda
-                var deleteBtn = document.createElement('button');
-                deleteBtn.textContent = 'Eliminar';
-                deleteBtn.className = 'btn btn-danger btn-sm';
-                deleteBtn.onclick = function() {
-                    // Eliminar la fila de la tabla
-                    var rowIndex = newRow.rowIndex;
-                    if (rowIndex > 0) { // Asegurarse de que el índice sea válido
-                        tableBody.deleteRow(rowIndex - 1);
-                        updateTotals();
-                    }
-                };
-                newRow.insertCell(5).appendChild(deleteBtn);
-
-                // Limpiar los campos del formulario
-                document.getElementById('cantidad_pollos').value = '';
-                document.getElementById('peso_bruto').value = '';
-                document.getElementById('numero_jabas').value = '';
-                document.getElementById('cantidad_pollos').select();
-
-                // Actualizar los totales
+            // Función para eliminar una fila
+            $('#detailsTable').on('click', '.remove-row', function() {
+                $(this).closest('tr').remove();
                 updateTotals();
             });
 
-            function updateTotals() {
-                var tableBody = document.getElementById('detailsTable').getElementsByTagName('tbody')[0];
-                var rows = tableBody.getElementsByTagName('tr');
-                var totalWeight = 0;
-                var totalTara = 0;
-                var totalNetWeight = 0;
-                var totalBoxes = 0;
-
-                // Sumar los valores de cada fila
-                for (var i = 0; i < rows.length; i++) {
-                    var cells = rows[i].getElementsByTagName('td');
-                    totalWeight += parseFloat(cells[1].textContent);
-                    totalTara += parseFloat(cells[3].textContent);
-                    totalNetWeight += parseFloat(cells[4].textContent);
-                    totalBoxes += parseInt(cells[2].textContent);
-                }
-
-                // Mostrar los totales en el pie de la tabla
-                document.getElementById('totalWeight').textContent = totalWeight.toFixed(2);
-                document.getElementById('totalTara').textContent = totalTara.toFixed(2);
-                document.getElementById('totalNetWeight').textContent = totalNetWeight.toFixed(2);
-                document.getElementById('totalBoxes').textContent = totalBoxes;
-            }
-
-
-
-            //fin detalle pedido
-
-
-
-            $('#searchDocumentBtn').on('click', function() {
-                var documento = $('#documento').val();
-                var tipoDocumento = $('#tipo_documento').val();
-
-                $.ajax({
-                    url: "{{ route('clientes.search') }}",
-                    type: 'POST',
-                    data: {
-                        documento: documento,
-                        tipo_documento: tipoDocumento,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            $('#nombre_comercial').val(response.data.razon_social);
-                            $('#razon_social').val(response.data.razon_social);
-                            $('#direccion').val(response.data.direccion);
-                            $('#departamento').val(response.data.departamento);
-                            $('#provincia').val(response.data.provincia);
-                            $('#distrito').val(response.data.distrito);
-
-                            Swal.fire({
-                                title: 'Información encontrada',
-                                text: 'Datos actualizados.',
-                                icon: 'info',
-                                confirmButtonText: 'OK'
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: response.message,
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'No se pudo realizar la búsqueda.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                });
-            });
-            //end search
-
-
-
-            $('#saveClientBtn').on('click', function() {
-                var formData = new FormData($('#createClientForm')[0]);
-
-                $.ajax({
-                    url: "{{ route('clientes.store') }}", // Cambia la URL al endpoint adecuado
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire({
-                                title: 'Éxito!',
-                                text: 'Cliente creado correctamente.',
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    $('#createClientModal').modal('hide');
-                                    $('#createClientForm')[0].reset();
-
-                                    // Añadir el nuevo cliente al select
-                                    addClientToSelect(response.cliente);
-                                }
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        if (xhr.status === 400) {
-                            // Manejar el caso de cliente ya existente
-                            Swal.fire({
-                                title: 'Error!',
-                                text: xhr.responseJSON.message ||
-                                    'Cliente con el mismo documento ya existe.',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        } else {
-                            // Manejar otros errores de validación
-                            var errors = xhr.responseJSON.errors;
-                            var errorMessage = '';
-                            if (errors) {
-                                $.each(errors, function(key, value) {
-                                    errorMessage += value[0] + '\n';
-                                });
-                            } else {
-                                errorMessage = 'Ha ocurrido un error inesperado.';
-                            }
-
-                            Swal.fire({
-                                title: 'Error!',
-                                text: errorMessage,
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    }
-                });
+            // Actualizar el monto a pagar cuando cambie el precio de venta
+            $('#precio_venta').on('input', function() {
+                var precioVenta = parseFloat($(this).val()) || 0;
+                var totalNetWeight = parseFloat($('#totalNetWeight').text()) || 0;
+                $('#monto_pagar').val((totalNetWeight * precioVenta).toFixed(2));
             });
 
-            // Función para añadir el cliente al select
-            function addClientToSelect(cliente) {
-                var $select = $('#cliente_id');
-                var newOption = new Option(cliente.nombre_comercial, cliente.id, true, true);
-                $select.append(newOption).trigger('change');
-            }
+
 
             $('.select2').select2();
 

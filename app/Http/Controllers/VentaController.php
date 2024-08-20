@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Caja;
 use App\Models\Cliente;
+use App\Models\OrdenDespacho;
 use App\Models\Serie;
 use App\Models\Venta;
 use Illuminate\Http\Request;
@@ -29,8 +30,10 @@ class VentaController extends Controller
     {
         $serie = Serie::first();
         $cajas = Caja::get();
-        $clientes = Cliente::where('estado',1)->get();
-        return view('admin.ventas.create', compact('clientes','cajas','serie'));
+        $ordenes = OrdenDespacho::where('estado_despacho',0)->get();
+
+
+        return view('admin.ventas.create', compact('ordenes','cajas','serie'));
     }
 
     /**
@@ -88,4 +91,20 @@ class VentaController extends Controller
     {
         //
     }
+
+
+    public function getOrdenDetalles($id)
+    {
+        $orden = OrdenDespacho::with('detalles')->find($id);
+
+        if ($orden) {
+            return response()->json([
+                'detalles' => $orden->detalles
+            ]);
+        }
+
+        return response()->json(null, 404);
+    }
+
+
 }

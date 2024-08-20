@@ -80,16 +80,7 @@
                         </div>
                     </div>
 
-                    <!-- Peso Bruto -->
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="peso_bruto">Peso Bruto</label>
-                            <input type="number" step="0.01" id="peso_bruto" name="peso_bruto" class="form-control">
-                            @error('peso_bruto')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
+
 
                     <!-- Número de Jabas -->
                     <div class="col-md-4">
@@ -101,6 +92,18 @@
                             @enderror
                         </div>
                     </div>
+
+                      <!-- Peso Bruto -->
+                      <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="peso_bruto">Peso Bruto</label>
+                            <input type="number" step="0.01" id="peso_bruto" name="peso_bruto" class="form-control">
+                            @error('peso_bruto')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
 
                     <!-- Botón para agregar detalles -->
                     <div class="col-md-12">
@@ -316,6 +319,28 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
+            //peso api
+
+            $('#peso_bruto').on('focus', function() {
+                // Realiza la solicitud AJAX cuando el campo reciba foco
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/api/peso', // URL del endpoint
+                    method: 'GET',
+                    success: function(response) {
+                        // Asigna el peso al campo de texto
+                        if (response.peso !== null) {
+                            $('#peso_bruto').val(response.peso);
+                        } else {
+                            $('#peso_bruto').val('No hay peso registrado');
+                        }
+                    },
+                    error: function() {
+                        $('#peso_bruto').val('Error al obtener peso');
+                    }
+                });
+            });
+
 
 
             let detailIndex = 1;
@@ -614,7 +639,7 @@
                             showConfirmButton: false,
                             timer: 1500
                         }).then(() => {
-                            setPdfUrl(response.pdf_url_a4, response.pdf_url_ticket );
+                            setPdfUrl(response.pdf_url_a4, response.pdf_url_ticket);
                             $('#selectDocumentTypeModal').modal('show');
                         });
                     },
@@ -636,7 +661,7 @@
             let pdfUrl_ticket = ''
 
             // Suponiendo que la URL se obtiene cuando se registra el documento
-            function setPdfUrl(url_a4,url_ticket) {
+            function setPdfUrl(url_a4, url_ticket) {
                 pdfUrl_a4 = url_a4;
                 pdfUrl_ticket = url_ticket
             }
@@ -660,7 +685,7 @@
             });
 
             document.getElementById('btnReloadPage').addEventListener('click', function() {
-               location.reload();
+                location.reload();
             });
 
 
