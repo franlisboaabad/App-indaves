@@ -8,8 +8,10 @@
 
 @section('content')
 
-
     <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Venta</h3>
+        </div>
         <div class="card-body">
             <form id="ventaForm" method="POST" action="{{ route('ventas.store') }}">
                 @csrf
@@ -46,7 +48,7 @@
 
                         <div class="form-group">
                             <label for="cliente_id">Seleccionar Orden de despacho</label>
-                            <select id="orden_id" name="orden_id" class="form-control select2" required>
+                            <select id="orden_despacho_id" name="orden_despacho_id" class="form-control select2" required>
                                 <option value="" disabled selected>Selecciona una Orden</option>
                                 @foreach ($ordenes as $orden)
                                     <option value="{{ $orden->id }}">{{ $orden->serie_orden }}</option>
@@ -93,37 +95,60 @@
                     </table>
                 </div>
 
+                <div class="form-group">
+                    <input type="hidden" name="peso_neto" id="peso_neto">
+                </div>
+
 
 
 
                 <!-- Información de Venta en Dos Columnas -->
                 <div class="row mt-4">
+
+                    <div class="col-md-4 mb-4">
+                        <label for="">Forma de pago</label>
+                        <select name="forma_de_pago" id="forma_de_pago" class="form-control">
+                            <option value="0">Contado</option>
+                            <option value="1">Credito</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <label for="">Metodo de pago</label>
+                        <select name="metodo_pago_id" id="metodo_pago_id" class="form-control">
+                            @foreach ($metodos as $metodo)
+                                <option value="{{ $metodo->id }}"> {{ $metodo->descripcion }} </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+
+                    </div>
+
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="precio_venta">Precio de Venta (por unidad)</label>
                             <input type="text" id="precio_venta" name="precio_venta" class="form-control"
-                                placeholder="Ingrese el precio de venta">
+                                value="{{ $precio->precio ?? 0 }}" placeholder="Ingrese el precio de venta">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="monto_pagar">Monto Total a Pagar</label>
-                            <input type="text" id="monto_pagar" name="monto_pagar" class="form-control" readonly>
+                            <label for="monto_total">Monto Total a Pagar</label>
+                            <input type="text" id="monto_total" name="monto_total" class="form-control" readonly>
                         </div>
                     </div>
                 </div>
 
                 <!-- Botón de Enviar en el Footer -->
                 <div class="text-right mt-4">
-                    <button type="submit" class="btn btn-primary">Generar Venta</button>
+                    <button type="button" class="btn btn-success" id="btnGenerar">Generar Venta</button>
                 </div>
 
 
             </form>
-
-
-
-
         </div>
     </div>
 
@@ -161,7 +186,8 @@
                                 <div class="form-group">
                                     <label for="documento">Documento</label>
                                     <div class="input-group">
-                                        <input type="text" id="documento" name="documento" class="form-control" required>
+                                        <input type="text" id="documento" name="documento" class="form-control"
+                                            required>
                                         <div class="input-group-append">
                                             <button type="button" id="searchDocumentBtn"
                                                 class="btn btn-outline-secondary">
@@ -279,7 +305,7 @@
             document.getElementById('fecha_venta').value = getLocalDateString();
 
 
-            $('#orden_id').on('change', function() {
+            $('#orden_despacho_id').on('change', function() {
                 var ordenId = $(this).val();
                 if (ordenId) {
                     $.ajax({
@@ -306,8 +332,8 @@
 
                                 // Calcular y actualizar los totales
                                 updateTotals();
-
                                 $('#orden-detalle').show();
+                                updatePago();
 
                             }
                         },
@@ -339,6 +365,10 @@
                 $('#totalBoxes').text(totalBoxes);
                 $('#totalTara').text(totalTara.toFixed(2));
                 $('#totalNetWeight').text(totalNetWeight.toFixed(2));
+
+                //tomar el peso neto para enviar
+                $('#peso_neto').val(totalNetWeight.toFixed(2));
+
             }
 
             // Función para eliminar una fila
@@ -351,10 +381,59 @@
             $('#precio_venta').on('input', function() {
                 var precioVenta = parseFloat($(this).val()) || 0;
                 var totalNetWeight = parseFloat($('#totalNetWeight').text()) || 0;
-                $('#monto_pagar').val((totalNetWeight * precioVenta).toFixed(2));
+                $('#monto_total').val((totalNetWeight * precioVenta).toFixed(2));
             });
 
+            function updatePago() {
+                var precioVenta = parseFloat($('#precio_venta').val()) || 0;
+                var totalNetWeight = parseFloat($('#totalNetWeight').text()) || 0;
+                $('#monto_total').val((totalNetWeight * precioVenta).toFixed(2));
+            }
 
+
+            $('#btnGenerar').on('click', function(event) {
+                event.preventDefault(); // Evita el envío inmediato del formulario
+
+                // Mostrar la ventana de confirmación con SweetAlert
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¿Quieres generar esta venta?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, generar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Si el usuario confirma, enviar los datos del formulario usando AJAX
+                        $.ajax({
+                            url: "{{ route('ventas.store') }}", // URL del método store
+                            type: 'POST', // Método HTTP
+                            data: $('#ventaForm')
+                        .serialize(), // Serializa los datos del formulario
+                            success: function(response) {
+                                Swal.fire({
+                                    title: 'Éxito',
+                                    text: 'Venta generada exitosamente.',
+                                    icon: 'success'
+                                }).then(() => {
+                                    // Redirigir o limpiar el formulario según sea necesario
+                                    window.location
+                                .reload(); // Opcional: recargar la página
+                                });
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'Hubo un problema al generar la venta. Inténtalo de nuevo.',
+                                    icon: 'error'
+                                });
+                            }
+                        });
+                    }
+                });
+            });
 
             $('.select2').select2();
 

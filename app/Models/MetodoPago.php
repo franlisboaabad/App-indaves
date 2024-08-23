@@ -10,4 +10,11 @@ class MetodoPago extends Model
     use HasFactory;
 
     protected $fillable = ['descripcion'];
+
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class, 'metodo_pago_id');
+    }
+
+
 }

@@ -21,5 +21,10 @@ class OrdenDespacho extends Model
         return $this->belongsTo(Cliente::class);
     }
 
+    public function ventas()
+    {
+        return $this->hasMany(Venta::class, 'orden_despacho_id');
+    }
+
 
 }

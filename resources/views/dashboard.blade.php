@@ -14,7 +14,7 @@
 
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3></h3>
+                    <h3>100</h3>
                     <p>SORTEOS</p>
                 </div>
                 <div class="icon">
@@ -30,7 +30,7 @@
 
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <h3></h3>
+                    <h3>100</h3>
                     <p>REGISTROS</p>
                 </div>
                 <div class="icon">
@@ -46,7 +46,7 @@
 
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3></h3>
+                    <h3>100</h3>
                     <p>TICKETS VENDIDOS</p>
                 </div>
                 <div class="icon">
