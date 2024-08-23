@@ -24,7 +24,11 @@ class VentaController extends Controller
      */
     public function index()
     {
-        //
+        $ventas = Venta::with('ordenDespacho') // Incluye relaciones si es necesario
+            ->orderBy('fecha_venta', 'desc') // Ordenar por fecha de venta
+            ->get();
+
+        return view('admin.ventas.index', compact('ventas'));
     }
 
     /**
@@ -109,7 +113,11 @@ class VentaController extends Controller
                 'pagada' => $pagada
             ]);
 
-
+            //serie
+            // Aumentar el número de serie (1) nota de venta | 2 orden despacho
+            $serie = Serie::findOrFail(1);
+            $serie->serie = $serie->serie + 1;
+            $serie->save();
 
             // Crear el detalle de la venta
             // Encuentra la orden de despacho relacionada
