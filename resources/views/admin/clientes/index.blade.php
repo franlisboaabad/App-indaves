@@ -8,16 +8,16 @@
 
 @section('content')
 
+<a href="#" class="btn btn-primary mb-3" data-toggle="modal" data-target="#createClientModal">Agregar Nuevo Cliente</a>
+
+
     <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Clientes</h3>
+        </div>
         <div class="card-body">
-
             <!-- Botón para abrir el modal -->
-            <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#createClientModal">Nuevo
-                Cliente</a>
-            <hr>
-
-
-            <table class="table" id="table-clientes">
+            <table class="table table-bordered" id="table-clientes">
                 <thead>
                     <th>#</th>
                     <th>Tipo documento</th>

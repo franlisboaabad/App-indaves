@@ -54,8 +54,8 @@
                         </div>
 
                         <div class="form-group">
-                            <button type="button" id="edit-btn" class="btn btn-info btn-sm">Editar</button>
-                            <a href="{{ route('empresas.index') }}" class="btn btn-primary btn-sm">Empresas</a>
+                            <button type="button" id="edit-btn" class="btn btn-success">Editar</button>
+                            <a href="{{ route('empresas.index') }}" class="btn btn-primary">Empresas</a>
                         </div>
                     </form>
 

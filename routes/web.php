@@ -20,6 +20,7 @@ use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\ActividadController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ListaPrecioController;
 use App\Http\Controllers\OrdenDeServicioController;
 use App\Http\Controllers\OrdenDespachoController;
 use App\Http\Controllers\OrdenIngresoController;
@@ -112,6 +113,7 @@ Route::resource('ordenes-ingreso', OrdenIngresoController::class )->middleware('
 Route::resource('ventas', VentaController::class)->middleware('auth');
 Route::get('ordenes/{id}', [VentaController::class, 'getOrdenDetalles'])->middleware('auth');
 Route::resource('ordenes-de-despacho',OrdenDespachoController::class)->middleware('auth')->parameters(['ordenes-de-despacho' => 'ordenDespacho']);
+Route::resource('lista-de-precios',ListaPrecioController::class)->middleware('auth')->parameters(['lista-de-precios' => 'listaPrecio']);
 
 
 

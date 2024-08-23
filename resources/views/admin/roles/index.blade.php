@@ -3,15 +3,21 @@
 @section('title', 'Lista de roles')
 
 @section('content_header')
-    <h1>Dashboard</h1>
+    <h1>Lista de Roles & Permisos</h1>
 @stop
 
 @section('content')
-    <p>Welcome to this beautiful admin panel.</p>
+
+
+    <a href="{{ route('roles.create') }}" class="btn btn-primary mb-3">Agregar Nuevo Rol</a>
+
     <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Roles</h3>
+        </div>
         <div class="card-body">
-            <a href="{{ route('roles.create') }}">Nuevo Rol</a> <hr>
-            <table class="table">
+
+            <table class="table table-bordered">
                 <thead>
                     <th>#</th>
                     <th>Role</th>
@@ -25,10 +31,10 @@
                             <td>
                                 <form action="{{ route('roles.destroy', $role) }}" method="POST">
 
-                                    <a href="{{ route('roles.edit', $role ) }}" class="btn btn-info btn-xs">Editar</a>
+                                    <a href="{{ route('roles.edit', $role ) }}" class="btn btn-info btn-sm">Editar</a>
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-danger btn-xs" onclick="return confirm('¿Esta seguro de eliminar el registro?')">Eliminar</button>
+                                    <button class="btn btn-danger btn-sm" onclick="return confirm('¿Esta seguro de eliminar el registro?')">Eliminar</button>
                                 </form>
                             </td>
                         </tr>

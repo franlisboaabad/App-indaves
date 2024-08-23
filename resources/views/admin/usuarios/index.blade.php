@@ -8,13 +8,15 @@
 
 @section('content')
     <p>Lista de usuarios</p>
+
+      <!-- Botón para abrir el modal -->
+      <a href="#" class="btn btn-primary mb-3" data-toggle="modal" data-target="#createUserModal">Agregar Nuevo Usuario</a>
+
     <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Usuarios</h3>
+        </div>
         <div class="card-body">
-
-            <!-- Botón para abrir el modal -->
-            <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#createUserModal">Nuevo
-                Usuario</a>
-
             <!-- Modal para crear un nuevo usuario -->
             <div class="modal fade" id="createUserModal" tabindex="-1" role="dialog" aria-labelledby="createUserModalLabel"
                 aria-hidden="true">
@@ -54,10 +56,7 @@
             </div>
 
 
-
-            <hr>
-
-            <table class="table" id="table-usuarios">
+            <table class="table table-bordered" id="table-usuarios">
                 <thead>
                     <th>#</th>
                     <th>Nombre</th>

@@ -137,6 +137,13 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.ordenes-despacho.show', 'description' => 'Ver orden despacho'])->syncRoles($RoleAdmin);
         Permission::create(['name' => 'admin.ordenes-despacho.destroy', 'description' => 'Eliminar orden despacho'])->syncRoles($RoleAdmin);
 
+        Permission::create(['name' => 'admin.precios.index', 'description' => 'Lista de precio'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.precios.create', 'description' => 'Registrar precio'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.precios.edit', 'description' => 'Editar precio'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.precios.show', 'description' => 'Ver precio'])->syncRoles($RoleAdmin);
+        Permission::create(['name' => 'admin.precios.destroy', 'description' => 'Eliminar precio'])->syncRoles($RoleAdmin);
+
+
 
     }
 }

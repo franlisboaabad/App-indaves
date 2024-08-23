@@ -369,10 +369,6 @@ return [
 
         ],
 
-
-
-
-
         // [
         //     'text'        => 'Sorteos',
         //     'route'         => 'sorteos.index', //apunta a ruta url route
@@ -417,6 +413,12 @@ return [
                     'text' => 'Empresa',
                     'route'  => 'empresas.index',
                     'can' => 'admin.empresas.index'
+                ],
+
+                [
+                    'text' => 'Precios',
+                    'route'  => 'lista-de-precios.index',
+                    'can' => 'admin.precios.index'
                 ],
 
 

@@ -71,8 +71,8 @@
                         </div>
 
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                            <a href="{{ route('usuarios.index') }}" class="btn btn-danger">Cancelar</a>
+                            <button type="submit" class="btn btn-success">Editar</button>
+                            <a href="{{ route('usuarios.index') }}" class="btn btn-primary">Lista de Usuarios</a>
                         </div>
                     </form>
                 </div>

@@ -3,16 +3,19 @@
 @section('title', 'Empresa')
 @section('plugins.Datatables', true)
 @section('content_header')
-    <h1>Empresa</h1>
+    <h1>Mi Empresa</h1>
 @stop
 
 @section('content')
     <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Empresa</h3>
+        </div>
         <div class="card-body">
             <!-- Botón para abrir el modal -->
             {{-- <a class="btn btn-primary btn-sm" href="#" id="openModal">Añadir Empresa</a> --}}
 
-            <table class="table" id="table-clientes">
+            <table class="table table-bordered" id="table-clientes">
                 <thead>
                     <th>#</th>
                     <th>Nombre</th>
