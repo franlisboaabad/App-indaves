@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('cliente_id')->constrained()->onDelete('cascade');
             $table->string('serie_orden');
             $table->date('fecha_despacho');
+            $table->integer('cantidad_pollos');
             $table->decimal('peso_total_bruto');
             $table->integer('cantidad_jabas');
             $table->integer('tara');

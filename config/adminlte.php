@@ -354,7 +354,7 @@ return [
 
         [
             'text' => 'Ventas',
-            'icon' => 'fa fa-edit',
+            'icon' => 'fa fa-credit-card',
             'submenu' => [
                 [
                     'text' => 'Nueva Venta',
@@ -368,22 +368,6 @@ return [
 
 
         ],
-
-        // [
-        //     'text'        => 'Sorteos',
-        //     'route'         => 'sorteos.index', //apunta a ruta url route
-        //     'icon'        => 'fa fa-th',
-        //     'can'  => 'admin.sorteos.index',
-        // ],
-
-        // [
-        //     'text'        => 'Registros',
-        //     'route'         => 'registros.index', //apunta a ruta url route
-        //     'icon'        => 'fa fa-edit',
-        //     'can'  => 'admin.registros.index',
-        // ],
-
-
         ['header' => 'account_settings'],
         [
             'text' => 'Configuracion',

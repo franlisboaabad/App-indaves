@@ -10,14 +10,15 @@
 
     <div class="row">
         <div class="col-md-12">
+
+            <a href="#" class="btn btn-primary mb-3" data-toggle="modal" data-target="#nuevoOrdenModal">Nueva Orden</a>
+
+
             <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Ordenes</h3>
+                </div>
                 <div class="card-body">
-
-                    <a href="#" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#nuevoOrdenModal">Nueva
-                        Orden</a>
-
-                    <hr>
-
                     <table class="table" id="table-ordenes">
                         <thead>
                             <th>#</th>

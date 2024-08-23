@@ -14,59 +14,57 @@
 
 @section('content')
 
-    <div class="card">
-        <div class="card-body">
-
-            @if ($errors->any())
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li class="text-red">{{ $error }}</li>
-                    @endforeach
-                </ul>
-            @endif
-
-            @if (session()->has('success'))
-                <div class="alert alert-success">
-                    {{ session()->get('success') }}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Agregar Rol</h3>
                 </div>
-            @endif
+                <div class="card-body">
 
+                    @include('partials.validaciones')
 
-            <div class="row">
-                <div class="col-md-6">
                     <form action="{{ route('roles.store') }}" method="POST">
+                        @csrf
+
                         <div class="form-group">
-                            <label for="">Name</label>
-                            <input type="text" name="name" placeholder="Ingrese Rol" class="form-control">
+                            <label for="name">Nombre del Rol</label>
+                            <input type="text" id="name" name="name" placeholder="Ingrese Rol"
+                                class="form-control" required>
                         </div>
 
                         <hr>
-                        <h5>Lista de permisos</h5>
+                        <h5>Lista de Permisos</h5>
+                        <div class="form-group">
                             @foreach ($permisos as $permiso)
-                            <input type="checkbox" value="{{ $permiso->id }}" name="permisos[]"> {{ $permiso->description }} <br>
+                                <div class="custom-control custom-switch mb-2">
+                                    <input type="checkbox" class="custom-control-input" id="permiso{{ $permiso->id }}"
+                                        name="permisos[]" value="{{ $permiso->id }}">
+                                    <label class="custom-control-label" for="permiso{{ $permiso->id }}">
+                                        {{ $permiso->description }}
+                                    </label>
+                                </div>
                             @endforeach
+                        </div>
                         <hr>
 
                         <div class="form-group">
-                            @csrf
-
-                            <button type="submit" class="btn btn-success btn-xs">Agregar rol</button>
-                            <a href="{{ route('roles.index') }}" class="btn btn-danger btn-xs">Lista de Roles</a>
+                            <button type="submit" class="btn btn-success">Agregar Rol</button>
+                            <a href="{{ route('roles.index') }}" class="btn btn-danger">Lista de Roles</a>
                         </div>
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
+
+
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+
 @stop
 
 @section('js')
-    <script>
-        console.log('hi!')
-    </script>
+
 @stop

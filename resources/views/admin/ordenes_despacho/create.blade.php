@@ -131,7 +131,8 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th>Total</th>
+                                {{-- <th>Total</th> --}}
+                                <th id="totalChiken">0.00</th>
                                 <th id="totalWeight">0.00</th>
                                 <th id="totalBoxes">0</th>
                                 <th id="totalTara">0.00</th>
@@ -419,6 +420,8 @@
             function updateTotals() {
                 var tableBody = document.getElementById('detailsTable').getElementsByTagName('tbody')[0];
                 var rows = tableBody.getElementsByTagName('tr');
+
+                var totalChiken = 0;
                 var totalWeight = 0;
                 var totalTara = 0;
                 var totalNetWeight = 0;
@@ -427,6 +430,7 @@
                 // Sumar los valores de cada fila
                 for (var i = 0; i < rows.length; i++) {
                     var cells = rows[i].getElementsByTagName('td');
+                    totalChiken += parseInt(cells[0].textContent);
                     totalWeight += parseFloat(cells[1].textContent);
                     totalTara += parseFloat(cells[3].textContent);
                     totalNetWeight += parseFloat(cells[4].textContent);
@@ -434,6 +438,7 @@
                 }
 
                 // Mostrar los totales en el pie de la tabla
+                document.getElementById('totalChiken').textContent = totalChiken.toFixed(2);
                 document.getElementById('totalWeight').textContent = totalWeight.toFixed(2);
                 document.getElementById('totalTara').textContent = totalTara.toFixed(2);
                 document.getElementById('totalNetWeight').textContent = totalNetWeight.toFixed(2);
@@ -580,6 +585,7 @@
 
 
                 // Recoger los datos de la tabla
+                let totalChiken = $('#totalChiken').text();
                 let totalWeight = $('#totalWeight').text();
                 let totalBoxes = $('#totalBoxes').text();
                 let totalTara = $('#totalTara').text();
@@ -618,6 +624,7 @@
                     cliente_id: clienteId,
                     serie_orden: serieOrden,
                     fecha_despacho: fechaDespacho,
+                    cantidad_pollos: totalChiken,
                     peso_total_bruto: totalWeight,
                     cantidad_jabas: totalBoxes,
                     tara: totalTara,

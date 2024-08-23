@@ -63,6 +63,7 @@ class VentaController extends Controller
             'forma_de_pago' => 'required|in:0,1', // Ajusta según tus opciones
             'metodo_pago_id' => 'required|exists:metodo_pagos,id',
             'monto_total' => 'required|numeric',
+            'monto_recibido' => 'nullable|numeric',
         ]);
 
         // Si la validación falla, devolver una respuesta de error
@@ -88,6 +89,12 @@ class VentaController extends Controller
         DB::beginTransaction();
 
         try {
+
+            $monto_recibido = $request->input('monto_recibido', 0);
+            $monto_total = $request->input('monto_total');
+            $saldo = $monto_total - $monto_recibido;
+            $pagada = $saldo <= 0;
+
             // Crear la nueva venta
             $venta = Venta::create([
                 'orden_despacho_id' => $request->input('orden_despacho_id'),
@@ -97,17 +104,29 @@ class VentaController extends Controller
                 'forma_de_pago' => $request->input('forma_de_pago'),
                 'metodo_pago_id' => $request->input('metodo_pago_id'),
                 'monto_total' => $request->input('monto_total'),
+                'monto_recibido' => $request->input('monto_recibido'),
+                'saldo' => $saldo,
+                'pagada' => $pagada
             ]);
 
+
+
             // Crear el detalle de la venta
+            // Encuentra la orden de despacho relacionada
+            $ordenDespacho = OrdenDespacho::find($venta->orden_despacho_id);
+
             $detalleVenta = DetalleVenta::create([
                 'venta_id' => $venta->id,
                 'orden_despacho_id' => $venta->orden_despacho_id,
-                'monto_total' => $venta->monto_total
+                'cantidad_pollos' => $ordenDespacho->cantidad_pollos,
+                'peso_bruto' => $ordenDespacho->peso_total_bruto,
+                'cantidad_jabas' => $ordenDespacho->cantidad_jabas,
+                'tara' => $ordenDespacho->tara,
+                'peso_neto' => $ordenDespacho->peso_total_neto,
             ]);
 
             // Actualizar el estado de la orden de despacho
-            $ordenDespacho = OrdenDespacho::findOrFail($venta->orden_despacho_id);
+            // $ordenDespacho = OrdenDespacho::findOrFail($venta->orden_despacho_id);
             $ordenDespacho->estado_despacho = 1;
             $ordenDespacho->save();
 

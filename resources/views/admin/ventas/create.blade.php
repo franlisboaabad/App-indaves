@@ -69,7 +69,7 @@
                 <hr>
                 <!-- Tabla de Detalles -->
                 <h3>Detalle de Orden</h3>
-                <div class="mt-4">
+                <div class="mt-4 mb-5">
                     <table class="table table-bordered" id="detailsTable">
                         <thead>
                             <tr>
@@ -95,52 +95,72 @@
                     </table>
                 </div>
 
-                <div class="form-group">
-                    <input type="hidden" name="peso_neto" id="peso_neto">
-                </div>
 
 
 
 
                 <!-- Información de Venta en Dos Columnas -->
                 <div class="row mt-4">
-
-                    <div class="col-md-4 mb-4">
-                        <label for="">Forma de pago</label>
-                        <select name="forma_de_pago" id="forma_de_pago" class="form-control">
-                            <option value="0">Contado</option>
-                            <option value="1">Credito</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-4 mb-4">
-                        <label for="">Metodo de pago</label>
-                        <select name="metodo_pago_id" id="metodo_pago_id" class="form-control">
-                            @foreach ($metodos as $metodo)
-                                <option value="{{ $metodo->id }}"> {{ $metodo->descripcion }} </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-4 mb-4">
-
+                    <div class="form-group">
+                        <input type="hidden" name="peso_neto" id="peso_neto">
                     </div>
 
 
-                    <div class="col-md-6">
+                    <!-- Información General de la Venta -->
+                    <div class="col-md-4 mb-4">
+                        <div class="form-group">
+                            <label for="forma_de_pago">Forma de Pago</label>
+                            <select name="forma_de_pago" id="forma_de_pago" class="form-control">
+                                <option value="0">Contado</option>
+                                <option value="1">Crédito</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="form-group">
+                            <label for="metodo_pago_id">Método de Pago</label>
+                            <select name="metodo_pago_id" id="metodo_pago_id" class="form-control">
+                                @foreach ($metodos as $metodo)
+                                    <option value="{{ $metodo->id }}">{{ $metodo->descripcion }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Información de Precios -->
+                    <div class="col-md-4 mb-4">
                         <div class="form-group">
                             <label for="precio_venta">Precio de Venta (por unidad)</label>
                             <input type="text" id="precio_venta" name="precio_venta" class="form-control"
                                 value="{{ $precio->precio ?? 0 }}" placeholder="Ingrese el precio de venta">
                         </div>
                     </div>
-                    <div class="col-md-6">
+
+                    <div class="col-md-4 mb-4">
                         <div class="form-group">
                             <label for="monto_total">Monto Total a Pagar</label>
                             <input type="text" id="monto_total" name="monto_total" class="form-control" readonly>
                         </div>
                     </div>
+
+                    <!-- Información de Pago -->
+                    <div class="col-md-4 mb-4">
+                        <div class="form-group">
+                            <label for="monto_recibido">Monto Recibido</label>
+                            <input type="text" id="monto_recibido" name="monto_recibido" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-4">
+                        <div class="form-group">
+                            <label for="saldo">Saldo</label>
+                            <input type="text" id="saldo" name="saldo" class="form-control" readonly>
+                        </div>
+                    </div>
                 </div>
+
+
 
                 <!-- Botón de Enviar en el Footer -->
                 <div class="text-right mt-4">
@@ -411,7 +431,7 @@
                             url: "{{ route('ventas.store') }}", // URL del método store
                             type: 'POST', // Método HTTP
                             data: $('#ventaForm')
-                        .serialize(), // Serializa los datos del formulario
+                                .serialize(), // Serializa los datos del formulario
                             success: function(response) {
                                 Swal.fire({
                                     title: 'Éxito',
@@ -420,14 +440,15 @@
                                 }).then(() => {
                                     // Redirigir o limpiar el formulario según sea necesario
                                     window.location
-                                .reload(); // Opcional: recargar la página
+                                        .reload(); // Opcional: recargar la página
                                 });
                             },
                             error: function(xhr) {
                                 var response = xhr.responseJSON;
                                 Swal.fire({
                                     title: 'Error',
-                                    text:   response.message || 'Hubo un problema al generar la venta. Inténtalo de nuevo.',
+                                    text: response.message ||
+                                        'Hubo un problema al generar la venta. Inténtalo de nuevo.',
                                     icon: 'error'
                                 });
                             }
@@ -435,6 +456,39 @@
                     }
                 });
             });
+
+
+            function calcularSaldo() {
+                // Obtén los valores del monto total y monto recibido
+                var montoTotal = parseFloat($('#monto_total').val()) || 0;
+                var montoRecibido = parseFloat($('#monto_recibido').val()) || 0;
+
+                // Verifica si el monto recibido es mayor que el monto total
+                if (montoRecibido > montoTotal) {
+                    // Muestra una alerta usando SweetAlert2
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'El monto recibido no puede ser mayor que el monto total.',
+                        confirmButtonText: 'Aceptar'
+                    });
+
+                    // Limpiar el campo de monto recibido para que el usuario pueda corregir el valor
+                    $('#monto_recibido').val('');
+                    $('#saldo').val('');
+                } else {
+                    // Calcula el saldo como la diferencia entre el monto total y el monto recibido
+                    var saldo = montoTotal - montoRecibido;
+                    $('#saldo').val(saldo.toFixed(2));
+                }
+            }
+
+            // Calcula el saldo y valida cuando el monto recibido cambie
+            $('#monto_recibido').on('input', function() {
+                calcularSaldo();
+            });
+
+
 
             $('.select2').select2();
 

@@ -80,7 +80,7 @@
                     <form id="aperturaCajaForm">
                         <div class="form-group">
                             <label for="monto_apertura">Monto de Apertura:</label>
-                            <input type="number" class="form-control" id="monto_apertura" name="monto_apertura" required>
+                            <input type="number" class="form-control" id="monto_apertura" name="monto_apertura" required value="0">
                         </div>
                         <button type="submit" class="btn btn-success btn-sm">Aperturar</button>
                     </form>

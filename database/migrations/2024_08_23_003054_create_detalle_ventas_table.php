@@ -18,9 +18,12 @@ return new class extends Migration
 
             $table->unsignedBigInteger('venta_id');
             $table->unsignedBigInteger('orden_despacho_id');
-            $table->double('monto_total');
+            $table->integer('cantidad_pollos');
+            $table->double('peso_bruto',8,2);
+            $table->integer('cantidad_jabas');
+            $table->double('tara',8,2);
+            $table->double('peso_neto');
             $table->boolean('estado')->default(1);
-
             $table->foreign('venta_id')->references('id')->on('ventas')->onDelete('cascade');
             $table->foreign('orden_despacho_id')->references('id')->on('orden_despachos')->onDelete('cascade');
 

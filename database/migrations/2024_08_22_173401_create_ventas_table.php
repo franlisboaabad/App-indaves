@@ -24,6 +24,10 @@ return new class extends Migration
             $table->string('forma_de_pago');
             $table->unsignedBigInteger('metodo_pago_id');
             $table->double('monto_total');
+            $table->decimal('monto_recibido', 8, 2)->nullable(); // Monto recibido
+            $table->decimal('saldo', 8, 2)->default(0); // Saldo pendiente
+            $table->boolean('pagada')->default(false); // Estado de la venta
+
             $table->string('url_venta_documento_a4')->nullable();
             $table->string('url_venta_documento_ticket')->nullable();
             $table->boolean('estado')->default(1);

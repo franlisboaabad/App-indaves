@@ -94,6 +94,7 @@ class OrdenDespachoController extends Controller
                 'cliente_id' => $request->cliente_id,
                 'serie_orden' => $request->serie_orden,
                 'fecha_despacho' => $request->fecha_despacho,
+                'cantidad_pollos' => $request->cantidad_pollos,
                 'peso_total_bruto' => $request->peso_total_bruto,
                 'cantidad_jabas' => $request->cantidad_jabas,
                 'tara' => $request->tara,
