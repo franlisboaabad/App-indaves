@@ -26,13 +26,46 @@
                         <dd class="col-sm-8">{{ $caja->fecha_apertura->format('d/m/Y H:i') }}</dd>
 
                         <dt class="col-sm-4">Estado:</dt>
-                        <dd class="col-sm-8">{{ ucfirst($caja->estado_caja) }}</dd>
+                        <dd class="col-sm-8">
+                            @if ($caja->estado_caja)
+                                <span class="badge badge-success">Abierto</span>
+                            @else
+                                <span class="badge badge-danger">Cerrado</span>
+                            @endif
+                        </dd>
 
                         <dt class="col-sm-4">Fecha de Cierre:</dt>
                         <dd class="col-sm-8">{{ $caja->fecha_cierre ? $caja->fecha_cierre->format('d/m/Y H:i') : 'No cerrada aún' }}</dd>
                     </dl>
                 </div>
             </div>
+
+            <!-- Mostrar los pagos asociados -->
+            <h3 class="mt-4">Pagos Asociados</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Monto</th>
+                        <th>Método de Pago</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($caja->pagos as $pago)
+                        <tr>
+                            <td>{{ $pago->id }}</td>
+                            <td>{{ number_format($pago->monto, 2) }}</td>
+                            <td>{{ $pago->metodoPago->descripcion }}</td>
+                            <td>{{ $pago->created_at->format('d/m/Y H:i') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4">No hay pagos registrados para esta caja.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
         <div class="card-footer">
             <!-- Botón para cerrar la caja -->

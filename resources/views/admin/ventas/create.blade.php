@@ -424,9 +424,10 @@
                                 });
                             },
                             error: function(xhr) {
+                                var response = xhr.responseJSON;
                                 Swal.fire({
                                     title: 'Error',
-                                    text: 'Hubo un problema al generar la venta. Inténtalo de nuevo.',
+                                    text:   response.message || 'Hubo un problema al generar la venta. Inténtalo de nuevo.',
                                     icon: 'error'
                                 });
                             }

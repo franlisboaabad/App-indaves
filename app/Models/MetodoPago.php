@@ -17,4 +17,10 @@ class MetodoPago extends Model
     }
 
 
+    // Relación con Pago
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class);
+    }
+
 }

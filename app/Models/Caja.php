@@ -17,4 +17,12 @@ class Caja extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+
+
+    // Relación con Pagos
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class);
+    }
 }

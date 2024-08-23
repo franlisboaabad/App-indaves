@@ -4,7 +4,7 @@
 <head>
     <title>Orden de Despacho | INDAVES</title>
     <style>
-        /* Estilos para ECS/80 */
+        /* Estilos para impresión en impresora 80x80mm */
         @page {
             size: 80mm 150mm; /* Tamaño de la página */
             margin: 0; /* Sin márgenes */
@@ -12,12 +12,12 @@
 
         @media print {
             body {
-                font-family: Arial, sans-serif;
-                font-size: 8px; /* Tamaño de fuente reducido para caber en una página pequeña */
+                font-family: Consolas, monospace; /* Cambiar a la fuente Consolas */
+                font-size: 5px; /* Tamaño de fuente reducido para caber en una página pequeña */
                 margin: 0;
                 padding: 0;
                 width: 80mm; /* Asegura que el contenido se ajuste al ancho de la página */
-                height: 80mm; /* Asegura que el contenido se ajuste a la altura de la página */
+                height: 150mm; /* Asegura que el contenido se ajuste a la altura de la página */
                 overflow: hidden; /* Evita que el contenido se desborde */
             }
 
@@ -104,7 +104,7 @@
     <!-- Detalles de la Orden -->
     <div>
         <h2>Detalles</h2>
-        <table border="1">
+        <table>
             <thead>
                 <tr>
                     <th>Cant</th>

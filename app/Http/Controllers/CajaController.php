@@ -63,7 +63,7 @@ class CajaController extends Controller
      */
     public function show(Caja $caja)
     {
-        $caja = Caja::findOrFail($caja->id);
+        $caja = Caja::with('pagos')->findOrFail($caja->id);
 
         // Asegurarse de que las fechas sean objetos Carbon
         $caja->fecha_apertura = Carbon::parse($caja->fecha_apertura);

@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Caja;
+use App\Models\Pago;
 use App\Models\Serie;
 use App\Models\Venta;
 use App\Models\Cliente;
 use App\Models\MetodoPago;
 use App\Models\ListaPrecio;
+use App\Models\DetalleVenta;
 use Illuminate\Http\Request;
 use App\Models\OrdenDespacho;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class VentaController extends Controller
@@ -71,8 +74,21 @@ class VentaController extends Controller
             ], 422); // Código de estado 422 para errores de validación
         }
 
-        // Crear la nueva venta
+        // Verificar si existe una caja abierta
+        $cajaAbierta = Caja::where('estado_caja', 1)->first();
+
+        if (!$cajaAbierta) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No hay una caja abierta.',
+            ], 400); // Código de estado 400 para error de solicitud
+        }
+
+        // Iniciar la transacción para garantizar la integridad de los datos
+        DB::beginTransaction();
+
         try {
+            // Crear la nueva venta
             $venta = Venta::create([
                 'orden_despacho_id' => $request->input('orden_despacho_id'),
                 'serie_venta' => $request->input('serie_venta'),
@@ -83,19 +99,47 @@ class VentaController extends Controller
                 'monto_total' => $request->input('monto_total'),
             ]);
 
+            // Crear el detalle de la venta
+            $detalleVenta = DetalleVenta::create([
+                'venta_id' => $venta->id,
+                'orden_despacho_id' => $venta->orden_despacho_id,
+                'monto_total' => $venta->monto_total
+            ]);
 
+            // Actualizar el estado de la orden de despacho
+            $ordenDespacho = OrdenDespacho::findOrFail($venta->orden_despacho_id);
+            $ordenDespacho->estado_despacho = 1;
+            $ordenDespacho->save();
 
+            // Registrar el pago
+            $pago = new Pago();
+            $pago->caja_id = $cajaAbierta->id;
+            $pago->metodo_pago_id = $venta->metodo_pago_id;
+            $pago->monto = $venta->monto_total;
+            $pago->save();
+
+            // Actualizar el monto de la caja
+            $cajaAbierta->monto_cierre += $pago->monto;
+            $cajaAbierta->save();
+
+            // Confirmar la transacción
+            DB::commit();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Venta generada exitosamente.',
                 'venta' => $venta
             ], 200); // Código de estado 200 para éxito
+
         } catch (\Exception $e) {
+            // Revertir la transacción en caso de error
+            DB::rollBack();
+
             // Manejo de errores si algo sale mal al guardar
             return response()->json([
                 'success' => false,
-                'message' => 'Hubo un problema al generar la venta. Inténtalo de nuevo.'
+                'message' => 'Hubo un problema al generar la venta. Inténtalo de nuevo.',
+                'error' => $e->getMessage() // Incluye el mensaje de error para depuración
             ], 500); // Código de estado 500 para errores del servidor
         }
     }

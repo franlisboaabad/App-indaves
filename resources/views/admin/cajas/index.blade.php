@@ -1,18 +1,22 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Lista de cajas')
 @section('plugins.Datatables', true)
 @section('content_header')
     <h1>Lista de Cajas</h1>
 @stop
 
 @section('content')
-    <div class="card">
-        <div class="card-body">
-            <a class="btn btn-primary btn-sm" href="#" id="openModal">Aperturar caja</a>
-            <hr>
+<a class="btn btn-primary mb-3" href="#" id="openModal">Aperturar caja</a>
 
-            <table class="table" id="table-clientes">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Cajas</h3>
+        </div>
+        <div class="card-body">
+
+
+            <table class="table table-bordered" id="table-clientes">
                 <thead>
                     <th>#</th>
                     <th>Usuario</th>
