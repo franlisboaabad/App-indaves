@@ -3,7 +3,7 @@
 @section('title', 'Ordenes de despacho')
 @section('plugins.Datatables', true)
 @section('content_header')
-    <h1>Listado de Ordenes</h1>
+    <h1>Lista de Ordenes</h1>
 @stop
 
 @section('content')
@@ -12,7 +12,7 @@
         <div class="card-body">
 
 
-            <table class="table" id="table-clientes">
+            <table class="table table-bordered" id="table-clientes">
                 <thead>
                     <tr>
                         <th>#</th>

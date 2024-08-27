@@ -13,6 +13,7 @@
         <div class="card-body">
             <form id="ventaForm" method="POST" action="{{ route('ordenes-de-despacho.store') }}">
                 @csrf
+
                 <div class="row">
 
                     <!-- Serie de Venta -->
@@ -30,7 +31,7 @@
                     <!-- Fecha de Venta -->
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="fecha_despacho">Fecha de Venta</label>
+                            <label for="fecha_despacho">Fecha de Despacho</label>
                             <input type="date" id="fecha_despacho" name="fecha_despacho" class="form-control" required>
                             @error('fecha_despacho')
                                 <span class="text-danger">{{ $message }}</span>
@@ -39,7 +40,13 @@
                     </div>
 
                     <!-- Espacio vacío para alineación -->
-                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="">Stock Cantidad de pollos</label>
+                            <input type="text" readonly class="form-control"
+                                value="{{ $stockPollo ? $stockPollo->cantidad_pollos : 'No hay datos' }}">
+                        </div>
+                    </div>
 
                     <!-- Select Cliente -->
                     <div class="col-md-4">
@@ -56,8 +63,6 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-
-
                     </div>
 
                     <!-- Espacios vacíos para alineación -->
@@ -68,9 +73,66 @@
                         </button>
                     </div>
                     <div class="col-md-2"></div>
+                </div>
+
+                <hr>
+
+                <div class="row mt-5">
+
+                    <div class="col-md-4 mb-5">
+                        <div class="form-grup">
+                            <label for="presentacion_pollo">Presentacion de Pollo:</label>
+                            <select id="presentacion_pollo" name="presentacion_pollo" class="form-control">
+                                <option value="0">Pollo Vivo</option>
+                                <option value="1">Pollo Beneficiado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <div class="form-grup">
+                            <label for="tipo_pollo">Tipo de Pollo:</label>
+                            <select id="tipo_pollo_id" name="tipo_pollo_id" class="form-control">
+                                @foreach ($tipoPollos as $tipo)
+                                    <option value="{{ $tipo->id }}"> {{ $tipo->descripcion }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <div class="form-group">
+                            <label for="tara">Tara kg.</label>
+                            <input type="text" id="tara" name="tara" class="form-control">
+                        </div>
+                    </div>
+
+
+                    <!-- Número de Jabas -->
+                    <div class="col-md-4 mb-3">
+                        <div class="form-group">
+                            <label for="cantidad_jabas">Número de Jabas</label>
+                            <input type="number" id="cantidad_jabas" name="cantidad_jabas" class="form-control">
+                            @error('cantidad_jabas')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
 
                     <!-- Cantidad de Pollos -->
-                    <div class="col-md-4">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="pollos_jaba">Pollos por jaba</label>
+                            <input type="number" id="pollos_jaba" name="pollos_jaba" class="form-control">
+                            @error('pollos_jaba')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+
+
+                    <!-- Cantidad de Pollos -->
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="cantidad_pollos">Cantidad de Pollos</label>
                             <input type="number" id="cantidad_pollos" name="cantidad_pollos" class="form-control">
@@ -82,19 +144,10 @@
 
 
 
-                    <!-- Número de Jabas -->
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="cantidad_jabas">Número de Jabas</label>
-                            <input type="number" id="cantidad_jabas" name="cantidad_jabas" class="form-control">
-                            @error('cantidad_jabas')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
 
-                      <!-- Peso Bruto -->
-                      <div class="col-md-4">
+
+                    <!-- Peso Bruto -->
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="peso_bruto">Peso Bruto</label>
                             <input type="number" step="0.01" id="peso_bruto" name="peso_bruto" class="form-control">
@@ -109,7 +162,6 @@
                     <div class="col-md-12">
                         <button type="button" id="addDetailBtn" class="btn btn-primary">Agregar al Detalle</button>
                     </div>
-
 
                 </div>
 
@@ -146,7 +198,7 @@
 
                 <!-- Botón de Submit -->
                 <br>
-                <button type="button" id="saveOrderBtn" class="btn btn-success">Registrar Orden de Despacho</button>
+                <button type="button" id="saveOrderBtn" class="btn btn-success">Registrar Orden</button>
             </form>
 
 
@@ -160,8 +212,8 @@
 
 
     <!-- Modal -->
-    <div class="modal fade" id="createClientModal" tabindex="-1" role="dialog" aria-labelledby="createClientModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="createClientModal" tabindex="-1" role="dialog"
+        aria-labelledby="createClientModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -322,7 +374,6 @@
         document.addEventListener('DOMContentLoaded', function() {
 
             //peso api
-
             $('#peso_bruto').on('focus', function() {
                 // Realiza la solicitud AJAX cuando el campo reciba foco
                 $.ajax({
@@ -342,6 +393,18 @@
                 });
             });
 
+            //calcular cantidad de pollos
+
+            $('#cantidad_pollos').focus(function(e) {
+                e.preventDefault();
+
+                let cantidad_jabas = $('#cantidad_jabas').val();
+                let pollos_jaba = $('#pollos_jaba').val();
+
+                $('#cantidad_pollos').val(cantidad_jabas * pollos_jaba);
+
+            });
+
 
 
             let detailIndex = 1;
@@ -359,16 +422,16 @@
             document.getElementById('fecha_despacho').value = getLocalDateString();
 
 
-
             //funcionalidad para detalle de pedido
             document.getElementById('addDetailBtn').addEventListener('click', function() {
                 // Obtener los valores de los inputs
                 var cantidadPollos = document.getElementById('cantidad_pollos').value;
                 var pesoBruto = document.getElementById('peso_bruto').value;
                 var numeroJabas = document.getElementById('cantidad_jabas').value;
+                var tara = document.getElementById('tara').value;
 
                 // Tara por defecto
-                var taraPorDefecto = 6; // 6 kg por jaba
+                var taraPorDefecto = tara; // 6 kg por jaba
 
                 // Validar que los campos no estén vacíos
                 if (!cantidadPollos || !pesoBruto || !numeroJabas) {
@@ -411,7 +474,8 @@
                 document.getElementById('cantidad_pollos').value = '';
                 document.getElementById('peso_bruto').value = '';
                 document.getElementById('cantidad_jabas').value = '';
-                document.getElementById('cantidad_pollos').select();
+                document.getElementById('pollos_jaba').value = '';
+                document.getElementById('cantidad_jabas').select();
 
                 // Actualizar los totales
                 updateTotals();
@@ -446,6 +510,7 @@
             }
             //fin detalle pedido
 
+            //buscar documento dni , ruc
             $('#searchDocumentBtn').on('click', function() {
                 var documento = $('#documento').val();
                 var tipoDocumento = $('#tipo_documento').val();
@@ -495,7 +560,7 @@
             //end search
 
 
-
+            //guardar cliente
             $('#saveClientBtn').on('click', function() {
                 var formData = new FormData($('#createClientForm')[0]);
 
@@ -556,6 +621,7 @@
                 });
             });
 
+
             // Función para añadir el cliente al select
             function addClientToSelect(cliente) {
                 var $select = $('#cliente_id');
@@ -563,14 +629,14 @@
                 $select.append(newOption).trigger('change');
             }
 
-
-
             //Button orden de despacho
             $('#saveOrderBtn').click(function() {
                 // Recoger los datos del formulario
                 let clienteId = $('#cliente_id').val();
                 let serieOrden = $('#serie_orden').val();
                 let fechaDespacho = $('#fecha_despacho').val();
+                var presentacion_pollo = $('#presentacion_pollo').val();
+                var tipo_pollo_id = $('#tipo_pollo_id').val();
 
 
                 // Validar el cliente_id
@@ -624,6 +690,8 @@
                     cliente_id: clienteId,
                     serie_orden: serieOrden,
                     fecha_despacho: fechaDespacho,
+                    presentacion_pollo: presentacion_pollo,
+                    tipo_pollo_id: tipo_pollo_id,
                     cantidad_pollos: totalChiken,
                     peso_total_bruto: totalWeight,
                     cantidad_jabas: totalBoxes,
@@ -694,6 +762,26 @@
             document.getElementById('btnReloadPage').addEventListener('click', function() {
                 location.reload();
             });
+
+
+            //funcionalidad de TARA
+
+            // Inicializamos el valor de tara en 6 cuando se carga la página
+            $('#tara').val(6);
+
+            // Detectamos el cambio en el select
+            $('#presentacion_pollo').change(function() {
+                // Obtenemos el valor del select
+                var valorSeleccionado = $(this).val();
+
+                // Cambiamos el valor del input según el valor del select
+                if (valorSeleccionado == '1') {
+                    $('#tara').val(2.5);
+                } else {
+                    $('#tara').val(6);
+                }
+            });
+
 
 
             $('.select2').select2();

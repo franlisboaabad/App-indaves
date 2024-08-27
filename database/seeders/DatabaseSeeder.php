@@ -66,6 +66,13 @@ class DatabaseSeeder extends Seeder
         // Inserta los datos en la tabla 'series'
         DB::table('series')->insert($dataSeries);
 
+        //Tipos de pollos
+
+        $tipo_pollos = ['Pollo Presa','Pollo Brasa','Pollo Tipo','Pollo Especial'];
+        foreach ($tipo_pollos as $descripcion) {
+            DB::table('tipo_pollos')->insert(['descripcion' => $descripcion]);
+        }
+
 
         // Metodos de pago +
         $descripciones = ['Efectivo', 'Transferencia', 'Yape', 'Plin','Credito'];

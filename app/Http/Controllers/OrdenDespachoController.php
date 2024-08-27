@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use App\Models\OrdenDespacho;
 use Illuminate\Support\Facades\DB;
 use App\Models\DetalleOrdenDespacho;
+use App\Models\OrdenIngreso;
+use App\Models\TipoPollo;
 use Illuminate\Support\Facades\Storage;
 
 class OrdenDespachoController extends Controller
@@ -58,7 +60,11 @@ class OrdenDespachoController extends Controller
         $serie = Serie::where('number', 'OD01')->first();
         $cajas = Caja::get();
         $clientes = Cliente::where('estado', 1)->get();
-        return view('admin.ordenes_despacho.create', compact('clientes', 'cajas', 'serie'));
+        $stockPollo = OrdenIngreso::orderBy('id','desc')->first();
+        $tipoPollos = TipoPollo::where('estado',1)->get();
+
+
+        return view('admin.ordenes_despacho.create', compact('clientes', 'cajas', 'serie','stockPollo','tipoPollos'));
     }
 
     /**
@@ -78,6 +84,8 @@ class OrdenDespachoController extends Controller
             'cantidad_jabas' => 'required|integer',
             'tara' => 'required|numeric',
             'peso_total_neto' => 'required|numeric',
+            'presentacion_pollo' => 'required|numeric',
+            'tipo_pollo_id' => 'required',
             'detalles' => 'required|array',
             'detalles.*.cantidad_pollos' => 'required|numeric',
             'detalles.*.peso_bruto' => 'required|numeric',
@@ -99,6 +107,8 @@ class OrdenDespachoController extends Controller
                 'cantidad_jabas' => $request->cantidad_jabas,
                 'tara' => $request->tara,
                 'peso_total_neto' => $request->peso_total_neto,
+                'presentacion_pollo' => $request->presentacion_pollo,
+                'tipo_pollo_id' => $request->tipo_pollo_id
             ]);
 
             // Aumentar el número de serie
