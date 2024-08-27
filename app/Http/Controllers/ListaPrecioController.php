@@ -25,8 +25,6 @@ class ListaPrecioController extends Controller
     public function index()
     {
         $precios = ListaPrecio::where('estado', 1)->get();
-
-
         return view('admin.precios.index', compact('precios'));
     }
 
@@ -90,7 +88,24 @@ class ListaPrecioController extends Controller
      */
     public function update(Request $request, ListaPrecio $listaPrecio)
     {
-        //
+        // Validación de datos
+        $request->validate([
+            'precio' => 'required|numeric',
+            'descripcion' => 'required|string|max:255',
+        ]);
+
+        try {
+            $precio = ListaPrecio::findOrFail($listaPrecio->id);
+            $precio->precio = $request->input('precio');
+            $precio->descripcion = $request->input('descripcion');
+            $precio->save();
+
+            // Respuesta JSON para AJAX
+            return response()->json(['success' => true, 'message' => 'Precio actualizado correctamente.']);
+        } catch (\Exception $e) {
+            // Manejo de errores
+            return response()->json(['success' => false, 'message' => 'Error al actualizar el precio.'], 500);
+        }
     }
 
     /**

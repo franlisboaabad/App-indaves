@@ -94,6 +94,7 @@ class VentaController extends Controller
 
         try {
 
+
             $monto_recibido = $request->input('monto_recibido', 0);
             $monto_total = $request->input('monto_total');
             $saldo = $monto_total - $monto_recibido;

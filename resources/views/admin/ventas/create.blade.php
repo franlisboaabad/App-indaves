@@ -96,6 +96,7 @@
                 </div>
 
 
+                <hr>
 
 
 
@@ -112,7 +113,7 @@
                             <label for="forma_de_pago">Forma de Pago</label>
                             <select name="forma_de_pago" id="forma_de_pago" class="form-control">
                                 <option value="0">Contado</option>
-                                <option value="1">Crédito</option>
+                                <option value="1">Credito</option>
                             </select>
                         </div>
                     </div>
@@ -486,6 +487,26 @@
             // Calcula el saldo y valida cuando el monto recibido cambie
             $('#monto_recibido').on('input', function() {
                 calcularSaldo();
+            });
+
+
+            $('#forma_de_pago').change(function() {
+                var selectedValue = $(this).val();
+                var metodoPagoSelect = $('#metodo_pago_id');
+
+                // Valor del método de pago para "Crédito"
+                var metodoPagoCreditoValue = '5'; // Asegúrate de que este valor coincida con el valor real para "Crédito"
+
+                if (selectedValue == '1') { // Si se selecciona "Crédito"
+                    metodoPagoSelect.val(metodoPagoCreditoValue); // Selecciona el método de pago "Crédito"
+
+                    let saldo = $('#monto_total').val();
+
+                    $('#monto_recibido').val(0);
+                    $('#saldo').val(saldo);
+                } else {
+                    metodoPagoSelect.val('1'); // Selecciona un valor por defecto, o podrías dejarlo en blanco
+                }
             });
 
 
