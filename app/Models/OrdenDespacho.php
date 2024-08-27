@@ -27,4 +27,10 @@ class OrdenDespacho extends Model
     }
 
 
+    public function tipoPollo()
+    {
+        return $this->belongsTo(TipoPollo::class, 'tipo_pollo_id');
+    }
+
+
 }

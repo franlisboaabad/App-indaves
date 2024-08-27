@@ -49,7 +49,8 @@
                             <td>
                                 <!-- Aquí puedes añadir botones para ver, editar o eliminar -->
                                 <a href="{{ route('ordenes-de-despacho.show', $orden->id) }}" class="btn btn-info btn-sm">Ver</a>
-                                <a href="{{ route('ordenes-de-despacho.edit', $orden->id) }}" class="btn btn-warning btn-sm">Editar</a>
+                                {{-- <a href="{{ route('ordenes-de-despacho.edit', $orden->id) }}" class="btn btn-warning btn-sm">Editar</a> --}}
+                                <a href="{{ route('ordenes-de-despacho.preview', $orden->id ) }}" class="btn btn-sm btn-primary" target="_Blank"> PDF </a>
                                 <form action="{{ route('ordenes-de-despacho.destroy', $orden->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')

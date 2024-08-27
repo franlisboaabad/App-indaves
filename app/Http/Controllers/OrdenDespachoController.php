@@ -18,6 +18,7 @@ use App\Models\OrdenIngreso;
 use App\Models\TipoPollo;
 use Illuminate\Support\Facades\Storage;
 
+
 class OrdenDespachoController extends Controller
 {
 
@@ -303,4 +304,34 @@ class OrdenDespachoController extends Controller
 
         return $fileName; // Devuelve el nombre del archivo generado
     }
+
+
+    //preview
+    public function previewPdf($orderId)
+    {
+        // Obtener la orden desde la base de datos
+        $orden = OrdenDespacho::findOrFail($orderId);
+        $empresa = Empresa::first();
+
+        // Configurar DOMPDF
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isPhpEnabled', true);
+
+        $dompdf = new Dompdf($options);
+
+        // Cargar la vista y renderizar el PDF
+        $view = view('pdf.ordenes_despacho.preview', compact('orden','empresa'))->render();
+        $dompdf->loadHtml($view);
+
+        // (Opcional) Configura el tamaño y orientación del papel
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Renderizar el PDF
+        $dompdf->render();
+
+        // Devolver el PDF como una vista previa en el navegador
+        return $dompdf->stream('orden_preview.pdf', ['Attachment' => false]);
+    }
+
 }

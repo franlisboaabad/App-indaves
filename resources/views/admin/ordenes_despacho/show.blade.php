@@ -18,8 +18,7 @@
         <div class="card-body">
             <!-- Información de la Orden -->
             <div class="mb-4">
-                <h4>Orden de Despacho</h4>
-                <p><strong>Cliente ID:</strong> {{ $orden->cliente->razon_social }}</p>
+                <p><strong>Cliente:</strong> {{ $orden->cliente->razon_social }}</p>
                 <p><strong>Serie de Orden:</strong> {{ $orden->serie_orden }}</p>
                 <p><strong>Fecha de Despacho:</strong> {{ \Carbon\Carbon::parse($orden->fecha_despacho)->format('d/m/Y') }}
                 </p>
@@ -27,7 +26,9 @@
                 <p><strong>Cantidad de Jabas:</strong> {{ $orden->cantidad_jabas }}</p>
                 <p><strong>Tara:</strong> {{ number_format($orden->tara, 2) }}</p>
                 <p><strong>Peso Total Neto:</strong> {{ number_format($orden->peso_total_neto, 2) }}</p>
-                <p><strong>Estado:</strong> {{ $orden->estado_despacho }}</p>
+                <p><strong>Estado:</strong> {{ $orden->estado_despacho ? 'Despachado' : 'Por despachar' }}</p>
+                <p><strong>Presentacion:</strong> {{ $orden->presentacion_pollo ? 'Pollo Beneficiado' : 'Pollo Vivo' }} </p>
+                <p><strong>Tipo de pollo:</strong> {{ $orden->tipoPollo->descripcion }} </p>
             </div>
 
             <!-- Detalles de la Orden -->
@@ -62,7 +63,6 @@
     <!-- /.card -->
 
 
-    {{-- Modal para imprimir --}}
 
     <!-- Modal para mostrar el PDF -->
     <div class="modal fade" id="printOrderModal" tabindex="-1" role="dialog" aria-labelledby="printOrderModalLabel"
@@ -95,7 +95,6 @@
             .no-print {
                 display: none;
             }
-
             /* Aquí puedes añadir otros estilos para la impresión */
         }
     </style>

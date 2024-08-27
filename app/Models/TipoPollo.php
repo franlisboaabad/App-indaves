@@ -9,5 +9,10 @@ class TipoPollo extends Model
 {
     use HasFactory;
 
-    protected $fillable = [ 'descripcion', 'estado' ];
+    protected $fillable = ['descripcion', 'estado'];
+
+    public function ordenes()
+    {
+        return $this->hasMany(OrdenDespacho::class, 'tipo_pollo_id');
+    }
 }

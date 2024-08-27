@@ -702,30 +702,50 @@
                 };
 
                 // Enviar los datos al controlador usando AJAX
-                $.ajax({
-                    url: '{{ route('ordenes-de-despacho.store') }}', // Utiliza el nombre de la ruta
-                    method: 'POST',
-                    data: data,
-                    success: function(response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Éxito',
-                            text: response.message,
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(() => {
-                            setPdfUrl(response.pdf_url_a4, response.pdf_url_ticket);
-                            $('#selectDocumentTypeModal').modal('show');
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: '¿Deseas registrar la orden?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, generar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            url: '{{ route('ordenes-de-despacho.store') }}', // Utiliza el nombre de la ruta
+                            method: 'POST',
+                            data: data,
+                            success: function(response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Éxito',
+                                    text: response.message,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    setPdfUrl(response.pdf_url_a4, response
+                                        .pdf_url_ticket);
+                                    $('#selectDocumentTypeModal').modal('show');
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Ocurrió un error: ' + xhr
+                                        .responseText,
+                                });
+                            }
                         });
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Ocurrió un error: ' + xhr.responseText,
-                        });
+
                     }
                 });
+
+
+
             });
 
             //fin button orde de despacho
@@ -767,7 +787,7 @@
             //funcionalidad de TARA
 
             // Inicializamos el valor de tara en 6 cuando se carga la página
-            $('#tara').val(6);
+            $('#tara').val(5.95);
 
             // Detectamos el cambio en el select
             $('#presentacion_pollo').change(function() {
@@ -778,7 +798,7 @@
                 if (valorSeleccionado == '1') {
                     $('#tara').val(2.5);
                 } else {
-                    $('#tara').val(6);
+                    $('#tara').val(5.95);
                 }
             });
 
