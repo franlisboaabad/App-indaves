@@ -534,11 +534,18 @@
 
                     let saldo = $('#monto_total').val();
 
-                    $('#monto_recibido').val(0);
+                    $('#monto_recibido').val('0.00');
+                    $('#monto_recibido').prop('readonly', true);
+                    $('#checkPagoCompleto').prop('readonly', true);
                     $('#saldo').val(saldo);
+                    $('#checkPagoCompleto').prop('disabled', true);
+
+
                 } else {
-                    metodoPagoSelect.val(
-                    '1'); // Selecciona un valor por defecto, o podrías dejarlo en blanco
+                    metodoPagoSelect.val('1'); // Selecciona un valor por defecto, o podrías dejarlo en blanco
+                    $('#saldo').val('0.00');
+                    $('#monto_recibido').prop('readonly', false);
+                    $('#checkPagoCompleto').prop('disabled', false);
                 }
             });
 
@@ -555,8 +562,8 @@
                     $('#saldo').val('0.00');
                 } else {
                     // Si no está marcado, limpiar los campos
-                    $('#monto_recibido').val('');
-                    $('#saldo').val('');
+                    $('#monto_recibido').val('0.00');
+                    $('#saldo').val('0.00');
                 }
             });
 
@@ -565,9 +572,10 @@
                 var montoRecibido = parseFloat($(this).val()) || 0;
 
                 // Calcular y mostrar el saldo
-                var saldo = montoRecibido - montoTotal;
+                var saldo = montoTotal - montoRecibido;
                 $('#saldo').val(saldo.toFixed(2));
             });
+
 
 
 

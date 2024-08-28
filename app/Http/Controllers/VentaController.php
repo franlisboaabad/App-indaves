@@ -64,10 +64,10 @@ class VentaController extends Controller
             'serie_venta' => 'required|string|max:255',
             'fecha_venta' => 'required|date',
             'peso_neto' => 'required|numeric',
-            'forma_de_pago' => 'required|in:0,1', // Ajusta según tus opciones
+            'forma_de_pago' => 'required|in:0,1', // 0: CONTADO ; 1 A CREDITO
             'metodo_pago_id' => 'required|exists:metodo_pagos,id',
             'monto_total' => 'required|numeric',
-            'monto_recibido' => 'nullable|numeric',
+            'monto_recibido' => 'required|numeric',
         ]);
 
         // Si la validación falla, devolver una respuesta de error
@@ -139,16 +139,22 @@ class VentaController extends Controller
             $ordenDespacho->estado_despacho = 1;
             $ordenDespacho->save();
 
-            // Registrar el pago
-            $pago = new Pago();
-            $pago->caja_id = $cajaAbierta->id;
-            $pago->metodo_pago_id = $venta->metodo_pago_id;
-            $pago->monto = $venta->monto_total;
-            $pago->save();
+            if ($request->forma_de_pago == 0) {
 
-            // Actualizar el monto de la caja
-            $cajaAbierta->monto_cierre += $pago->monto;
-            $cajaAbierta->save();
+                // Registrar el pago
+                $pago = new Pago();
+                $pago->caja_id = $cajaAbierta->id;
+                $pago->metodo_pago_id = $venta->metodo_pago_id;
+                $pago->monto = $venta->monto_total;
+                $pago->save();
+
+                // Actualizar el monto de la caja
+                $cajaAbierta->monto_cierre += $pago->monto;
+                $cajaAbierta->save();
+
+            }
+
+
 
             // Confirmar la transacción
             DB::commit();
