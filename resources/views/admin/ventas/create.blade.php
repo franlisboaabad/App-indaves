@@ -146,7 +146,18 @@
                     </div>
 
                     <!-- Información de Pago -->
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-2 mb-4">
+                        <div class="form-group"> <br>
+                            <label for="checkPagoCompleto" class="checkbox-label">
+                                Desea hacer el pago completo?
+                                <input type="checkbox" id="checkPagoCompleto">
+                            </label>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-2 mb-4">
                         <div class="form-group">
                             <label for="monto_recibido">Monto Recibido</label>
                             <input type="text" id="monto_recibido" name="monto_recibido" class="form-control">
@@ -178,8 +189,8 @@
 
 
     <!-- Modal -->
-    <div class="modal fade" id="createClientModal" tabindex="-1" role="dialog" aria-labelledby="createClientModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="createClientModal" tabindex="-1" role="dialog"
+        aria-labelledby="createClientModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -303,6 +314,26 @@
     <style>
         .select2-selection {
             height: 40px !important;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            /* Tamaño del texto */
+            cursor: pointer;
+            /* Cambia el cursor al pasar sobre el texto */
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 20px;
+            /* Tamaño del checkbox */
+            height: 20px;
+            /* Tamaño del checkbox */
+            margin-right: 10px;
+            /* Espacio entre el checkbox y el texto */
+            cursor: pointer;
+            /* Cambia el cursor al pasar sobre el checkbox */
         }
     </style>
 @endsection
@@ -495,7 +526,8 @@
                 var metodoPagoSelect = $('#metodo_pago_id');
 
                 // Valor del método de pago para "Crédito"
-                var metodoPagoCreditoValue = '5'; // Asegúrate de que este valor coincida con el valor real para "Crédito"
+                var metodoPagoCreditoValue =
+                '5'; // Asegúrate de que este valor coincida con el valor real para "Crédito"
 
                 if (selectedValue == '1') { // Si se selecciona "Crédito"
                     metodoPagoSelect.val(metodoPagoCreditoValue); // Selecciona el método de pago "Crédito"
@@ -505,8 +537,36 @@
                     $('#monto_recibido').val(0);
                     $('#saldo').val(saldo);
                 } else {
-                    metodoPagoSelect.val('1'); // Selecciona un valor por defecto, o podrías dejarlo en blanco
+                    metodoPagoSelect.val(
+                    '1'); // Selecciona un valor por defecto, o podrías dejarlo en blanco
                 }
+            });
+
+            //check
+            $('#checkPagoCompleto').change(function() {
+                if ($(this).is(':checked')) {
+                    // Obtener el monto total a pagar
+                    var montoTotal = parseFloat($('#monto_total').val()) || 0;
+
+                    // Establecer el monto recibido igual al monto total a pagar
+                    $('#monto_recibido').val(montoTotal);
+
+                    // Calcular y mostrar el saldo
+                    $('#saldo').val('0.00');
+                } else {
+                    // Si no está marcado, limpiar los campos
+                    $('#monto_recibido').val('');
+                    $('#saldo').val('');
+                }
+            });
+
+            $('#monto_recibido').on('input', function() {
+                var montoTotal = parseFloat($('#monto_total').val()) || 0;
+                var montoRecibido = parseFloat($(this).val()) || 0;
+
+                // Calcular y mostrar el saldo
+                var saldo = montoRecibido - montoTotal;
+                $('#saldo').val(saldo.toFixed(2));
             });
 
 

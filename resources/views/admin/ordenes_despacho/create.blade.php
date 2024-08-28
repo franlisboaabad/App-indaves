@@ -732,11 +732,11 @@
                                 });
                             },
                             error: function(xhr, status, error) {
+                                var response = xhr.responseJSON;
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Error',
-                                    text: 'Ocurrió un error: ' + xhr
-                                        .responseText,
+                                    text: response.message || 'Ocurrió un error',
                                 });
                             }
                         });

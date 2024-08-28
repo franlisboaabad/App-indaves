@@ -51,11 +51,12 @@
                                 <a href="{{ route('ordenes-de-despacho.show', $orden->id) }}" class="btn btn-info btn-sm">Ver</a>
                                 {{-- <a href="{{ route('ordenes-de-despacho.edit', $orden->id) }}" class="btn btn-warning btn-sm">Editar</a> --}}
                                 <a href="{{ route('ordenes-de-despacho.preview', $orden->id ) }}" class="btn btn-sm btn-primary" target="_Blank"> PDF </a>
-                                <form action="{{ route('ordenes-de-despacho.destroy', $orden->id) }}" method="POST" style="display:inline;">
+
+                                @if (!$orden->estado_despacho)
+                                    <!-- Botón para eliminar -->
                                     @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                                </form>
+                                    <button type="button" class="btn btn-danger btn-sm delete-button" data-id="{{ $orden->id }}">Eliminar</button>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
@@ -80,6 +81,52 @@
         $(document).ready(function() {
 
             $('#table-clientes').DataTable();
+
+            // Maneja el clic en el botón de eliminación
+            $(document).on('click', '.delete-button', function() {
+                const id = $(this).data('id'); // Obtener el ID del registro
+
+                // Mostrar alerta de confirmación
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¡No podrás revertir esto!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Si el usuario confirma, enviar solicitud AJAX para eliminar el registro
+                        $.ajax({
+                            url: `/ordenes-de-despacho/${id}`,
+                            type: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Incluye el token CSRF
+                            },
+                            success: function(response) {
+                                Swal.fire(
+                                    'Eliminado!',
+                                    'El registro ha sido eliminado.',
+                                    'success'
+                                ).then(() => {
+                                    // Eliminar la fila de la tabla
+                                    $(`button[data-id="${id}"]`).closest('tr').remove();
+                                });
+                            },
+                            error: function(xhr) {
+                                Swal.fire(
+                                    'Error!',
+                                    'No se pudo eliminar el registro.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            });
+
 
         });
     </script>

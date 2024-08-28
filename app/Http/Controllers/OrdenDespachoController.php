@@ -40,7 +40,7 @@ class OrdenDespachoController extends Controller
     public function index()
     {
         // Obtener todas las órdenes de despacho
-        $ordenes = OrdenDespacho::all();
+        $ordenes = OrdenDespacho::where('estado',1)->get();
 
         // Convertir fechas a instancias de Carbon (si es necesario)
         foreach ($ordenes as $orden) {
@@ -95,6 +95,17 @@ class OrdenDespachoController extends Controller
             'detalles.*.peso_neto' => 'required|numeric',
         ]);
 
+         // Verificar si existe una caja abierta
+        //  $cajaAbierta = Caja::where('estado_caja', 1)->first();
+         $OrdenIngreso = OrdenIngreso::orderBy('id','desc')->first();
+
+         if (!$OrdenIngreso) {
+             return response()->json([
+                 'success' => false,
+                 'message' => 'No se ha registrado Orden de Ingreso',
+             ], 400); // Código de estado 400 para error de solicitud
+         }
+
         DB::beginTransaction(); // Iniciar una transacción
 
         try {
@@ -128,6 +139,12 @@ class OrdenDespachoController extends Controller
                     'peso_neto' => $detalle['peso_neto']
                 ]);
             }
+
+            //descontar cantidad de pollos en Orden de Ingreso
+
+            $ordenIngreso = OrdenIngreso::orderBy('id','desc')->first();
+            $ordenIngreso->cantidad_pollos -= $request->cantidad_pollos;
+            $ordenIngreso->save();
 
 
             // Generar los PDFs
@@ -213,7 +230,23 @@ class OrdenDespachoController extends Controller
      */
     public function destroy(OrdenDespacho $ordenDespacho)
     {
-        //
+        try {
+            $orden = OrdenDespacho::findOrFail($ordenDespacho->id);
+
+
+            $ordenIngreso = OrdenIngreso::orderBy('id','desc')->first();
+            $ordenIngreso->cantidad_pollos += $orden->cantidad_pollos;
+            $ordenIngreso->save();
+
+
+            // Cambiar el estado en lugar de eliminar el registro
+            $orden->estado = 0; // O el valor que corresponda para marcar como despachado
+            $orden->save();
+
+            return response()->json(['success' => true, 'message' => 'Orden de despacho dado de baja.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 
     private function generatePdf_A4($id)

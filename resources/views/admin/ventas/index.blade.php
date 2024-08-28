@@ -33,11 +33,17 @@
                             {{-- <td>{{ \Carbon\Carbon::parse($venta->fecha_venta)->format('d/m/Y') }}</td> --}}
                             <td>{{ $venta->fecha_venta }}</td>
                             <td>{{ $venta->peso_neto }}</td>
-                            <td>{{ $venta->forma_de_pago }}</td>
+                            <td>{{ $venta->forma_de_pago ? 'A credito' : 'Contado' }}</td>
                             <td>{{ number_format($venta->monto_total, 2) }}</td>
                             <td>{{ number_format($venta->monto_recibido, 2) }}</td>
                             <td>{{ number_format($venta->saldo, 2) }}</td>
-                            <td>{{ $venta->estado }}</td>
+                            <td>
+                                @if ($venta->pagada)
+                                    <span class="badge badge-success">Pagada</span>
+                                @else
+                                    <span class="badge badge-danger">Pendiente de pago</span>
+                                @endif
+                            </td>
                             <td>
                                 <a href="{{ route('ventas.show', $venta->id) }}" class="btn btn-info btn-sm">Ver</a>
                                 <a href="{{ route('ventas.edit', $venta->id) }}" class="btn btn-warning btn-sm">Editar</a>
