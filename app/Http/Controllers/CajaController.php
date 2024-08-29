@@ -16,7 +16,7 @@ class CajaController extends Controller
      */
     public function index()
     {
-        $cajas = Caja::all();
+        $cajas = Caja::where('estado',1)->get();
         return view('admin.cajas.index', compact('cajas'));
     }
 
@@ -138,7 +138,9 @@ class CajaController extends Controller
             $caja = Caja::findOrFail($caja->id);
 
             // Eliminar la caja
-            $caja->delete();
+            $caja->estado = 0;
+            $caja->estado_caja = 0;
+            $caja->save();
 
             // Devolver una respuesta JSON
             return response()->json([

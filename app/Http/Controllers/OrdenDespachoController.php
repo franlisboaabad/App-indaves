@@ -61,7 +61,7 @@ class OrdenDespachoController extends Controller
         $serie = Serie::where('number', 'OD01')->first();
         $cajas = Caja::get();
         $clientes = Cliente::where('estado', 1)->get();
-        $stockPollo = OrdenIngreso::orderBy('id','desc')->first();
+        $stockPollo = OrdenIngreso::where('estado',1)->orderBy('id','desc')->first();
         $tipoPollos = TipoPollo::where('estado',1)->get();
 
 
@@ -97,7 +97,7 @@ class OrdenDespachoController extends Controller
 
          // Verificar si existe una caja abierta
         //  $cajaAbierta = Caja::where('estado_caja', 1)->first();
-         $OrdenIngreso = OrdenIngreso::orderBy('id','desc')->first();
+         $OrdenIngreso = OrdenIngreso::where('estado',1)->get();
 
          if (!$OrdenIngreso) {
              return response()->json([
@@ -235,7 +235,7 @@ class OrdenDespachoController extends Controller
 
 
             $ordenIngreso = OrdenIngreso::orderBy('id','desc')->first();
-            $ordenIngreso->cantidad_pollos += $orden->cantidad_pollos;
+            $ordenIngreso->cantidad_pollos_stock += $orden->cantidad_pollos;
             $ordenIngreso->save();
 
 

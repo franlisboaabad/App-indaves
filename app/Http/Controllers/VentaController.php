@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use App\Models\Caja;
 use App\Models\Pago;
 use App\Models\Serie;
 use App\Models\Venta;
 use App\Models\Cliente;
+use App\Models\Empresa;
 use App\Models\MetodoPago;
 use App\Models\ListaPrecio;
 use App\Models\DetalleVenta;
 use Illuminate\Http\Request;
 use App\Models\OrdenDespacho;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class VentaController extends Controller
@@ -29,7 +33,7 @@ class VentaController extends Controller
             ->get();
         $metodos = MetodoPago::get();
 
-        return view('admin.ventas.index', compact('ventas','metodos'));
+        return view('admin.ventas.index', compact('ventas', 'metodos'));
     }
 
     /**
@@ -153,8 +157,22 @@ class VentaController extends Controller
                 // Actualizar el monto de la caja
                 $cajaAbierta->monto_cierre += $pago->monto;
                 $cajaAbierta->save();
-
             }
+
+
+            // Generar el PDF
+            $pdfFileNameA4 = $this->generatePdf_A4($venta->id);
+
+            // Crear la ruta relativa para almacenar en el modelo
+            $pdfFilePathA4 = 'ventasA4/' . $pdfFileNameA4;
+
+            // Actualizar el modelo con la ruta del PDF
+            $venta->url_venta_documento_a4 = $pdfFilePathA4;
+            $venta->save();
+
+            // Generar la URL pública
+            $pdfUrlA4 = Storage::url($pdfFilePathA4);
+
 
 
 
@@ -188,7 +206,8 @@ class VentaController extends Controller
      */
     public function show(Venta $venta)
     {
-        //
+        // Pasa la venta a la vista
+        return view('admin.ventas.show', compact('venta'));
     }
 
     /**
@@ -224,6 +243,58 @@ class VentaController extends Controller
     {
         //
     }
+
+
+    private function generatePdf_A4($id)
+    {
+        // Obtener la orden y la empresa
+        $venta = Venta::find($id);
+        if (!$venta) {
+            throw new \Exception('Venta no encontrada.');
+        }
+
+        $empresa = Empresa::first();
+        if (!$empresa) {
+            throw new \Exception('Empresa no encontrada.');
+        }
+
+        $orden = OrdenDespacho::find($venta->orden_despacho_id);
+
+        // Configurar Dompdf
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isPhpEnabled', true); // Habilitar PHP si es necesario
+        $dompdf = new Dompdf($options);
+
+        // Cargar la vista Blade
+        $html = view('pdf.ventas.venta_a4', [
+            'venta' => $venta,
+            'empresa' => $empresa,
+            'orden' => $orden
+        ])->render();
+
+        // Cargar HTML en Dompdf
+        $dompdf->loadHtml($html);
+
+        // Configurar tamaño de página y orientación
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Renderizar el PDF
+        $dompdf->render();
+
+        // Generar un nombre único para el archivo
+        $fileName = 'venta_' . $id . '_' . now()->format('Ymd_His') . '.pdf';
+
+        // Ruta donde se almacenará el archivo PDF
+        $storagePath = 'public/ventasA4/' . $fileName;
+
+        // Guardar el PDF en la carpeta especificada
+        Storage::put($storagePath, $dompdf->output());
+
+        return $fileName; // Devuelve el nombre del archivo generado
+    }
+
+
 
 
     public function getOrdenDetalles($id)
