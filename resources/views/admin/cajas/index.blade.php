@@ -82,7 +82,7 @@
                             <label for="monto_apertura">Monto de Apertura:</label>
                             <input type="number" class="form-control" id="monto_apertura" name="monto_apertura" required value="0">
                         </div>
-                        <button type="submit" class="btn btn-success btn-sm">Aperturar</button>
+                        <button type="submit" class="btn btn-success">Aperturar</button>
                     </form>
                 </div>
             </div>

@@ -27,8 +27,9 @@ class VentaController extends Controller
         $ventas = Venta::with('ordenDespacho') // Incluye relaciones si es necesario
             ->orderBy('fecha_venta', 'desc') // Ordenar por fecha de venta
             ->get();
+        $metodos = MetodoPago::get();
 
-        return view('admin.ventas.index', compact('ventas'));
+        return view('admin.ventas.index', compact('ventas','metodos'));
     }
 
     /**
@@ -143,6 +144,7 @@ class VentaController extends Controller
 
                 // Registrar el pago
                 $pago = new Pago();
+                $pago->venta_id = $venta->id;
                 $pago->caja_id = $cajaAbierta->id;
                 $pago->metodo_pago_id = $venta->metodo_pago_id;
                 $pago->monto = $venta->monto_total;

@@ -9,7 +9,7 @@ class Pago extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['caja_id', 'metodo_pago_id','monto'];
+    protected $fillable = ['venta_id', 'caja_id', 'metodo_pago_id', 'monto'];
 
     public function caja()
     {
@@ -23,4 +23,8 @@ class Pago extends Model
         return $this->belongsTo(MetodoPago::class);
     }
 
+    public function venta()
+    {
+        return $this->belongsTo(Venta::class);
+    }
 }

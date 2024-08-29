@@ -45,9 +45,17 @@
                                 @endif
                             </td>
                             <td>
+                                @if (!$venta->pagada)
+                                    <a href="#" class="btn btn-sm btn-primary" data-toggle="modal"
+                                        data-target="#agregarPagoModal" data-venta-monto="{{ $venta->saldo }}"
+                                        data-venta-id="{{ $venta->id }}">
+                                        Agregar Pago
+                                    </a>
+                                @endif
                                 <a href="{{ route('ventas.show', $venta->id) }}" class="btn btn-info btn-sm">Ver</a>
                                 <a href="{{ route('ventas.edit', $venta->id) }}" class="btn btn-warning btn-sm">Editar</a>
-                                <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST"
+                                    style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
@@ -59,6 +67,51 @@
             </table>
         </div>
     </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="agregarPagoModal" tabindex="-1" role="dialog" aria-labelledby="agregarPagoModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="agregarPagoModalLabel">Agregar Pago</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="agregarPagoForm" action="{{ route('pagos.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="venta_id" id="venta_id">
+
+                        <div class="form-group">
+                            <label for="">Monto a pagar</label>
+                            <input type="text" class="form-control" name="monto_total" id="monto_total" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="metodo_pago">Método de Pago</label>
+                            <select class="form-control" name="metodo_pago_id" id="metodo_pago_id" required>
+                                <!-- Aquí deberías cargar dinámicamente los métodos de pago disponibles -->
+                                @foreach ($metodos as $metodo)
+                                    <option value="{{ $metodo->id }}">{{ $metodo->descripcion }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="monto">Ingresar Pago</label>
+                            <input type="number" step="0.01" class="form-control" name="monto" id="monto" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Registrar Pago</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 @stop
 
@@ -72,8 +125,56 @@
         $(document).ready(function() {
             $('#table-ventas').DataTable({
                 // Opciones de DataTables, como la longitud de la página, la búsqueda, etc.
-
             });
+
+
+            $('#agregarPagoModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Botón que abrió el modal
+                var ventaId = button.data('venta-id'); // Extrae el ID de la venta
+                var montoTotal = button.data('venta-monto')
+
+                var modal = $(this);
+                modal.find('#venta_id').val(ventaId);
+                modal.find('#monto_total').val(montoTotal);
+            });
+
+
+
+            // Manejo del envío del formulario
+            $('#agregarPagoForm').on('submit', function(event) {
+                event.preventDefault(); // Evita el envío normal del formulario
+
+                var form = $(this);
+                var url = form.attr('action'); // Obtiene la URL de acción del formulario
+                var data = form.serialize(); // Obtiene los datos del formulario serializados
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: data,
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Pago agregado correctamente',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            location
+                        .reload(); // Recarga la página después de mostrar la alerta
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudo agregar el pago. Intenta nuevamente.'
+                        });
+                    }
+                });
+            });
+
+
+
         });
     </script>
 @stop

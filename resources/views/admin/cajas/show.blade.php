@@ -46,6 +46,7 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <td>Serie de venta</td>
                         <th>Monto</th>
                         <th>Método de Pago</th>
                         <th>Fecha</th>
@@ -55,6 +56,7 @@
                     @forelse($caja->pagos as $pago)
                         <tr>
                             <td>{{ $pago->id }}</td>
+                            <td>{{ $pago->venta->serie_venta }}</td>
                             <td>{{ number_format($pago->monto, 2) }}</td>
                             <td>{{ $pago->metodoPago->descripcion }}</td>
                             <td>{{ $pago->created_at->format('d/m/Y H:i') }}</td>

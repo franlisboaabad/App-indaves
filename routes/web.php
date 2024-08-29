@@ -24,6 +24,7 @@ use App\Http\Controllers\ListaPrecioController;
 use App\Http\Controllers\OrdenDeServicioController;
 use App\Http\Controllers\OrdenDespachoController;
 use App\Http\Controllers\OrdenIngresoController;
+use App\Http\Controllers\PagoController;
 use App\Http\Controllers\VentaController;
 use App\Models\OrdenDespacho;
 use App\Models\OrdenIngreso;
@@ -115,7 +116,7 @@ Route::get('ordenes/{id}', [VentaController::class, 'getOrdenDetalles'])->middle
 Route::resource('ordenes-de-despacho',OrdenDespachoController::class)->middleware('auth')->parameters(['ordenes-de-despacho' => 'ordenDespacho']);
 Route::get('/ordenes-de-despacho/{id}/preview', [OrdenDespachoController::class, 'previewPdf'])->name('ordenes-de-despacho.preview')->middleware('auth');
 Route::resource('lista-de-precios',ListaPrecioController::class)->middleware('auth')->parameters(['lista-de-precios' => 'listaPrecio']);
-
+Route::resource('pagos',PagoController::class)->middleware('auth');
 
 
 
