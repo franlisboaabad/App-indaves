@@ -24,7 +24,8 @@
                             <th>#</th>
                             <th>N° guía</th>
                             <th>Cantidad de jabas</th>
-                            <th>Cantidad de pollos</th>
+                            <th>Cantidad de pollos Ingreso</th>
+                            <th>Cantidad de pollos Stock</th>
                             <th>Peso total</th>
                             <th>Estado</th>
                             <th>Fecha de registro</th>
@@ -37,6 +38,7 @@
                                     <td>{{ $orden->numero_guia }}</td>
                                     <td>{{ $orden->cantidad_jabas }}</td>
                                     <td>{{ $orden->cantidad_pollos }}</td>
+                                    <td>{{ $orden->cantidad_pollos_stock }}</td>
                                     <td>{{ $orden->peso_total }}</td>
                                     <td>
                                         @if ($orden->estado)
@@ -141,14 +143,14 @@
                             title: 'Éxito!',
                             text: 'La orden ha sido registrada correctamente.',
                             icon: 'success',
-                            confirmButtonText: 'Ok'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // Cerrar el modal y limpiar el formulario
-                                $('#nuevoOrdenModal').modal('hide');
-                                $('#ordenIngresoForm')[0].reset();
-                                location.reload();
-                            }
+                            showConfirmButton: false, // Oculta el botón de confirmación
+                            timer: 1500, // Tiempo en milisegundos antes de recargar la página
+                            // timerProgressBar: true // Opcional: muestra una barra de progreso para el temporizador
+                        }).then(() => {
+                            // Recargar la página después de que el temporizador termine
+                            $('#nuevoOrdenModal').modal('hide');
+                            $('#ordenIngresoForm')[0].reset();
+                            location.reload();
                         });
                     },
                     error: function(xhr) {

@@ -446,6 +446,22 @@
             $('#btnGenerar').on('click', function(event) {
                 event.preventDefault(); // Evita el envío inmediato del formulario
 
+                // Seleccionar los elementos usando el selector adecuado
+                var monto_total = parseFloat($('#monto_total').val()) || 0;
+                var saldo = parseFloat($('#saldo').val()) || 0;
+
+                // Validar si ambos valores son cero
+                if (monto_total === 0 && saldo === 0) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'No existe monto total de la venta',
+                        icon: 'error',
+                        showConfirmButton: false, // Oculta el botón de confirmación
+                        timer: 1500 // Muestra el mensaje durante 1500 ms
+                    });
+                    return; // Detiene la ejecución del resto del código
+                }
+
                 // Mostrar la ventana de confirmación con SweetAlert
                 Swal.fire({
                     title: '¿Estás seguro?',
@@ -463,16 +479,18 @@
                             url: "{{ route('ventas.store') }}", // URL del método store
                             type: 'POST', // Método HTTP
                             data: $('#ventaForm')
-                                .serialize(), // Serializa los datos del formulario
+                        .serialize(), // Serializa los datos del formulario
                             success: function(response) {
                                 Swal.fire({
                                     title: 'Éxito',
                                     text: 'Venta generada exitosamente.',
-                                    icon: 'success'
+                                    icon: 'success',
+                                    showConfirmButton: false, // Oculta el botón de confirmación
+                                    timer: 1500 // Tiempo en milisegundos antes de recargar la página
                                 }).then(() => {
                                     // Redirigir o limpiar el formulario según sea necesario
                                     window.location
-                                        .reload(); // Opcional: recargar la página
+                                .reload(); // Opcional: recargar la página
                                 });
                             },
                             error: function(xhr) {
@@ -488,6 +506,7 @@
                     }
                 });
             });
+
 
 
             function calcularSaldo() {
@@ -527,7 +546,7 @@
 
                 // Valor del método de pago para "Crédito"
                 var metodoPagoCreditoValue =
-                '5'; // Asegúrate de que este valor coincida con el valor real para "Crédito"
+                    '5'; // Asegúrate de que este valor coincida con el valor real para "Crédito"
 
                 if (selectedValue == '1') { // Si se selecciona "Crédito"
                     metodoPagoSelect.val(metodoPagoCreditoValue); // Selecciona el método de pago "Crédito"
@@ -542,7 +561,8 @@
 
 
                 } else {
-                    metodoPagoSelect.val('1'); // Selecciona un valor por defecto, o podrías dejarlo en blanco
+                    metodoPagoSelect.val(
+                        '1'); // Selecciona un valor por defecto, o podrías dejarlo en blanco
                     $('#saldo').val('0.00');
                     $('#monto_recibido').prop('readonly', false);
                     $('#checkPagoCompleto').prop('disabled', false);

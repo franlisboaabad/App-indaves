@@ -128,7 +128,7 @@
                             icon: 'success',
                             title: '¡Éxito!',
                             text: 'Caja aperturada exitosamente.',
-                            timer: 3000, // Muestra el alert por 3 segundos
+                            timer: 1500, // Muestra el alert por 3 segundos
                             showConfirmButton: false
                         }).then(function() {
                             location
@@ -140,7 +140,7 @@
                             icon: 'error',
                             title: 'Error',
                             text: 'Hubo un error al guardar la caja.',
-                            timer: 3000, // Muestra el alert por 3 segundos
+                            timer: 1500, // Muestra el alert por 3 segundos
                             showConfirmButton: false
                         });
                     }
@@ -182,7 +182,7 @@
                                         icon: 'success',
                                         title: '¡Éxito!',
                                         text: response.message,
-                                        timer: 3000,
+                                        timer: 1500,
                                         showConfirmButton: false
                                     }).then(function() {
                                         location
@@ -193,7 +193,7 @@
                                         icon: 'error',
                                         title: 'Error',
                                         text: response.message,
-                                        timer: 3000,
+                                        timer: 1500,
                                         showConfirmButton: false
                                     });
                                 }
@@ -203,7 +203,7 @@
                                     icon: 'error',
                                     title: 'Error',
                                     text: 'Hubo un error al procesar la solicitud.',
-                                    timer: 3000,
+                                    timer: 1500,
                                     showConfirmButton: false
                                 });
                             }

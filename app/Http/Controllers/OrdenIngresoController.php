@@ -57,7 +57,7 @@ class OrdenIngresoController extends Controller
         ]);
 
         // Crear una nueva orden de ingreso
-        OrdenIngreso::create($request->all());
+        OrdenIngreso::create(['cantidad_pollos_stock' => $request->cantidad_pollos ] + $request->all());
 
         // Retornar una respuesta exitosa
         return response()->json(['message' => 'Orden registrada correctamente']);

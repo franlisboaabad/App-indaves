@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('numero_guia');
             $table->integer('cantidad_jabas');
             $table->integer('cantidad_pollos');
+            $table->integer('cantidad_pollos_stock');
             $table->decimal('peso_total', 8, 2); // Peso total en kilogramos (o la unidad que prefieras)
             $table->boolean('estado')->default(true);
             $table->timestamps();

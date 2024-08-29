@@ -143,7 +143,7 @@ class OrdenDespachoController extends Controller
             //descontar cantidad de pollos en Orden de Ingreso
 
             $ordenIngreso = OrdenIngreso::orderBy('id','desc')->first();
-            $ordenIngreso->cantidad_pollos -= $request->cantidad_pollos;
+            $ordenIngreso->cantidad_pollos_stock -= $request->cantidad_pollos;
             $ordenIngreso->save();
 
 

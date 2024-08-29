@@ -173,8 +173,9 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Éxito',
-                            text: response.message ||
-                                'El precio ha sido agregado exitosamente.',
+                            text: response.message || 'El precio ha sido agregado exitosamente.',
+                            showConfirmButton: false,
+                            timer:1500
                         }).then(function() {
                             $('#addPriceModal').modal('hide');
                             // Opcionalmente, recargar la tabla o hacer otras actualizaciones
@@ -224,7 +225,8 @@
                             title: 'Éxito!',
                             text: 'El precio se ha actualizado correctamente.',
                             icon: 'success',
-                            confirmButtonText: 'OK'
+                            showConfirmButton: false,
+                            timer:1500
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 location.reload(); // Recarga la página para actualizar la lista
@@ -237,7 +239,8 @@
                             title: 'Error!',
                             text: 'Hubo un problema al actualizar el precio.',
                             icon: 'error',
-                            confirmButtonText: 'OK'
+                            showConfirmButton: false,
+                            timer:1500
                         });
                     }
                 });
@@ -269,11 +272,14 @@
                                 _method: 'DELETE'
                             },
                             success: function(response) {
-                                Swal.fire(
-                                    '¡Eliminado!',
-                                    response.message ||
-                                    'El precio ha sido eliminado.',
-                                    'success'
+                                Swal.fire({
+                                    title:'¡Eliminado!',
+                                    text:response.message || 'El precio ha sido eliminado.',
+                                    icon:'success',
+                                    showConfirmButton: false,
+                                    timer:1500
+                                }
+
                                 ).then(function() {
                                     location
                                         .reload(); // Opcional: Recargar la página para reflejar los cambios

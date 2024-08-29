@@ -9,5 +9,5 @@ class OrdenIngreso extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['numero_guia', 'cantidad_jabas', 'cantidad_pollos', 'peso_total', 'estado'];
+    protected $fillable = ['numero_guia', 'cantidad_jabas', 'cantidad_pollos','cantidad_pollos_stock', 'peso_total', 'estado'];
 }

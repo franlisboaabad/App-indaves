@@ -39,12 +39,12 @@
                         </div>
                     </div>
 
-                    <!-- Espacio vacío para alineación -->
+                    <!-- stock de pollos  -->
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="">Stock Cantidad de pollos</label>
                             <input type="text" readonly class="form-control"
-                                value="{{ $stockPollo ? $stockPollo->cantidad_pollos : 'No hay datos' }}">
+                                value="{{ $stockPollo ? $stockPollo->cantidad_pollos_stock : 'No hay datos' }}">
                         </div>
                     </div>
 
