@@ -102,7 +102,8 @@
 
                         <div class="form-group">
                             <label for="monto">Ingresar Pago</label>
-                            <input type="number" step="0.01" class="form-control" name="monto" id="monto" required>
+                            <input type="number" step="0.01" class="form-control" name="monto" id="monto"
+                                required>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Registrar Pago</button>
@@ -123,58 +124,74 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
-            $('#table-ventas').DataTable({
-                // Opciones de DataTables, como la longitud de la página, la búsqueda, etc.
-            });
+                    $('#table-ventas').DataTable({
+                        // Opciones de DataTables, como la longitud de la página, la búsqueda, etc.
+                    });
 
 
-            $('#agregarPagoModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget); // Botón que abrió el modal
-                var ventaId = button.data('venta-id'); // Extrae el ID de la venta
-                var montoTotal = button.data('venta-monto')
+                    $('#agregarPagoModal').on('show.bs.modal', function(event) {
+                        var button = $(event.relatedTarget); // Botón que abrió el modal
+                        var ventaId = button.data('venta-id'); // Extrae el ID de la venta
+                        var montoTotal = button.data('venta-monto')
 
-                var modal = $(this);
-                modal.find('#venta_id').val(ventaId);
-                modal.find('#monto_total').val(montoTotal);
-            });
+                        var modal = $(this);
+                        modal.find('#venta_id').val(ventaId);
+                        modal.find('#monto_total').val(montoTotal);
+                    });
 
 
 
-            // Manejo del envío del formulario
-            $('#agregarPagoForm').on('submit', function(event) {
-                event.preventDefault(); // Evita el envío normal del formulario
+                    // Manejo del envío del formulario
+                    $(document).ready(function() {
+                        $('#agregarPagoForm').on('submit', function(event) {
+                            event.preventDefault(); // Evita el envío normal del formulario
 
-                var form = $(this);
-                var url = form.attr('action'); // Obtiene la URL de acción del formulario
-                var data = form.serialize(); // Obtiene los datos del formulario serializados
+                            var form = $(this);
+                            var url = form.attr('action'); // Obtiene la URL de acción del formulario
+                            var data = form.serialize(); // Obtiene los datos del formulario serializados
+                            var monto = parseFloat($('#monto').val());
+                            var saldo = parseFloat($('#monto_total')
+                        .val()); // Asegúrate de tener el saldo en el formulario
 
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: data,
-                    success: function(response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Pago agregado correctamente',
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(() => {
-                            location
-                        .reload(); // Recarga la página después de mostrar la alerta
+                            // Validar que el monto no exceda el saldo
+                            if (monto > saldo) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Monto excede el saldo',
+                                    text: 'El monto ingresado no puede ser mayor que el saldo pendiente.'
+                                });
+                                return;
+                            }
+
+                            $.ajax({
+                                url: url,
+                                type: 'POST',
+                                data: data,
+                                success: function(response) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Éxito',
+                                        text:'Pago agregado correctamente',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    }).then(() => {
+                                        location
+                                    .reload(); // Recarga la página después de mostrar la alerta
+                                    });
+                                },
+                                error: function(xhr, status, error) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'No se pudo agregar el pago. Intenta nuevamente.'
+                                    });
+                                }
+                            });
                         });
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'No se pudo agregar el pago. Intenta nuevamente.'
-                        });
-                    }
+                    });
+
+
+
                 });
-            });
-
-
-
-        });
     </script>
 @stop

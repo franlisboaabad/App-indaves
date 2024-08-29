@@ -63,6 +63,14 @@ class PagoController extends Controller
             ], 400); // Código de estado 400 para error de solicitud
         }
 
+        // Verificar si el monto excede el saldo de la venta
+        if ($request->monto > $venta->saldo) {
+            return response()->json([
+                'success' => false,
+                'message' => 'El monto ingresado excede el saldo pendiente de la venta.'
+            ], 400); // Código de estado 400 para error de solicitud
+        }
+
         // Crear el nuevo pago
         $pago = Pago::create([
             'venta_id' => $venta->id,
