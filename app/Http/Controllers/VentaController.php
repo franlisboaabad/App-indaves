@@ -160,18 +160,37 @@ class VentaController extends Controller
             }
 
 
-            // Generar el PDF
-            $pdfFileNameA4 = $this->generatePdf_A4($venta->id);
+            try {
+                // Generar el PDF
+                $pdfFileNameA4 = $this->generatePdf_A4($venta->id);
 
-            // Crear la ruta relativa para almacenar en el modelo
-            $pdfFilePathA4 = 'ventasA4/' . $pdfFileNameA4;
+                // Crear la ruta relativa para almacenar en el modelo
+                $pdfFilePathA4 = 'ventasA4/' . $pdfFileNameA4;
 
-            // Actualizar el modelo con la ruta del PDF
-            $venta->url_venta_documento_a4 = $pdfFilePathA4;
-            $venta->save();
+                // Actualizar el modelo con la ruta del PDF
+                $venta->url_venta_documento_a4 = $pdfFilePathA4;
+                $venta->save();
 
-            // Generar la URL pública
-            $pdfUrlA4 = Storage::url($pdfFilePathA4);
+                // Generar la URL pública
+                $pdfUrlA4 = Storage::url($pdfFilePathA4);
+
+
+                //Generar el Ticket
+                $pdfFileNameTicket = $this->generateTicket($venta->id);
+
+                // Crear la ruta relativa para almacenar en el modelo
+                $pdfFilePathTicket = 'ventasTicket/' . $pdfFileNameTicket;
+
+                // Actualizar el modelo con la ruta del PDF
+                $venta->url_venta_documento_a4 = $pdfFilePathTicket;
+                $venta->save();
+
+                // Generar la URL pública
+                $pdfUrlTicket = Storage::url($pdfFilePathTicket);
+
+            } catch (\Exception $e) {
+                //throw $th;
+            }
 
 
 
@@ -182,7 +201,9 @@ class VentaController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Venta generada exitosamente.',
-                'venta' => $venta
+                'venta' => $venta,
+                'urlPdf' => $pdfUrlA4,
+                'urlTicket' => $pdfUrlTicket,
             ], 200); // Código de estado 200 para éxito
 
         } catch (\Exception $e) {
@@ -290,6 +311,61 @@ class VentaController extends Controller
 
         // Guardar el PDF en la carpeta especificada
         Storage::put($storagePath, $dompdf->output());
+
+        return $fileName; // Devuelve el nombre del archivo generado
+    }
+
+
+    private function generateTicket($id)
+    {
+        // Obtener la orden y la empresa
+        $venta = Venta::find($id);
+        if (!$venta) {
+            throw new \Exception('Venta no encontrada.');
+        }
+
+        $empresa = Empresa::first();
+        if (!$empresa) {
+            throw new \Exception('Empresa no encontrada.');
+        }
+
+        $orden = OrdenDespacho::find($venta->orden_despacho_id);
+
+        // Configurar Dompdf
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isPhpEnabled', true); // Habilitar PHP si es necesario
+        $dompdf = new Dompdf($options);
+
+        // Cargar la vista Blade
+        $html = view('pdf.ventas.venta_ticket', [
+            'venta' => $venta,
+            'empresa' => $empresa,
+            'orden' => $orden
+        ])->render();
+
+        // Cargar HTML en Dompdf
+        $dompdf->loadHtml($html);
+
+        // (Opcional) Configurar tamaño de página y orientación
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Renderizar el PDF
+        $dompdf->render();
+
+        // Generar un nombre único para el archivo
+        $fileName = 'venta_' . $id . '_' . now()->format('Ymd_His') . '.pdf';
+
+        // Ruta donde se almacenará el archivo PDF
+        $storagePath = storage_path('app/public/ventasTicket/' . $fileName);
+
+        // Crear el directorio si no existe
+        if (!is_dir(dirname($storagePath))) {
+            mkdir(dirname($storagePath), 0755, true);
+        }
+
+        // Guardar el PDF en la carpeta especificada
+        file_put_contents($storagePath, $dompdf->output());
 
         return $fileName; // Devuelve el nombre del archivo generado
     }

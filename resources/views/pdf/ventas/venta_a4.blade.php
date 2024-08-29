@@ -5,12 +5,19 @@
     <title>Venta | INDAVES</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+            margin: 0;
+            padding: 0;
+            color: #333; /* Color de texto principal */
         }
 
         .header {
             text-align: center;
             margin-bottom: 20px;
+            border-bottom: 2px solid #007bff; /* Color del borde inferior de la cabecera */
+            padding-bottom: 10px;
+            background-color: #f8f9fa; /* Color de fondo de la cabecera */
         }
 
         .header img {
@@ -18,39 +25,66 @@
         }
 
         .header h1 {
-            margin: 0;
-            font-size: 24px;
+            margin: 5px 0;
+            font-size: 18px;
+            color: #007bff; /* Color del título de la cabecera */
         }
 
         .header p {
-            margin: 5px 0;
+            margin: 2px 0;
+            color: #555; /* Color del texto en la cabecera */
+        }
+
+        h2 {
+            border-bottom: 1px solid #007bff; /* Color del borde inferior de los encabezados h2 */
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #007bff; /* Color del texto de los encabezados h2 */
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            font-size: 12px;
         }
 
-        table,
-        th,
-        td {
-            border: 1px solid black;
+        table, th, td {
+            border: 1px solid #dee2e6; /* Color del borde de la tabla */
         }
 
-        th,
-        td {
+        th, td {
             padding: 8px;
             text-align: left;
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: #e9ecef; /* Color de fondo de los encabezados de la tabla */
+            color: #333; /* Color del texto en los encabezados de la tabla */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Color de fondo alternativo para las filas de la tabla */
         }
 
         .footer {
             text-align: center;
             margin-top: 20px;
+            border-top: 2px solid #007bff; /* Color del borde superior del pie de página */
+            padding-top: 10px;
+            background-color: #f8f9fa; /* Color de fondo del pie de página */
+        }
+
+        .footer h3 {
+            margin: 0;
+            font-size: 14px;
+            color: #e74c3c; /* Color del título en el pie de página */
+        }
+
+        .footer p {
+            margin: 5px 0;
+            color: #555; /* Color del texto en el pie de página */
         }
     </style>
 </head>
@@ -65,24 +99,20 @@
         <p>{{ $empresa->email }}</p>
     </div>
 
-    <!-- Información de la Orden -->
+    <!-- Información de la Venta -->
     <div>
         <h2>Información de la Venta</h2>
-        <p><strong>ID de Venta:</strong> {{ $venta->serie_venta }}</p>
-        <p><strong>Cliente:</strong> {{ $venta->ordenDespacho->cliente->razon_social }}</p>
-        <p><strong>Fecha:</strong> {{ $orden->created_at->format('d/m/Y') }}</p>
-        {{-- <p><strong>Forma de pago:</strong>{{ $venta->forma_de_pago ? 'Credito' : 'Contado' }}</p>
-        <p><strong>Metodo de pago:</strong>{{ $venta->metodoPago->descripcion }}</p> --}}
+        <p><strong>ID de Venta:</strong> {{ $venta->serie_venta }} | <strong>Cliente:</strong> {{ $venta->ordenDespacho->cliente->razon_social }} | <strong>Fecha:</strong> {{ $venta->created_at->format('d/m/Y') }}</p>
+        <p><strong>Forma de pago:</strong> {{ $venta->forma_de_pago ? 'Crédito' : 'Contado' }} | <strong>Método de pago:</strong> {{ $venta->metodoPago->descripcion }}</p>
+        <p><strong>Monto a pagar:</strong> {{ number_format($venta->monto_total, 2) }} </p>
+        <p><strong>Recibido:</strong> {{ number_format($venta->monto_recibido, 2) }} | <strong>Saldo:</strong> {{ number_format($venta->saldo, 2) }} </p>
     </div>
 
     <!-- Información de la Orden -->
     <div>
         <h2>Orden de Despacho</h2>
-        <p><strong>Serie de Orden:</strong> {{ $orden->serie_orden }}</p>
-        <p><strong>Sr(a):</strong> {{ $orden->cliente->razon_social }}</p>
-        <p><strong>Fecha de Despacho:</strong> {{ \Carbon\Carbon::parse($orden->fecha_despacho)->format('d/m/Y') }}</p>
-        <p><strong>Presentacion:</strong> {{ $orden->presentacion_pollo ? 'Pollo Beneficiado' : 'Pollo Vivo' }} </p>
-        <p><strong>Tipo de Pollo:</strong> {{ $orden->tipoPollo->descripcion }} </p>
+        <p><strong>Serie de Orden:</strong> {{ $orden->serie_orden }} | <strong>Sr(a):</strong> {{ $orden->cliente->razon_social }} | <strong>Fecha de Despacho:</strong> {{ \Carbon\Carbon::parse($orden->fecha_despacho)->format('d/m/Y') }}</p>
+        <p><strong>Presentación:</strong> {{ $orden->presentacion_pollo ? 'Pollo Beneficiado' : 'Pollo Vivo' }} | <strong>Tipo de Pollo:</strong> {{ $orden->tipoPollo->descripcion }}</p>
     </div>
 
     <!-- Detalles de la Orden -->

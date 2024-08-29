@@ -211,7 +211,7 @@
 
 
 
-    <!-- Modal -->
+    <!-- Modal Add cliente -->
     <div class="modal fade" id="createClientModal" tabindex="-1" role="dialog"
         aria-labelledby="createClientModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
@@ -333,7 +333,7 @@
 
 
 
-    <!-- Modal -->
+    <!-- Modal Imprimir documentos -->
     <div class="modal fade" id="selectDocumentTypeModal" tabindex="-1" aria-labelledby="selectDocumentTypeModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">

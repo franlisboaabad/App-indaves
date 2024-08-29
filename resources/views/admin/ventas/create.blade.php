@@ -187,126 +187,29 @@
 
 
 
-
-    <!-- Modal -->
-    <div class="modal fade" id="createClientModal" tabindex="-1" role="dialog"
-        aria-labelledby="createClientModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
+    <!-- Modal Imprimir documentos -->
+    <div class="modal fade" id="selectDocumentTypeModal" tabindex="-1" aria-labelledby="selectDocumentTypeModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="createClientModalLabel">Crear Nuevo Cliente</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <h5 class="modal-title" id="selectDocumentTypeModalLabel">Seleccionar Tipo de Documento</h5>
+                    <!-- Button to close the modal -->
+                    {{-- <button type="button" class="btn-close" id="btnCloseModal" aria-label="Close"></button> --}}
                 </div>
                 <div class="modal-body">
-                    <form id="createClientForm">
-                        @csrf
-
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="tipo_documento">Tipo de Documento</label>
-                                    <select id="tipo_documento" name="tipo_documento" class="form-control" required>
-                                        <option value="0">SIN DOCUMENTO</option>
-                                        <option value="1">DNI</option>
-                                        <option value="2">RUC</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="documento">Documento</label>
-                                    <div class="input-group">
-                                        <input type="text" id="documento" name="documento" class="form-control"
-                                            required>
-                                        <div class="input-group-append">
-                                            <button type="button" id="searchDocumentBtn"
-                                                class="btn btn-outline-secondary">
-                                                <i class="fa fa-search"></i> Buscar
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col">
-
-                                <div class="form-group">
-                                    <label for="nombre_comercial">Nombre Comercial</label>
-                                    <input type="text" id="nombre_comercial" name="nombre_comercial"
-                                        class="form-control" required>
-                                </div>
-                            </div>
-
-                            <div class="col">
-
-                                <div class="form-group">
-                                    <label for="razon_social">Razón Social</label>
-                                    <input type="text" id="razon_social" name="razon_social" class="form-control"
-                                        required>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
-                        <div class="form-group">
-                            <label for="direccion">Dirección</label>
-                            <input type="text" id="direccion" name="direccion" class="form-control" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="departamento">Departamento</label>
-                            <input type="text" id="departamento" name="departamento" class="form-control" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="provincia">Provincia</label>
-                            <input type="text" id="provincia" name="provincia" class="form-control" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="distrito">Distrito</label>
-                            <input type="text" id="distrito" name="distrito" class="form-control" required>
-                        </div>
-
-
-                        <div class="row">
-
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" id="email" name="email" class="form-control" required>
-                                </div>
-                            </div>
-
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="celular">Celular</label>
-                                    <input type="text" id="celular" name="celular" class="form-control" required>
-                                </div>
-
-                            </div>
-                        </div>
-
-
-
-                        <div class="form-group">
-                            <button type="button" id="saveClientBtn" class="btn btn-success">Guardar</button>
-                        </div>
-
-                    </form>
+                    <p>Seleccione el tipo de documento que desea generar:</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="btnDocumentA4">Documento A4</button>
+                    <button type="button" class="btn btn-secondary" id="btnDocumentTicket">Documento Ticket</button>
+                    <!-- Button to close the modal and reload the page -->
+                    <button type="button" class="btn btn-danger" id="btnReloadPage">Cerrar y Recargar</button>
                 </div>
             </div>
         </div>
     </div>
+
 
 @stop
 
@@ -479,7 +382,7 @@
                             url: "{{ route('ventas.store') }}", // URL del método store
                             type: 'POST', // Método HTTP
                             data: $('#ventaForm')
-                        .serialize(), // Serializa los datos del formulario
+                                .serialize(), // Serializa los datos del formulario
                             success: function(response) {
                                 Swal.fire({
                                     title: 'Éxito',
@@ -489,8 +392,9 @@
                                     timer: 1500 // Tiempo en milisegundos antes de recargar la página
                                 }).then(() => {
                                     // Redirigir o limpiar el formulario según sea necesario
-                                    window.location
-                                .reload(); // Opcional: recargar la página
+                                    // window.location.reload(); // Opcional: recargar la página
+                                    $('#selectDocumentTypeModal').modal('show');
+                                    setPdfUrl(response.urlPdf, response.urlTicket);
                                 });
                             },
                             error: function(xhr) {
@@ -508,7 +412,7 @@
             });
 
 
-
+            //calcular el saldo de manra automatica
             function calcularSaldo() {
                 // Obtén los valores del monto total y monto recibido
                 var montoTotal = parseFloat($('#monto_total').val()) || 0;
@@ -539,7 +443,7 @@
                 calcularSaldo();
             });
 
-
+            //seleccionar la forma de pago 0 contado, 1 credito
             $('#forma_de_pago').change(function() {
                 var selectedValue = $(this).val();
                 var metodoPagoSelect = $('#metodo_pago_id');
@@ -569,7 +473,7 @@
                 }
             });
 
-            //check
+            //check calculo del monto completo
             $('#checkPagoCompleto').change(function() {
                 if ($(this).is(':checked')) {
                     // Obtener el monto total a pagar
@@ -587,6 +491,7 @@
                 }
             });
 
+            //calcular el monto recibido
             $('#monto_recibido').on('input', function() {
                 var montoTotal = parseFloat($('#monto_total').val()) || 0;
                 var montoRecibido = parseFloat($(this).val()) || 0;
@@ -596,6 +501,42 @@
                 $('#saldo').val(saldo.toFixed(2));
             });
 
+
+            //ruta de pdf
+            // Variable global para guardar la URL del PDF
+            let pdfUrl_a4 = '';
+            let pdfUrl_ticket = ''
+
+            // Suponiendo que la URL se obtiene cuando se registra el documento
+            function setPdfUrl(url_a4, url_ticket) {
+                pdfUrl_a4 = url_a4;
+                pdfUrl_ticket = url_ticket
+            }
+
+            document.getElementById('btnDocumentA4').addEventListener('click', function() {
+                if (pdfUrl_a4) {
+                    window.open(pdfUrl_a4, '_blank');
+                } else {
+                    alert('La URL del documento no está disponible.');
+                }
+            });
+
+
+            document.getElementById('btnDocumentTicket').addEventListener('click', function() {
+                if (pdfUrl_ticket) {
+                    window.open(pdfUrl_ticket, '_blank');
+                } else {
+                    alert('La URL del documento no está disponible.');
+                }
+            });
+
+
+
+            //btnReload pagina
+            $('#btnReloadPage').click(function(e) {
+                e.preventDefault();
+                window.location.reload(); // Opcional: recargar la página
+            });
 
 
 
