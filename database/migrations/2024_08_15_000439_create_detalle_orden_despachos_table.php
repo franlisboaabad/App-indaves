@@ -16,11 +16,14 @@ return new class extends Migration
         Schema::create('detalle_orden_despachos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('orden_despacho_id')->constrained('orden_despachos')->onDelete('cascade');
+            $table->foreignId('presentacion_pollo_id')->nullable()->constrained('presentacion_pollos');
+            $table->foreignId('tipo_pollo_id')->nullable()->constrained('tipo_pollos');
             $table->integer('cantidad_pollos');
             $table->decimal('peso_bruto', 8, 2);
             $table->integer('cantidad_jabas');
-            $table->decimal('tara', 8, 2); // Tara por defecto de 6 kg
+            $table->decimal('tara', 8, 2);
             $table->decimal('peso_neto', 8, 2);
+            $table->decimal('precio', 8, 2);
             $table->boolean('estado')->default(1);
             $table->timestamps();
         });

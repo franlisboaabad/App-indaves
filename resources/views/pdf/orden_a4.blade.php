@@ -71,8 +71,6 @@
         <p><strong>Serie de Orden:</strong> {{ $orden->serie_orden }}</p>
         <p><strong>Sr(a):</strong> {{ $orden->cliente->razon_social }}</p>
         <p><strong>Fecha de Despacho:</strong> {{ \Carbon\Carbon::parse($orden->fecha_despacho)->format('d/m/Y') }}</p>
-        <p><strong>Presentacion:</strong> {{ $orden->presentacion_pollo ? 'Pollo Beneficiado' : 'Pollo Vivo' }} </p>
-        <p><strong>Tipo de Pollo:</strong> {{ $orden->tipoPollo->descripcion }} </p>
     </div>
 
     <!-- Detalles de la Orden -->
@@ -81,6 +79,8 @@
         <table>
             <thead>
                 <tr>
+                    <th>Presentación</th>
+                    <th>Tipo</th>
                     <th>Cantidad de Pollos</th>
                     <th>Peso Bruto</th>
                     <th>Cantidad de Jabas</th>
@@ -91,6 +91,8 @@
             <tbody>
                 @foreach ($orden->detalles as $detalle)
                     <tr>
+                        <td>{{ $detalle->presentacion_pollo_descripcion }}</td>
+                        <td>{{ $detalle->tipo_pollo_descripcion }}</td>
                         <td>{{ $detalle->cantidad_pollos }}</td>
                         <td>{{ number_format($detalle->peso_bruto, 2) }}</td>
                         <td>{{ $detalle->cantidad_jabas }}</td>
@@ -101,7 +103,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th>Total</th>
+                    <th colspan="3">Total</th>
                     <th>{{ number_format($orden->peso_total_bruto, 2) }}</th>
                     <th>{{ $orden->cantidad_jabas }}</th>
                     <th>{{ number_format($orden->tara, 2) }}</th>

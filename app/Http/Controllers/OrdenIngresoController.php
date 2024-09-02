@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\GlobalStateEnum;
+use App\Http\Requests\StoreOrdenIngresoRequest;
 use App\Models\OrdenIngreso;
 use Illuminate\Http\Request;
 
@@ -18,91 +20,49 @@ class OrdenIngresoController extends Controller
     }
 
 
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $Ordenes_ingreso = OrdenIngreso::where('estado', 1)->get();
+        $ordenes_ingreso = OrdenIngreso::query()
+            ->where('estado', GlobalStateEnum::STATUS_ACTIVE)
+            ->get();
 
-        return view('admin.ordenes_ingreso.index', compact('Ordenes_ingreso'));
+        $cantidad_pollos_pendientes=  $ordenes_ingreso->sum('cantidad_pollos_stock');
+
+        return view('admin.ordenes_ingreso.index', compact('ordenes_ingreso','cantidad_pollos_pendientes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        // Validar la solicitud
-        $request->validate([
-            'cantidad_jabas' => 'required|integer',
-            'cantidad_pollos' => 'required|integer',
-            'peso_total' => 'required|numeric'
-        ]);
 
+    public function store(StoreOrdenIngresoRequest $request)
+    {
         // Crear una nueva orden de ingreso
-        OrdenIngreso::create(['cantidad_pollos_stock' => $request->cantidad_pollos ] + $request->all());
+        OrdenIngreso::query()->create(['cantidad_pollos_stock' => $request->input('cantidad_pollos') ] + $request->validated());
 
         // Retornar una respuesta exitosa
         return response()->json(['message' => 'Orden registrada correctamente']);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\OrdenIngreso  $ordenIngreso
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(OrdenIngreso $ordenIngreso)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\OrdenIngreso  $ordenIngreso
-     * @return \Illuminate\Http\Response
-     */
     public function edit(OrdenIngreso $ordenIngreso)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\OrdenIngreso  $ordenIngreso
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, OrdenIngreso $ordenIngreso)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\OrdenIngreso  $ordenIngreso
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(OrdenIngreso $ordenIngreso)
     {
         // Verificar si la orden existe

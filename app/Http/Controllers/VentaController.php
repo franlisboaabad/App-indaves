@@ -375,11 +375,17 @@ class VentaController extends Controller
 
     public function getOrdenDetalles($id)
     {
-        $orden = OrdenDespacho::with('detalles')->find($id);
+        $orden = OrdenDespacho::query()
+            ->withAggregate('cliente','razon_social')
+            ->with('cliente',fn($query)=>$query->withSum('saldos','total'))
+            ->with('detalles',
+                fn($query)=>$query->withAggregate('tipo_pollo','descripcion')
+                    ->withAggregate('presentacion_pollo','descripcion')
+            )->findOrFail($id);
 
         if ($orden) {
             return response()->json([
-                'detalles' => $orden->detalles
+                'orden' => $orden
             ]);
         }
 

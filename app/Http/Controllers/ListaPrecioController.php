@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreListaPrecioRequest;
 use App\Models\ListaPrecio;
+use App\Models\PresentacionPollo;
+use App\Models\TipoPollo;
 use Illuminate\Http\Request;
 
 class ListaPrecioController extends Controller
@@ -17,15 +20,18 @@ class ListaPrecioController extends Controller
         $this->middleware('can:admin.precios.destroy')->only('destroy');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $precios = ListaPrecio::where('estado', 1)->get();
-        return view('admin.precios.index', compact('precios'));
+        $precios = ListaPrecio::query()
+            ->withAggregate('tipo_pollo','descripcion')
+            ->withAggregate('presentacion_pollo','descripcion')
+            ->where('estado', ListaPrecio::STATUS_ACTIVE)
+            ->get();
+
+        $tipo_pollos = TipoPollo::query()->get();
+        $presentacion_pollos = PresentacionPollo::query()->get();
+
+        return view('admin.precios.index', compact('precios','tipo_pollos','presentacion_pollos'));
     }
 
     /**
@@ -38,62 +44,27 @@ class ListaPrecioController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'precio' => 'required|numeric|min:0',
-            'descripcion' => 'nullable|string',
-        ]);
 
-        // Lógica para guardar el nuevo precio
-        ListaPrecio::create($validatedData);
+    public function store(StoreListaPrecioRequest $request)
+    {
+        ListaPrecio::query()->create($request->validated());
 
         return response()->json(['message' => 'El precio ha sido agregado exitosamente.']);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ListaPrecio  $listaPrecio
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(ListaPrecio $listaPrecio)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ListaPrecio  $listaPrecio
-     * @return \Illuminate\Http\Response
-     */
     public function edit(ListaPrecio $listaPrecio)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ListaPrecio  $listaPrecio
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ListaPrecio $listaPrecio)
+    public function update(StoreListaPrecioRequest $request, ListaPrecio $listaPrecio)
     {
-        // Validación de datos
-        $request->validate([
-            'precio' => 'required|numeric',
-            'descripcion' => 'required|string|max:255',
-        ]);
-
         try {
             $precio = ListaPrecio::findOrFail($listaPrecio->id);
             $precio->precio = $request->input('precio');
@@ -108,18 +79,10 @@ class ListaPrecioController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ListaPrecio  $listaPrecio
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(ListaPrecio $listaPrecio)
     {
-
-        $precio = ListaPrecio::findOrFail($listaPrecio->id);
-        $precio->estado = false; // O $precio->estado = 0;
-        $precio->save();
+        $listaPrecio->estado = ListaPrecio::STATUS_INACTIVE; // O $precio->estado = 0;
+        $listaPrecio->save();
 
         return redirect()->back()->with('success', 'El precio ha sido eliminado correctamente.');
     }

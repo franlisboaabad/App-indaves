@@ -23,14 +23,10 @@ return new class extends Migration
             $table->integer('cantidad_jabas');
             $table->integer('tara');
             $table->decimal('peso_total_neto');
-            $table->integer('presentacion_pollo');
-            $table->unsignedBigInteger('tipo_pollo_id');
             $table->string('url_orden_documento_a4')->nullable();
             $table->string('url_orden_documento_ticket')->nullable();
             $table->boolean('estado_despacho')->default(0);
             $table->boolean('estado')->default(1);
-
-            $table->foreign('tipo_pollo_id')->references('id')->on('tipo_pollos')->onDelete('cascade');
             $table->timestamps();
         });
     }

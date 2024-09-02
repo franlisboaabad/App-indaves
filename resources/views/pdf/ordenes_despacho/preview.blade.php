@@ -114,8 +114,6 @@
             <p><strong>Serie de Orden:</strong> {{ $orden->serie_orden }}</p>
             <p><strong>Cliente:</strong> {{ $orden->cliente->razon_social }}</p>
             <p><strong>Fecha de Despacho:</strong> {{ \Carbon\Carbon::parse($orden->fecha_despacho)->format('d/m/Y') }}</p>
-            <p><strong>Presentación:</strong> {{ $orden->presentacion_pollo ? 'Pollo Beneficiado' : 'Pollo Vivo' }}</p>
-            <p><strong>Tipo de Pollo:</strong> {{ $orden->tipoPollo->descripcion }}</p>
         </div>
 
         <!-- Detalles de la Orden -->

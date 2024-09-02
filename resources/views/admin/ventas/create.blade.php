@@ -59,10 +59,18 @@
                             @enderror
                         </div>
                     </div>
-
-                    <div class="col-md-8"></div>
-
-
+                    <div class="col-md-4" id="container-cliente">
+                        <div class="form-group">
+                            <label for="cliente">Cliente</label>
+                            <input type="text" id="cliente" name="cliente" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="saldo">Saldo</label>
+                            <input type="text" id="saldo" name="saldo" class="form-control" readonly>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -73,6 +81,7 @@
                     <table class="table table-bordered" id="detailsTable">
                         <thead>
                             <tr>
+                                <th>Tipo de Pollo</th>
                                 <th>Cantidad de Pollos</th>
                                 <th>Peso Bruto</th>
                                 <th>Cantidad de Jabas</th>
@@ -274,8 +283,9 @@
 
 
                                 // Agregar filas con los detalles de la orden
-                                data.detalles.forEach(function(detalle) {
+                                data.orden.detalles.forEach(function(detalle) {
                                     var row = '<tr>' +
+                                        '<td>' + detalle.tipo_pollo_descripcion + '</td>' +
                                         '<td>' + detalle.cantidad_pollos + '</td>' +
                                         '<td>' + detalle.peso_bruto + '</td>' +
                                         '<td>' + detalle.cantidad_jabas + '</td>' +
@@ -284,6 +294,9 @@
                                         '</tr>';
                                     $('#detailsTable tbody').append(row);
                                 });
+
+                                $('#cliente').val(data.orden?.cliente_razon_social);
+                                $('#saldo').val(data.orden?.cliente?.saldos_sum_total);
 
                                 // Calcular y actualizar los totales
                                 updateTotals();

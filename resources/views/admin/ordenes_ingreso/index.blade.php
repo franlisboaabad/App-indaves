@@ -32,7 +32,7 @@
                             <th>Acciones</th>
                         </thead>
                         <tbody>
-                            @foreach ($Ordenes_ingreso as $orden)
+                            @foreach ($ordenes_ingreso as $orden)
                                 <tr>
                                     <td>{{ $orden->id }}</td>
                                     <td>{{ $orden->numero_guia }}</td>
@@ -90,6 +90,14 @@
                             <input type="number" class="form-control" id="cantidad_jabas" name="cantidad_jabas" required>
                         </div>
                         <div class="form-group">
+                            <label for="cantidad_pollos_pendientes">Cantidad de Pollos Pendientes</label>
+                            <input type="number" readonly
+                                   class="form-control" id="cantidad_pollos_pendientes"
+                                   name="cantidad_pollos_pendientes"
+                                   value="{{$cantidad_pollos_pendientes}}"
+                            >
+                        </div>
+                        <div class="form-group">
                             <label for="cantidad_pollos">Cantidad de Pollos</label>
                             <input type="number" class="form-control" id="cantidad_pollos" name="cantidad_pollos" required>
                         </div>
@@ -118,7 +126,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
-            $('#table-ordenes').DataTable();
+            $('#table-ordenes').DataTable({
+                language: {
+                    "url": "/js/spanish.json"
+                },
+            });
 
 
             // Manejar el envío del formulario
@@ -126,7 +138,7 @@
                 e.preventDefault(); // Evitar el envío del formulario de manera tradicional
 
                 // Obtener los datos del formulario
-                var formData = $(this).serialize();
+                const formData = $(this).serialize();
 
                 // Enviar los datos al servidor usando AJAX
                 $.ajax({
@@ -169,7 +181,7 @@
             $('.btn-delete').on('click', function(e) {
                 e.preventDefault(); // Evita que el formulario se envíe de manera tradicional
 
-                var form = $(this).closest('form'); // Encuentra el formulario más cercano
+                const form = $(this).closest('form'); // Encuentra el formulario más cercano
 
                 // Mostrar el diálogo de confirmación con SweetAlert
                 Swal.fire({

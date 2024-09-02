@@ -27,8 +27,6 @@
                 <p><strong>Tara:</strong> {{ number_format($orden->tara, 2) }}</p>
                 <p><strong>Peso Total Neto:</strong> {{ number_format($orden->peso_total_neto, 2) }}</p>
                 <p><strong>Estado:</strong> {{ $orden->estado_despacho ? 'Despachado' : 'Por despachar' }}</p>
-                <p><strong>Presentacion:</strong> {{ $orden->presentacion_pollo ? 'Pollo Beneficiado' : 'Pollo Vivo' }} </p>
-                <p><strong>Tipo de pollo:</strong> {{ $orden->tipoPollo->descripcion }} </p>
             </div>
 
             <!-- Detalles de la Orden -->
@@ -37,6 +35,8 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
+                            <th>Presentación</th>
+                            <th>Tipo</th>
                             <th>Cantidad de Pollos</th>
                             <th>Peso Bruto</th>
                             <th>Cantidad de Jabas</th>
@@ -47,6 +47,8 @@
                     <tbody>
                         @foreach ($orden->detalles as $detalle)
                             <tr>
+                                <td>{{ $detalle->presentacion_pollo_descripcion }}</td>
+                                <td>{{ $detalle->tipo_pollo_descripcion }}</td>
                                 <td>{{ $detalle->cantidad_pollos }}</td>
                                 <td>{{ number_format($detalle->peso_bruto, 2) }}</td>
                                 <td>{{ $detalle->cantidad_jabas }}</td>

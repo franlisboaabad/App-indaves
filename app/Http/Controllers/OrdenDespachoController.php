@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\GlobalStateEnum;
+use App\Http\Requests\StoreOrdenDespachoRequest;
+use App\Models\ListaPrecio;
+use App\Models\PresentacionPollo;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -40,7 +44,7 @@ class OrdenDespachoController extends Controller
     public function index()
     {
         // Obtener todas las órdenes de despacho
-        $ordenes = OrdenDespacho::where('estado',1)->get();
+        $ordenes = OrdenDespacho::where('estado', 1)->get();
 
         // Convertir fechas a instancias de Carbon (si es necesario)
         foreach ($ordenes as $orden) {
@@ -58,53 +62,35 @@ class OrdenDespachoController extends Controller
      */
     public function create()
     {
-        $serie = Serie::where('number', 'OD01')->first();
+        $serie = Serie::query()->where('number', 'OD01')->first();
         $cajas = Caja::get();
-        $clientes = Cliente::where('estado', 1)->get();
-        $stockPollo = OrdenIngreso::where('estado',1)->orderBy('id','desc')->first();
-        $tipoPollos = TipoPollo::where('estado',1)->get();
+        $clientes = Cliente::query()->where('estado', 1)->get();
+        $stockPollo = OrdenIngreso::query()
+            ->where('estado', GlobalStateEnum::STATUS_ACTIVE)
+            ->sum('cantidad_pollos_stock');
+        $tipoPollos = TipoPollo::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
+        $presentacionPollos = PresentacionPollo::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
 
+        $prices = ListaPrecio::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
 
-        return view('admin.ordenes_despacho.create', compact('clientes', 'cajas', 'serie','stockPollo','tipoPollos'));
+        return view('admin.ordenes_despacho.create',
+            compact('clientes', 'cajas', 'serie', 'stockPollo', 'tipoPollos', 'presentacionPollos', 'prices')
+        );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(StoreOrdenDespachoRequest $request)
     {
-        // Validar los datos del formulario
-        $request->validate([
-            'cliente_id' => 'required|integer',
-            'serie_orden' => 'required|string|max:255',
-            'fecha_despacho' => 'required|date',
-            'peso_total_bruto' => 'required|numeric',
-            'cantidad_jabas' => 'required|integer',
-            'tara' => 'required|numeric',
-            'peso_total_neto' => 'required|numeric',
-            'presentacion_pollo' => 'required|numeric',
-            'tipo_pollo_id' => 'required',
-            'detalles' => 'required|array',
-            'detalles.*.cantidad_pollos' => 'required|numeric',
-            'detalles.*.peso_bruto' => 'required|numeric',
-            'detalles.*.cantidad_jabas' => 'required|integer',
-            'detalles.*.tara' => 'required|numeric',
-            'detalles.*.peso_neto' => 'required|numeric',
-        ]);
 
-         // Verificar si existe una caja abierta
+        // Verificar si existe una caja abierta
         //  $cajaAbierta = Caja::where('estado_caja', 1)->first();
-         $OrdenIngreso = OrdenIngreso::where('estado',1)->get();
+        $OrdenIngreso = OrdenIngreso::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
 
-         if (!$OrdenIngreso) {
-             return response()->json([
-                 'success' => false,
-                 'message' => 'No se ha registrado Orden de Ingreso',
-             ], 400); // Código de estado 400 para error de solicitud
-         }
+        if (!$OrdenIngreso) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se ha registrado Orden de Ingreso',
+            ], 400); // Código de estado 400 para error de solicitud
+        }
 
         DB::beginTransaction(); // Iniciar una transacción
 
@@ -120,7 +106,6 @@ class OrdenDespachoController extends Controller
                 'tara' => $request->tara,
                 'peso_total_neto' => $request->peso_total_neto,
                 'presentacion_pollo' => $request->presentacion_pollo,
-                'tipo_pollo_id' => $request->tipo_pollo_id
             ]);
 
             // Aumentar el número de serie
@@ -136,13 +121,16 @@ class OrdenDespachoController extends Controller
                     'peso_bruto' => $detalle['peso_bruto'],
                     'cantidad_jabas' => $detalle['cantidad_jabas'],
                     'tara' => $detalle['tara'],
-                    'peso_neto' => $detalle['peso_neto']
+                    'peso_neto' => $detalle['peso_neto'],
+                    'precio' => $detalle['precio'],
+                    'tipo_pollo_id' => $detalle['tipo_pollo_id'],
+                    'presentacion_pollo_id' => $detalle['presentacion_pollo_id'],
                 ]);
             }
 
             //descontar cantidad de pollos en Orden de Ingreso
 
-            $ordenIngreso = OrdenIngreso::orderBy('id','desc')->first();
+            $ordenIngreso = OrdenIngreso::orderBy('id', 'desc')->first();
             $ordenIngreso->cantidad_pollos_stock -= $request->cantidad_pollos;
             $ordenIngreso->save();
 
@@ -176,6 +164,8 @@ class OrdenDespachoController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack(); // Revertir la transacción en caso de error
+
+            report($e);
             // Responder con error
             return response()->json([
                 'message' => 'Error al registrar la orden de despacho.',
@@ -187,13 +177,17 @@ class OrdenDespachoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\OrdenDespacho  $ordenDespacho
+     * @param \App\Models\OrdenDespacho $ordenDespacho
      * @return \Illuminate\Http\Response
      */
     public function show(OrdenDespacho $ordenDespacho)
     {
         // Obtener la orden de despacho con el ID dado
-        $orden = OrdenDespacho::with('detalles')->findOrFail($ordenDespacho->id);
+        $orden = OrdenDespacho::query()
+        ->with('detalles',
+            fn($query)=>$query->withAggregate('tipo_pollo','descripcion')
+                ->withAggregate('presentacion_pollo','descripcion')
+        )->findOrFail($ordenDespacho->id);
 
         // Pasar la orden y sus detalles a la vista
         return view('admin.ordenes_despacho.show', compact('orden'));
@@ -202,7 +196,7 @@ class OrdenDespachoController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\OrdenDespacho  $ordenDespacho
+     * @param \App\Models\OrdenDespacho $ordenDespacho
      * @return \Illuminate\Http\Response
      */
     public function edit(OrdenDespacho $ordenDespacho)
@@ -213,8 +207,8 @@ class OrdenDespachoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\OrdenDespacho  $ordenDespacho
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\OrdenDespacho $ordenDespacho
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, OrdenDespacho $ordenDespacho)
@@ -225,7 +219,7 @@ class OrdenDespachoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\OrdenDespacho  $ordenDespacho
+     * @param \App\Models\OrdenDespacho $ordenDespacho
      * @return \Illuminate\Http\Response
      */
     public function destroy(OrdenDespacho $ordenDespacho)
@@ -234,7 +228,7 @@ class OrdenDespachoController extends Controller
             $orden = OrdenDespacho::findOrFail($ordenDespacho->id);
 
 
-            $ordenIngreso = OrdenIngreso::orderBy('id','desc')->first();
+            $ordenIngreso = OrdenIngreso::orderBy('id', 'desc')->first();
             $ordenIngreso->cantidad_pollos_stock += $orden->cantidad_pollos;
             $ordenIngreso->save();
 
@@ -252,7 +246,12 @@ class OrdenDespachoController extends Controller
     private function generatePdf_A4($id)
     {
         // Obtener la orden y la empresa
-        $ordenDespacho = OrdenDespacho::find($id);
+        $ordenDespacho = OrdenDespacho::query()
+            ->with('detalles',
+                fn($query)=>$query->withAggregate('tipo_pollo','descripcion')
+                    ->withAggregate('presentacion_pollo','descripcion')
+            )
+            ->find($id);
         $empresa = Empresa::first(); // O el método que utilices para obtener la empresa
 
         // Configurar Dompdf
@@ -354,7 +353,7 @@ class OrdenDespachoController extends Controller
         $dompdf = new Dompdf($options);
 
         // Cargar la vista y renderizar el PDF
-        $view = view('pdf.ordenes_despacho.preview', compact('orden','empresa'))->render();
+        $view = view('pdf.ordenes_despacho.preview', compact('orden', 'empresa'))->render();
         $dompdf->loadHtml($view);
 
         // (Opcional) Configura el tamaño y orientación del papel

@@ -13,6 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
+        Schema::create('presentacion_pollos', function (Blueprint $table) {
+            $table->id();
+            $table->string('descripcion');
+            $table->boolean('estado')->default(1);
+            $table->decimal('tara')->nullable();
+            $table->timestamps();
+        });
+
         Schema::create('tipo_pollos', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
@@ -28,6 +36,7 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('presentacion_pollos');
         Schema::dropIfExists('tipo_pollos');
     }
 };

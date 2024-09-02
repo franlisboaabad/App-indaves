@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('lista_precios', function (Blueprint $table) {
+        Schema::create('saldos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('presentacion_pollo_id')->nullable()->constrained('presentacion_pollos');
-            $table->foreignId('tipo_pollo_id')->nullable()->constrained('tipo_pollos');
-            $table->double('precio',8,2);
-            $table->string('descripcion')->nullable();
-            $table->boolean('estado')->default(1);
+            $table->foreignId('cliente_id')->nullable();
+            $table->decimal('total');
+            $table->foreignId('reference_id')
+                ->nullable()
+                ->references('id')
+                ->on('ventas');
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('lista_precios');
+        Schema::dropIfExists('saldos');
     }
 };

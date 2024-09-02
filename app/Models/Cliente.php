@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Cliente extends Model
 {
@@ -18,18 +19,21 @@ class Cliente extends Model
         return $this->hasMany(Equipo::class);
     }
 
-    public function ordenes()
+    public function ordenes(): HasMany
     {
         return $this->hasMany(OrdenDeServicio::class);
     }
 
-
-    public function actividades()
+    public function saldos(): HasMany
+    {
+        return $this->hasMany(Saldo::class);
+    }
+    public function actividades(): HasMany
     {
         return $this->hasMany(Actividad::class);
     }
 
-    public function proyectos()
+    public function proyectos(): HasMany
     {
         return $this->hasMany(Proyecto::class);
     }
