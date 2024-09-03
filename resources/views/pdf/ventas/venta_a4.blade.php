@@ -48,7 +48,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
-            font-size: 12px;
+            font-size: 14px;
         }
 
         table, th, td {
@@ -112,9 +112,9 @@
         <p><strong>Forma de pago:</strong> {{ $venta->forma_de_pago ? 'Crédito' : 'Contado' }}</p>
         <p><strong>Monto a pagar:</strong> {{ number_format($venta->monto_total, 2) }} </p>
 
-        <h5>Pagos</h5>
+        <h5>PAGOS</h5>
         @foreach($venta->pagos as $pago)
-            <p><strong> {{ $pago->metodo_pago_descripcion }}:</strong> {{ number_format($pago->monto, 2) }} </p>
+            <p><strong> {{ $pago->metodo_pago->descripcion }}:</strong> {{ number_format($pago->monto, 2) }} </p>
         @endforeach
 
     </div>
@@ -128,11 +128,11 @@
                 <tr>
                     <th>Presentación</th>
                     <th>Tipo</th>
-                    <th>Cantidad de Pollos</th>
-                    <th>Peso Bruto</th>
-                    <th>Cantidad de Jabas</th>
+                    <th>C.Pollos</th>
+                    <th>P.Bruto</th>
+                    <th>C.Jabas</th>
                     <th>Tara</th>
-                    <th>Peso Neto</th>
+                    <th>P.Neto</th>
                 </tr>
             </thead>
             <tbody>
@@ -148,15 +148,15 @@
                     </tr>
                 @endforeach
             </tbody>
-            <tfoot>
+            {{-- <tfoot>
                 <tr>
                     <th colspan="3">Total</th>
                     <th>{{ number_format($venta->peso_total_bruto, 2) }}</th>
                     <th>{{ $venta->cantidad_jabas }}</th>
                     <th>{{ number_format($venta->tara, 2) }}</th>
-                    <th>{{ number_format($venta->peso_total_neto, 2) }}</th>
+                    <th>{{ number_format($venta->peso_neto, 2) }}</th>
                 </tr>
-            </tfoot>
+            </tfoot> --}}
         </table>
     </div>
 

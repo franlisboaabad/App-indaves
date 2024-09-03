@@ -2,84 +2,95 @@
 <html>
 
 <head>
-    <title> Venta Ticket | INDAVES</title>
+    <title>Venta | INDAVES</title>
     <style>
-        /* Estilos para impresión en impresora 80x80mm */
-        @page {
-            size: 80mm 150mm; /* Tamaño de la página */
-            margin: 0; /* Sin márgenes */
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+            margin: 0;
+            padding: 0;
+            color: #333; /* Color de texto principal */
         }
 
-        @media print {
-            body {
-                font-family: Consolas, monospace; /* Cambiar a la fuente Consolas */
-                font-size: 5px; /* Tamaño de fuente reducido para caber en una página pequeña */
-                margin: 0;
-                padding: 0;
-                width: 80mm; /* Asegura que el contenido se ajuste al ancho de la página */
-                height: 150mm; /* Asegura que el contenido se ajuste a la altura de la página */
-                overflow: hidden; /* Evita que el contenido se desborde */
-            }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #007bff; /* Color del borde inferior de la cabecera */
+            padding-bottom: 10px;
+            /* background-color: #f8f9fa;  */
+            /* Color de fondo de la cabecera */
+        }
 
-            .header, .footer {
-                text-align: center;
-                margin: 0;
-                padding: 0;
-            }
+        .header img {
+            width: 100px;
+        }
 
-            .header img {
-                width: 60px; /* Ajusta el tamaño del logo para que se ajuste bien */
-                height: auto; /* Mantiene la proporción */
-            }
+        .header h1 {
+            margin: 5px 0;
+            font-size: 18px;
+            color: #007bff; /* Color del título de la cabecera */
+        }
 
-            .header h1 {
-                font-size: 10px;
-                margin: 2px 0;
-                padding: 0;
-            }
+        .header p {
+            margin: 2px 0;
+            color: #555; /* Color del texto en la cabecera */
+        }
 
-            .header p {
-                margin: 2px 0;
-                font-size: 6px; /* Tamaño de fuente más pequeño */
-            }
+        h2 {
+            border-bottom: 1px solid #007bff; /* Color del borde inferior de los encabezados h2 */
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #007bff; /* Color del texto de los encabezados h2 */
+        }
 
-            h2 {
-                font-size: 8px;
-                margin: 4px 0;
-                padding: 0;
-            }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 100px;
+        }
 
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                font-size: 7px; /* Tamaño de fuente reducido para la tabla */
-                margin: 0;
-            }
+        table, th, td {
+            border: 1px solid #dee2e6; /* Color del borde de la tabla */
+        }
 
-            table, th, td {
-                border: 1px solid black; /* Borde visible para la tabla */
-            }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
 
-            th, td {
-                padding: 2px; /* Reducir padding para ajustar mejor */
-                text-align: center; /* Centra el texto */
-            }
+        th {
+            /* background-color: #e9ecef;  */
+            /* Color de fondo de los encabezados de la tabla */
+            color: #333;
+            /* Color del texto en los encabezados de la tabla */
+        }
 
-            th {
-                background-color: #f2f2f2;
-                font-weight: bold;
-            }
+        tr:nth-child(even) {
+            /* background-color: #f2f2f2;  */
+            /* Color de fondo alternativo para las filas de la tabla */
+        }
 
-            .footer h3 {
-                font-size: 8px;
-                margin: 4px 0;
-                padding: 0;
-            }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            border-top: 2px solid #007bff; /* Color del borde superior del pie de página */
+            padding-top: 10px;
+            /* background-color: #f8f9fa;  */
+            /* Color de fondo del pie de página */
+        }
 
-            .footer p {
-                font-size: 6px;
-                margin: 2px 0;
-            }
+        .footer h3 {
+            margin: 0;
+            font-size: 14px;
+            color: #e74c3c; /* Color del título en el pie de página */
+        }
+
+        .footer p {
+            margin: 5px 0;
+            /* color: #555;  */
+            /* Color del texto en el pie de página */
         }
     </style>
 </head>
@@ -97,40 +108,38 @@
     <!-- Información de la Venta -->
     <div>
         <h2>Información de la Venta</h2>
-        <p><strong>ID de Venta:</strong> {{ $venta->serie_venta }}</p>
-        <p><strong>Cliente:</strong> {{ $venta->ordenDespacho->cliente->razon_social }}</p>
-        <p><strong>Fecha:</strong> {{ $venta->created_at->format('d/m/Y') }}</p>
+        <p><strong>ID de Venta:</strong> {{ $venta->serie_venta }} | <strong>Cliente:</strong> {{ $venta->cliente->razon_social }} | <strong>Fecha:</strong> {{ $venta->created_at->format('d/m/Y') }}</p>
         <p><strong>Forma de pago:</strong> {{ $venta->forma_de_pago ? 'Crédito' : 'Contado' }}</p>
-        <p><strong>Monto a pagar:</strong> {{ number_format($venta->monto_total, 2) }}</p>
-        <p><strong>Recibido:</strong> {{ number_format($venta->monto_recibido, 2) }}</p>
-        <p><strong>Saldo:</strong> {{ number_format($venta->saldo, 2) }}</p>
+        <p><strong>Monto a pagar:</strong> {{ number_format($venta->monto_total, 2) }} </p>
+
+        <h5>PAGOS</h5>
+        @foreach($venta->pagos as $pago)
+            <p><strong> {{ $pago->metodo_pago->descripcion }}:</strong> {{ number_format($pago->monto, 2) }} </p>
+        @endforeach
+
     </div>
 
-    <!-- Información de la Orden -->
-    <div>
-        <h2>Orden de Despacho</h2>
-        <p><strong>Serie de Orden:</strong> {{ $orden->serie_orden }}</p>
-        <p><strong>Sr(a):</strong> {{ $orden->cliente->razon_social }}</p>
-        <p><strong>Fecha de Despacho:</strong> {{ \Carbon\Carbon::parse($orden->fecha_despacho)->format('d/m/Y') }}</p>
-        <p><strong>Presentación:</strong> {{ $orden->presentacion_pollo ? 'Pollo Beneficiado' : 'Pollo Vivo' }}</p>
-    </div>
 
     <!-- Detalles de la Orden -->
     <div>
-        <h2>Detalles de la Orden</h2>
+        <h2>Detalles de la Venta</h2>
         <table>
             <thead>
                 <tr>
-                    <th>Cantidad</th>
-                    <th>Peso Bruto</th>
-                    <th>Cantidad Jabas</th>
+                    <th>Presentación</th>
+                    <th>Tipo</th>
+                    <th>C.Pollos</th>
+                    <th>P.Bruto</th>
+                    <th>C.Jabas</th>
                     <th>Tara</th>
-                    <th>Peso Neto</th>
+                    <th>P.Neto</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($orden->detalles as $detalle)
+                @foreach ($venta->detalles as $detalle)
                     <tr>
+                        <td>{{ $detalle->presentacion_pollo_descripcion }}</td>
+                        <td>{{ $detalle->tipo_pollo_descripcion }}</td>
                         <td>{{ $detalle->cantidad_pollos }}</td>
                         <td>{{ number_format($detalle->peso_bruto, 2) }}</td>
                         <td>{{ $detalle->cantidad_jabas }}</td>
@@ -139,15 +148,15 @@
                     </tr>
                 @endforeach
             </tbody>
-            <tfoot>
+            {{-- <tfoot>
                 <tr>
-                    <th>Total</th>
-                    <th>{{ number_format($orden->peso_total_bruto, 2) }}</th>
-                    <th>{{ $orden->cantidad_jabas }}</th>
-                    <th>{{ number_format($orden->tara, 2) }}</th>
-                    <th>{{ number_format($orden->peso_total_neto, 2) }}</th>
+                    <th colspan="3">Total</th>
+                    <th>{{ number_format($venta->peso_total_bruto, 2) }}</th>
+                    <th>{{ $venta->cantidad_jabas }}</th>
+                    <th>{{ number_format($venta->tara, 2) }}</th>
+                    <th>{{ number_format($venta->peso_neto, 2) }}</th>
                 </tr>
-            </tfoot>
+            </tfoot> --}}
         </table>
     </div>
 

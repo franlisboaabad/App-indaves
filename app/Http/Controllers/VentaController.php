@@ -281,7 +281,7 @@ class VentaController extends Controller
 
         ini_set('pcre.backtrack_limit', '5000000');
 
-        $html = view('pdf.ventas.venta_a4',
+        $html = view('pdf.ventas.venta_ticket',
            ['venta' => $venta,
                'empresa' => $empresa
            ]
