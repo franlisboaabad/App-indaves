@@ -102,7 +102,7 @@ class VentaController extends Controller
                 'cliente_id' => $request->input('cliente_id'),
                 'serie_venta' => $request->input('serie_venta'),
                 'fecha_venta' => $request->input('fecha_venta'),
-                'peso_neto' => $request->input('peso_neto'),
+                'peso_neto' => $request->input('peso_total_neto'),
                 'forma_de_pago' => $request->input('forma_de_pago'),
                 'metodo_pago_id' => $request->input('metodo_pago_id'),
                 'monto_total' => $request->input('monto_total'),
@@ -113,6 +113,28 @@ class VentaController extends Controller
             //serie
             // Aumentar el número de serie (1) nota de venta | 2 orden despacho
             $this->incrementarSerieVenta();
+
+            $ordenIngreso = OrdenIngreso::orderBy('id', 'desc')->first();
+            // Verificar si se encontró un registro
+            if ($ordenIngreso) {
+                // Asegurarse de que la cantidad a restar no sea mayor que el stock disponible
+                if ($ordenIngreso->cantidad_pollos_stock >= $request->cantidad_pollos) {
+                    // Restar la cantidad de pollos del stock
+                    $ordenIngreso->cantidad_pollos_stock -= $request->cantidad_pollos;
+                    // Guardar los cambios en la base de datos
+                    $ordenIngreso->save();
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'No hay suficiente stock de pollos.',
+                    ], 422); // Código de estado 400 para error de solicitud
+                }
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No se encontró ningún registro de orden de ingreso para actualizar.',
+                ], 422); // Código de estado 400 para error de solicitud
+            }
 
             // Crear el detalle de la venta
             // Encuentra la orden de despacho relacionada

@@ -44,35 +44,35 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="">Stock Cantidad de pollos</label>
-                            <input type="text" readonly class="form-control"
-                                   value="{{ $stockPollo  }}">
+                            <input type="text" readonly class="form-control" value="{{ $stockPollo }}">
                         </div>
                     </div>
                     <!-- Select Cliente -->
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="cliente_id">Cliente</label>
-                            <select id="cliente_id" name="cliente_id" class="form-control select2" required >
+                            <select id="cliente_id" name="cliente_id" class="form-control select2" required>
                                 <option value="" disabled selected>Selecciona un cliente</option>
                                 @foreach ($clientes as $cliente)
                                     <option value="{{ $cliente->id }}">{{ $cliente->nombre_comercial }}</option>
                                 @endforeach
                             </select>
                             @error('cliente_id')
-                            <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
                     <div class="col-md-2">
                         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createClientModal"
-                                style="margin-top: 35px">
+                            style="margin-top: 35px">
                             <i class="fa fa-user"></i> Nuevo Cliente
                         </button>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="saldo">Saldo</label>
-                            <input type="text" id="saldo_pendiente" name="saldo_pendiente" class="form-control" readonly value="0">
+                            <input type="text" id="saldo_pendiente" name="saldo_pendiente" class="form-control" readonly
+                                value="0">
                         </div>
                     </div>
                 </div>
@@ -85,8 +85,8 @@
                             <label for="presentacion_pollo_id">Presentacion de Pollo:</label>
                             <select id="presentacion_pollo_id" name="presentacion_pollo_id" class="form-control">
                                 @foreach ($presentacionPollos as $presentacionPollo)
-                                    <option
-                                        value="{{ $presentacionPollo->id }}"> {{ $presentacionPollo->descripcion }} </option>
+                                    <option value="{{ $presentacionPollo->id }}"> {{ $presentacionPollo->descripcion }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -120,7 +120,7 @@
                             <label for="cantidad_jabas">Número de Jabas</label>
                             <input type="number" id="cantidad_jabas" name="cantidad_jabas" class="form-control">
                             @error('cantidad_jabas')
-                            <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                             <label for="pollos_jaba">Pollos por jaba</label>
                             <input type="number" id="pollos_jaba" name="pollos_jaba" class="form-control">
                             @error('pollos_jaba')
-                            <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -144,7 +144,7 @@
                             <label for="cantidad_pollos">Cantidad de Pollos</label>
                             <input type="number" id="cantidad_pollos" name="cantidad_pollos" class="form-control">
                             @error('cantidad_pollos')
-                            <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -154,9 +154,10 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="peso_bruto">Peso Bruto</label>
-                            <input type="number" step="0.01" id="peso_bruto" name="peso_bruto" class="form-control">
+                            <input type="number" step="0.01" id="peso_bruto" name="peso_bruto"
+                                class="form-control">
                             @error('peso_bruto')
-                            <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -173,33 +174,33 @@
                 <div class="mt-4">
                     <table class="table table-bordered" id="detailsTable">
                         <thead>
-                        <tr>
-                            <th>Cantidad de Pollos</th>
-                            <th>Peso Bruto</th>
-                            <th>Cantidad de Jabas</th>
-                            <th>Tara</th>
-                            <th>Precio</th>
-                            <th>Peso Neto</th>
-                            <th>Sub Total</th>
-                            <th>Acciones</th>
-                        </tr>
+                            <tr>
+                                <th>Cantidad de Pollos</th>
+                                <th>Peso Bruto</th>
+                                <th>Cantidad de Jabas</th>
+                                <th>Tara</th>
+                                <th>Precio</th>
+                                <th>Peso Neto</th>
+                                <th>Sub Total</th>
+                                <th>Acciones</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <!-- Las filas de la tabla se agregarán aquí mediante JavaScript -->
+                            <!-- Las filas de la tabla se agregarán aquí mediante JavaScript -->
                         </tbody>
                         <tfoot>
-                        <tr>
-                            {{-- <th>Total</th> --}}
-                            <th id="totalChiken">0.00</th>
-                            <th id="totalWeight">0.00</th>
-                            <th id="totalBoxes">0</th>
-                            <th id="totalTara">0.00</th>
-                            <th id="precio">0.00</th>
-                            <th id="totalNetWeight">0.00</th>
-                            <th id="subtotal">0.00</th>
+                            <tr>
+                                {{-- <th>Total</th> --}}
+                                <th id="totalChiken">0.00</th>
+                                <th id="totalWeight">0.00</th>
+                                <th id="totalBoxes">0</th>
+                                <th id="totalTara">0.00</th>
+                                <th id="precio">0.00</th>
+                                <th id="totalNetWeight">0.00</th>
+                                <th id="subtotal">0.00</th>
 
-                            <th></th>
-                        </tr>
+                                <th></th>
+                            </tr>
                         </tfoot>
                     </table>
                 </div>
@@ -350,6 +351,28 @@
             obtenerPrecio();
             obtenerTara();
             obtenerSaldo();
+
+            //peso api
+            $('#peso_bruto').on('focus', function() {
+                // Realiza la solicitud AJAX cuando el campo reciba foco
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/api/peso', // URL del endpoint
+                    method: 'GET',
+                    success: function(response) {
+                        // Asigna el peso al campo de texto
+                        if (response.peso !== null) {
+                            $('#peso_bruto').val(response.peso);
+                        } else {
+                            $('#peso_bruto').val('No hay peso registrado');
+                        }
+                    },
+                    error: function() {
+                        $('#peso_bruto').val('Error al obtener peso');
+                    }
+                });
+            });
+
+
             // Función para obtener la fecha en formato YYYY-MM-DD en la zona horaria local
             function getLocalDateString() {
                 const today = new Date();
@@ -395,7 +418,7 @@
 
                 // Recoger los datos de la tabla
                 let detalles = [];
-                $('#detailsTable tbody tr').each(function () {
+                $('#detailsTable tbody tr').each(function() {
                     let cantidadPollos = $(this).find('td:eq(0)').text();
                     let pesoBruto = $(this).find('td:eq(1)').text();
                     let cantidadJabas = $(this).find('td:eq(2)').text();
@@ -436,12 +459,12 @@
                     cantidad_jabas: totalBoxes,
                     tara: totalTara,
                     peso_total_neto: totalNetWeight,
-                    subtotal : subtotal,
-                    forma_de_pago  : $('#forma_de_pago').val(),
-                    metodo_pago_id  : $('#metodo_pago_id').val(),
-                    monto_recibido  : $('#monto_recibido').val(),
-                    monto_total  : $('#monto_total').val(),
-                    saldo_pendiente : $('#saldo_pendiente').val(),
+                    subtotal: subtotal,
+                    forma_de_pago: $('#forma_de_pago').val(),
+                    metodo_pago_id: $('#metodo_pago_id').val(),
+                    monto_recibido: $('#monto_recibido').val(),
+                    monto_total: $('#monto_total').val(),
+                    saldo_pendiente: $('#saldo_pendiente').val(),
                     detalles: detalles, // Aquí se envían los detalles
                     _token: $('meta[name="csrf-token"]').attr('content') // Token CSRF para protección
                 };
@@ -557,8 +580,8 @@
 
             // Suponiendo que la URL se obtiene cuando se registra el documento
             function setPrint(venta) {
-                $('#btnDocumentA4').attr('href',venta.url_pdf);
-                $('#btnDocumentTicket').attr('href',venta.url_ticket);
+                $('#btnDocumentA4').attr('href', venta.url_pdf);
+                $('#btnDocumentTicket').attr('href', venta.url_ticket);
             }
             //btnReload pagina
             $('#btnReloadPage').click(function(e) {
@@ -567,7 +590,7 @@
             });
 
 
-            document.getElementById('addDetailBtn').addEventListener('click', function () {
+            document.getElementById('addDetailBtn').addEventListener('click', function() {
                 // Obtener los valores de los inputs
                 var cantidadPollos = document.getElementById('cantidad_pollos').value;
                 var pesoBruto = document.getElementById('peso_bruto').value;
@@ -614,7 +637,7 @@
                 const deleteBtn = document.createElement('button');
                 deleteBtn.textContent = 'Eliminar';
                 deleteBtn.className = 'btn btn-danger btn-sm';
-                deleteBtn.onclick = function () {
+                deleteBtn.onclick = function() {
                     // Eliminar la fila de la tabla
                     const rowIndex = newRow.rowIndex;
                     if (rowIndex > 0) { // Asegurarse de que el índice sea válido
@@ -654,7 +677,7 @@
                     totalTara += parseFloat(cells[3].textContent);
                     totalNetWeight += parseFloat(cells[5].textContent);
                     totalBoxes += parseInt(cells[2].textContent);
-                    subtotal +=parseFloat(cells[6].textContent);
+                    subtotal += parseFloat(cells[6].textContent);
                 }
 
                 // Mostrar los totales en el pie de la tabla
@@ -672,12 +695,12 @@
                 $('#monto_total').val(totalPay.toFixed(2));
             }
 
-            $('#presentacion_pollo_id').change(function (el) {
+            $('#presentacion_pollo_id').change(function(el) {
                 obtenerTara();
                 obtenerPrecio();
             });
 
-            $('#tipo_pollo_id').change(function (el) {
+            $('#tipo_pollo_id').change(function(el) {
                 obtenerPrecio();
             });
 
@@ -701,19 +724,19 @@
                 }
             }
 
-            function obtenerSaldo(){
+            function obtenerSaldo() {
                 const clienteId = $('#cliente_id').val();
-                if(clienteId){
-                    const clienteBuscado = clientes.find(cliente=>cliente.id == clienteId);
-                    $('#saldo_pendiente').val(clienteBuscado.saldos_sum_total|| 0)
+                if (clienteId) {
+                    const clienteBuscado = clientes.find(cliente => cliente.id == clienteId);
+                    $('#saldo_pendiente').val(clienteBuscado.saldos_sum_total || 0)
                 }
             }
 
-            $('#cliente_id').change(function(){
+            $('#cliente_id').change(function() {
                 obtenerSaldo();
             });
 
-            $('#cantidad_pollos').focus(function (e) {
+            $('#cantidad_pollos').focus(function(e) {
                 e.preventDefault();
 
                 let cantidad_jabas = $('#cantidad_jabas').val();
@@ -727,4 +750,3 @@
         });
     </script>
 @stop
-

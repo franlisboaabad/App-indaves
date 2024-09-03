@@ -58,7 +58,7 @@
                             <td>{{ $pago->id }}</td>
                             <td>{{ $pago->venta->serie_venta }}</td>
                             <td>{{ number_format($pago->monto, 2) }}</td>
-                            <td>{{ $pago->metodoPago->descripcion }}</td>
+                            <td>{{ $pago->metodo_pago->descripcion }}</td>
                             <td>{{ $pago->created_at->format('d/m/Y H:i') }}</td>
                         </tr>
                     @empty

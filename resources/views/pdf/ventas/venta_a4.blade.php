@@ -17,7 +17,8 @@
             margin-bottom: 20px;
             border-bottom: 2px solid #007bff; /* Color del borde inferior de la cabecera */
             padding-bottom: 10px;
-            background-color: #f8f9fa; /* Color de fondo de la cabecera */
+            /* background-color: #f8f9fa;  */
+            /* Color de fondo de la cabecera */
         }
 
         .header img {
@@ -60,12 +61,15 @@
         }
 
         th {
-            background-color: #e9ecef; /* Color de fondo de los encabezados de la tabla */
-            color: #333; /* Color del texto en los encabezados de la tabla */
+            /* background-color: #e9ecef;  */
+            /* Color de fondo de los encabezados de la tabla */
+            color: #333;
+            /* Color del texto en los encabezados de la tabla */
         }
 
         tr:nth-child(even) {
-            background-color: #f2f2f2; /* Color de fondo alternativo para las filas de la tabla */
+            /* background-color: #f2f2f2;  */
+            /* Color de fondo alternativo para las filas de la tabla */
         }
 
         .footer {
@@ -73,7 +77,8 @@
             margin-top: 20px;
             border-top: 2px solid #007bff; /* Color del borde superior del pie de página */
             padding-top: 10px;
-            background-color: #f8f9fa; /* Color de fondo del pie de página */
+            /* background-color: #f8f9fa;  */
+            /* Color de fondo del pie de página */
         }
 
         .footer h3 {
@@ -84,7 +89,8 @@
 
         .footer p {
             margin: 5px 0;
-            color: #555; /* Color del texto en el pie de página */
+            /* color: #555;  */
+            /* Color del texto en el pie de página */
         }
     </style>
 </head>
