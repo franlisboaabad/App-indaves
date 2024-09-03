@@ -84,11 +84,10 @@ class DatabaseSeeder extends Seeder
 
 
         // Metodos de pago +
-        $descripciones = ['Efectivo', 'Transferencia', 'Yape', 'Plin','Credito'];
+        $descripciones = ['Efectivo', 'Transferencia', 'Yape', 'Plin','Credito','Saldo'];
         foreach ($descripciones as $descripcion) {
             DB::table('metodo_pagos')->insert([
                 'descripcion' => $descripcion,
-                // Agrega aquí otros campos si es necesario
             ]);
         }
     }

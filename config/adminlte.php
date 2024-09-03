@@ -334,7 +334,7 @@ return [
             'can'  => 'admin.cajas.index',
         ],
 
-        [
+  /*      [
             'text' => 'Orden Despacho',
             'icon' => 'fa fa-cart-plus',
             'submenu' => [
@@ -349,7 +349,7 @@ return [
             ],
 
 
-        ],
+        ],*/
 
 
         [

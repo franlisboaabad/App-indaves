@@ -112,6 +112,7 @@ Route::resource('cajas', CajaController::class)->middleware('auth');
 Route::resource('empresas', EmpresaController::class)->middleware('auth');
 Route::resource('ordenes-ingreso', OrdenIngresoController::class )->middleware('auth')->parameters(['ordenes-ingreso' => 'ordenIngreso']);
 Route::resource('ventas', VentaController::class)->middleware('auth');
+Route::get('ventas/{id}/{format}', [VentaController::class,'print'])->name('ventas.print')->middleware('auth');
 Route::get('ordenes/{id}', [VentaController::class, 'getOrdenDetalles'])->middleware('auth');
 Route::resource('ordenes-de-despacho',OrdenDespachoController::class)->middleware('auth')->parameters(['ordenes-de-despacho' => 'ordenDespacho']);
 Route::get('/ordenes-de-despacho/{id}/preview', [OrdenDespachoController::class, 'previewPdf'])->name('ordenes-de-despacho.preview')->middleware('auth');

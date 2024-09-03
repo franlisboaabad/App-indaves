@@ -54,6 +54,8 @@
                                 @endif
                                 <a href="{{ route('ventas.show', $venta->id) }}" class="btn btn-info btn-sm">Ver</a>
                                 {{-- <a href="{{ route('ventas.edit', $venta->id) }}" class="btn btn-warning btn-sm">Editar</a> --}}
+                                <a href="{{ route('ventas.print', ['id' => $venta->id,'format'=>'a4']) }}" target="_blank" class="btn btn-danger btn-sm">A4</a>
+                                <a href="{{ route('ventas.print', ['id' => $venta->id,'format'=>'ticket']) }}" target="_blank" class="btn btn-primary btn-sm">TICKET</a>
                                 <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST"
                                     style="display:inline;">
                                     @csrf

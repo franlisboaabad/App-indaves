@@ -15,12 +15,10 @@ return new class extends Migration
     {
         Schema::create('ventas', function (Blueprint $table) {
             $table->id();
-
-            $table->unsignedBigInteger('orden_despacho_id');
-
+            $table->unsignedBigInteger('cliente_id');
             $table->string('serie_venta');
             $table->date('fecha_venta');
-            $table->double('peso_neto',8,2);
+            $table->double('peso_neto',8,2)->nullable();
             $table->string('forma_de_pago');
             $table->unsignedBigInteger('metodo_pago_id');
             $table->double('monto_total');
@@ -32,8 +30,8 @@ return new class extends Migration
             $table->string('url_venta_documento_ticket')->nullable();
             $table->boolean('estado')->default(1);
 
-            $table->foreign('orden_despacho_id')->references('id')->on('orden_despachos')->onDelete('cascade');
-            $table->foreign('metodo_pago_id')->references('id')->on('metodo_pagos')->onDelete('cascade');
+            $table->foreign('cliente_id')->references('id')->on('clientes');
+            $table->foreign('metodo_pago_id')->references('id')->on('metodo_pagos');
             $table->timestamps();
         });
     }

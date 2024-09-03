@@ -102,25 +102,26 @@
     <!-- Información de la Venta -->
     <div>
         <h2>Información de la Venta</h2>
-        <p><strong>ID de Venta:</strong> {{ $venta->serie_venta }} | <strong>Cliente:</strong> {{ $venta->ordenDespacho->cliente->razon_social }} | <strong>Fecha:</strong> {{ $venta->created_at->format('d/m/Y') }}</p>
-        <p><strong>Forma de pago:</strong> {{ $venta->forma_de_pago ? 'Crédito' : 'Contado' }} | <strong>Método de pago:</strong> {{ $venta->metodoPago->descripcion }}</p>
+        <p><strong>ID de Venta:</strong> {{ $venta->serie_venta }} | <strong>Cliente:</strong> {{ $venta->cliente->razon_social }} | <strong>Fecha:</strong> {{ $venta->created_at->format('d/m/Y') }}</p>
+        <p><strong>Forma de pago:</strong> {{ $venta->forma_de_pago ? 'Crédito' : 'Contado' }}</p>
         <p><strong>Monto a pagar:</strong> {{ number_format($venta->monto_total, 2) }} </p>
-        <p><strong>Recibido:</strong> {{ number_format($venta->monto_recibido, 2) }} | <strong>Saldo:</strong> {{ number_format($venta->saldo, 2) }} </p>
+
+        <h5>Pagos</h5>
+        @foreach($venta->pagos as $pago)
+            <p><strong> {{ $pago->metodo_pago_descripcion }}:</strong> {{ number_format($pago->monto, 2) }} </p>
+        @endforeach
+
     </div>
 
-    <!-- Información de la Orden -->
-    <div>
-        <h2>Orden de Despacho</h2>
-        <p><strong>Serie de Orden:</strong> {{ $orden->serie_orden }} | <strong>Sr(a):</strong> {{ $orden->cliente->razon_social }} | <strong>Fecha de Despacho:</strong> {{ \Carbon\Carbon::parse($orden->fecha_despacho)->format('d/m/Y') }}</p>
-        <p><strong>Presentación:</strong> {{ $orden->presentacion_pollo ? 'Pollo Beneficiado' : 'Pollo Vivo' }} | <strong>Tipo de Pollo:</strong> {{ $orden->tipoPollo->descripcion }}</p>
-    </div>
 
     <!-- Detalles de la Orden -->
     <div>
-        <h2>Detalles de la Orden</h2>
+        <h2>Detalles de la Venta</h2>
         <table>
             <thead>
                 <tr>
+                    <th>Presentación</th>
+                    <th>Tipo</th>
                     <th>Cantidad de Pollos</th>
                     <th>Peso Bruto</th>
                     <th>Cantidad de Jabas</th>
@@ -129,8 +130,10 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($orden->detalles as $detalle)
+                @foreach ($venta->detalles as $detalle)
                     <tr>
+                        <td>{{ $detalle->presentacion_pollo_descripcion }}</td>
+                        <td>{{ $detalle->tipo_pollo_descripcion }}</td>
                         <td>{{ $detalle->cantidad_pollos }}</td>
                         <td>{{ number_format($detalle->peso_bruto, 2) }}</td>
                         <td>{{ $detalle->cantidad_jabas }}</td>
@@ -141,11 +144,11 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th>Total</th>
-                    <th>{{ number_format($orden->peso_total_bruto, 2) }}</th>
-                    <th>{{ $orden->cantidad_jabas }}</th>
-                    <th>{{ number_format($orden->tara, 2) }}</th>
-                    <th>{{ number_format($orden->peso_total_neto, 2) }}</th>
+                    <th colspan="3">Total</th>
+                    <th>{{ number_format($venta->peso_total_bruto, 2) }}</th>
+                    <th>{{ $venta->cantidad_jabas }}</th>
+                    <th>{{ number_format($venta->tara, 2) }}</th>
+                    <th>{{ number_format($venta->peso_total_neto, 2) }}</th>
                 </tr>
             </tfoot>
         </table>

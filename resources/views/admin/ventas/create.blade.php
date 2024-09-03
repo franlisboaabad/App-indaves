@@ -41,76 +41,168 @@
                     </div>
 
                     <!-- Espacio vacío para alineación -->
-                    <div class="col-md-4"></div>
-
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="">Stock Cantidad de pollos</label>
+                            <input type="text" readonly class="form-control"
+                                   value="{{ $stockPollo  }}">
+                        </div>
+                    </div>
                     <!-- Select Cliente -->
                     <div class="col-md-4">
-
                         <div class="form-group">
-                            <label for="cliente_id">Seleccionar Orden de despacho</label>
-                            <select id="orden_despacho_id" name="orden_despacho_id" class="form-control select2" required>
-                                <option value="" disabled selected>Selecciona una Orden</option>
-                                @foreach ($ordenes as $orden)
-                                    <option value="{{ $orden->id }}">{{ $orden->serie_orden }}</option>
+                            <label for="cliente_id">Cliente</label>
+                            <select id="cliente_id" name="cliente_id" class="form-control select2" required >
+                                <option value="" disabled selected>Selecciona un cliente</option>
+                                @foreach ($clientes as $cliente)
+                                    <option value="{{ $cliente->id }}">{{ $cliente->nombre_comercial }}</option>
                                 @endforeach
                             </select>
                             @error('cliente_id')
-                                <span class="text-danger">{{ $message }}</span>
+                            <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-4" id="container-cliente">
-                        <div class="form-group">
-                            <label for="cliente">Cliente</label>
-                            <input type="text" id="cliente" name="cliente" class="form-control" readonly>
-                        </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createClientModal"
+                                style="margin-top: 35px">
+                            <i class="fa fa-user"></i> Nuevo Cliente
+                        </button>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="saldo">Saldo</label>
-                            <input type="text" id="saldo" name="saldo" class="form-control" readonly>
+                            <input type="text" id="saldo_pendiente" name="saldo_pendiente" class="form-control" readonly value="0">
                         </div>
                     </div>
                 </div>
 
 
-                <hr>
+                <div class="row mt-5">
+
+                    <div class="col-md-4 mb-5">
+                        <div class="form-grup">
+                            <label for="presentacion_pollo_id">Presentacion de Pollo:</label>
+                            <select id="presentacion_pollo_id" name="presentacion_pollo_id" class="form-control">
+                                @foreach ($presentacionPollos as $presentacionPollo)
+                                    <option
+                                        value="{{ $presentacionPollo->id }}"> {{ $presentacionPollo->descripcion }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-5">
+                        <div class="form-grup">
+                            <label for="tipo_pollo">Tipo de Pollo:</label>
+                            <select id="tipo_pollo_id" name="tipo_pollo_id" class="form-control">
+                                @foreach ($tipoPollos as $tipo)
+                                    <option value="{{ $tipo->id }}"> {{ $tipo->descripcion }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-5">
+                        <div class="form-group">
+                            <label for="tara">Tara kg.</label>
+                            <input type="text" id="tara" name="tara" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-md-2 mb-5">
+                        <div class="form-group">
+                            <label for="precio">Precio.</label>
+                            <input type="number" id="precio" name="precio" class="form-control">
+                        </div>
+                    </div>
+                    <!-- Número de Jabas -->
+                    <div class="col-md-4 mb-3">
+                        <div class="form-group">
+                            <label for="cantidad_jabas">Número de Jabas</label>
+                            <input type="number" id="cantidad_jabas" name="cantidad_jabas" class="form-control">
+                            @error('cantidad_jabas')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+
+                    <!-- Cantidad de Pollos -->
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="pollos_jaba">Pollos por jaba</label>
+                            <input type="number" id="pollos_jaba" name="pollos_jaba" class="form-control">
+                            @error('pollos_jaba')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+
+                    <!-- Cantidad de Pollos -->
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="cantidad_pollos">Cantidad de Pollos</label>
+                            <input type="number" id="cantidad_pollos" name="cantidad_pollos" class="form-control">
+                            @error('cantidad_pollos')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+
+                    <!-- Peso Bruto -->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="peso_bruto">Peso Bruto</label>
+                            <input type="number" step="0.01" id="peso_bruto" name="peso_bruto" class="form-control">
+                            @error('peso_bruto')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+
+                    <!-- Botón para agregar detalles -->
+                    <div class="col-md-12">
+                        <button type="button" id="addDetailBtn" class="btn btn-primary">Agregar al Detalle</button>
+                    </div>
+
+                </div>
+
                 <!-- Tabla de Detalles -->
-                <h3>Detalle de Orden</h3>
-                <div class="mt-4 mb-5">
+                <div class="mt-4">
                     <table class="table table-bordered" id="detailsTable">
                         <thead>
-                            <tr>
-                                <th>Tipo de Pollo</th>
-                                <th>Cantidad de Pollos</th>
-                                <th>Peso Bruto</th>
-                                <th>Cantidad de Jabas</th>
-                                <th>Tara</th>
-                                <th>Peso Neto</th>
-                                <th>Sub Total</th>
-                            </tr>
+                        <tr>
+                            <th>Cantidad de Pollos</th>
+                            <th>Peso Bruto</th>
+                            <th>Cantidad de Jabas</th>
+                            <th>Tara</th>
+                            <th>Precio</th>
+                            <th>Peso Neto</th>
+                            <th>Sub Total</th>
+                            <th>Acciones</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <!-- Las filas de la tabla se agregarán aquí mediante JavaScript -->
+                        <!-- Las filas de la tabla se agregarán aquí mediante JavaScript -->
                         </tbody>
                         <tfoot>
-                            <tr>
-                                <th>Total</th>
-                                <th id="totalChiken">0</th>
-                                <th id="totalWeight">0.00</th>
-                                <th id="totalBoxes">0</th>
-                                <th id="totalTara">0.00</th>
-                                <th id="totalNetWeight">0.00</th>
-                                <th id="subtotal">0.00</th>
-                            </tr>
+                        <tr>
+                            {{-- <th>Total</th> --}}
+                            <th id="totalChiken">0.00</th>
+                            <th id="totalWeight">0.00</th>
+                            <th id="totalBoxes">0</th>
+                            <th id="totalTara">0.00</th>
+                            <th id="precio">0.00</th>
+                            <th id="totalNetWeight">0.00</th>
+                            <th id="subtotal">0.00</th>
+
+                            <th></th>
+                        </tr>
                         </tfoot>
                     </table>
                 </div>
-
-
-                <hr>
-
-
 
                 <!-- Información de Venta en Dos Columnas -->
                 <div class="row mt-4">
@@ -141,15 +233,7 @@
                         </div>
                     </div>
 
-                    <!-- Información de Precios -->
-                    <div class="col-md-4 mb-4">
-                        {{-- <div class="form-group">
-                            <label for="precio_venta">Precio de Venta (por unidad)</label>
-                            <input type="text" id="precio_venta" name="precio_venta" class="form-control"
-                                value="{{ $precio->precio ?? 0 }}" placeholder="Ingrese el precio de venta">
-                        </div> --}}
-                    </div>
-
+                    <div class="col-md-4 mb-4"></div>
                     <div class="col-md-4 mb-4">
                         <div class="form-group">
                             <label for="monto_total">Monto Total a Pagar</label>
@@ -196,7 +280,8 @@
         </div>
     </div>
 
-
+    <!-- Modal Add cliente -->
+    @include('admin.clientes.modal')
 
 
     <!-- Modal Imprimir documentos -->
@@ -213,8 +298,8 @@
                     <p>Seleccione el tipo de documento que desea generar:</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnDocumentA4">Documento A4</button>
-                    <button type="button" class="btn btn-secondary" id="btnDocumentTicket">Documento Ticket</button>
+                    <a target="_blank" class="btn btn-primary" id="btnDocumentA4">Documento A4</a>
+                    <a target="_blank" class="btn btn-secondary" id="btnDocumentTicket">Documento Ticket</a>
                     <!-- Button to close the modal and reload the page -->
                     <button type="button" class="btn btn-danger" id="btnReloadPage">Cerrar y Recargar</button>
                 </div>
@@ -257,8 +342,14 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+        const tipo_pollos = @json($tipoPollos);
+        const presentacion_pollos = @json($presentacionPollos);
+        const prices = @json($prices);
+        const clientes = @json($clientes);
         document.addEventListener('DOMContentLoaded', function() {
-
+            obtenerPrecio();
+            obtenerTara();
+            obtenerSaldo();
             // Función para obtener la fecha en formato YYYY-MM-DD en la zona horaria local
             function getLocalDateString() {
                 const today = new Date();
@@ -272,125 +363,88 @@
             document.getElementById('fecha_venta').value = getLocalDateString();
 
 
-            $('#orden_despacho_id').on('change', function() {
-                var ordenId = $(this).val();
-                if (ordenId) {
-                    $.ajax({
-                        url: '/ordenes/' + ordenId,
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(data) {
-                            if (data) {
-                                // Limpiar la tabla antes de agregar nuevas filas
-                                $('#detailsTable tbody').empty();
-
-
-                                // Agregar filas con los detalles de la orden
-                                data.orden.detalles.forEach(function(detalle) {
-                                    var row = '<tr>' +
-                                        '<td>' + detalle.tipo_pollo_descripcion +
-                                        '</td>' +
-                                        '<td>' + detalle.cantidad_pollos + '</td>' +
-                                        '<td>' + detalle.peso_bruto + '</td>' +
-                                        '<td>' + detalle.cantidad_jabas + '</td>' +
-                                        '<td>' + detalle.tara + '</td>' +
-                                        '<td>' + detalle.peso_neto + '</td>' +
-                                        '<td>' + detalle.subtotal + '</td>' +
-                                        '</tr>';
-                                    $('#detailsTable tbody').append(row);
-                                });
-
-                                $('#cliente').val(data.orden?.cliente_razon_social);
-                                $('#saldo').val(data.orden?.cliente?.saldos_sum_total);
-
-                                // Calcular y actualizar los totales
-                                updateTotals();
-                                $('#orden-detalle').show();
-                                updatePago();
-
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error:', error);
-                        }
-                    });
-                } else {
-                    $('#orden-detalle').hide();
-                }
-            });
-
-            // Función para calcular y actualizar los totales
-            function updateTotals() {
-                var totalChiken = 0;
-                var totalWeight = 0;
-                var totalBoxes = 0;
-                var totalTara = 0;
-                var totalNetWeight = 0;
-                var subtotal = 0;
-
-                $('#detailsTable tbody tr').each(function() {
-                    var cells = $(this).find('td');
-                    totalChiken += parseInt($(cells[1]).text()) || 0;
-                    totalWeight += parseFloat($(cells[2]).text()) || 0;
-                    totalBoxes += parseInt($(cells[3]).text()) || 0;
-                    totalTara += parseFloat($(cells[4]).text()) || 0;
-                    totalNetWeight += parseFloat($(cells[5]).text()) || 0;
-                    subtotal += parseFloat($(cells[6]).text()) || 0;
-                });
-
-                $('#totalChiken').text(totalChiken);
-                $('#totalWeight').text(totalWeight.toFixed(2));
-                $('#totalBoxes').text(totalBoxes);
-                $('#totalTara').text(totalTara.toFixed(2));
-                $('#totalNetWeight').text(totalNetWeight.toFixed(2));
-                $('#subtotal').text(subtotal.toFixed(2));
-
-                //tomar el peso neto para enviar
-                $('#peso_neto').val(totalNetWeight.toFixed(2));
-
-                //monto total a pagar
-                $('#monto_total').val(subtotal.toFixed(2));
-            }
-
             // Función para eliminar una fila
             $('#detailsTable').on('click', '.remove-row', function() {
                 $(this).closest('tr').remove();
                 updateTotals();
             });
 
-            // Actualizar el monto a pagar cuando cambie el precio de venta
-            $('#precio_venta').on('input', function() {
-                var precioVenta = parseFloat($(this).val()) || 0;
-                var totalNetWeight = parseFloat($('#totalNetWeight').text()) || 0;
-                $('#monto_total').val((totalNetWeight * precioVenta).toFixed(2));
-            });
-
-            function updatePago() {
-                var precioVenta = parseFloat($('#precio_venta').val()) || 0;
-                var totalNetWeight = parseFloat($('#totalNetWeight').text()) || 0;
-                // $('#monto_total').val((totalNetWeight * precioVenta).toFixed(2));
-            }
-
-
             $('#btnGenerar').on('click', function(event) {
                 event.preventDefault(); // Evita el envío inmediato del formulario
-
-                // Seleccionar los elementos usando el selector adecuado
-                var monto_total = parseFloat($('#monto_total').val()) || 0;
-                var saldo = parseFloat($('#saldo').val()) || 0;
-
-                // Validar si ambos valores son cero
-                if (monto_total === 0 && saldo === 0) {
+                const clienteId = $('#cliente_id').val();
+                const serie_venta = $('#serie_venta').val();
+                const fecha_venta = $('#fecha_venta').val();
+                // Validar el cliente_id
+                if (!clienteId) {
                     Swal.fire({
-                        title: 'Error',
-                        text: 'No existe monto total de la venta',
-                        icon: 'error',
-                        showConfirmButton: false, // Oculta el botón de confirmación
-                        timer: 1500 // Muestra el mensaje durante 1500 ms
+                        icon: 'warning',
+                        title: 'Atención',
+                        text: 'Por favor, seleccione un cliente.',
                     });
-                    return; // Detiene la ejecución del resto del código
+                    return;
                 }
 
+
+                // Recoger los datos de la tabla
+                let totalChiken = $('#totalChiken').text();
+                let totalWeight = $('#totalWeight').text();
+                let totalBoxes = $('#totalBoxes').text();
+                let totalTara = $('#totalTara').text();
+                let totalNetWeight = $('#totalNetWeight').text();
+                let subtotal = $('#subtotal').text();
+
+                // Recoger los datos de la tabla
+                let detalles = [];
+                $('#detailsTable tbody tr').each(function () {
+                    let cantidadPollos = $(this).find('td:eq(0)').text();
+                    let pesoBruto = $(this).find('td:eq(1)').text();
+                    let cantidadJabas = $(this).find('td:eq(2)').text();
+                    let tara = $(this).find('td:eq(3)').text();
+                    let precio = $(this).find('td:eq(4)').text();
+                    let pesoNeto = $(this).find('td:eq(5)').text();
+                    let subtotal = $(this).find('td:eq(6)').text();
+
+                    detalles.push({
+                        cantidad_pollos: cantidadPollos,
+                        peso_bruto: pesoBruto,
+                        cantidad_jabas: cantidadJabas,
+                        tara: tara,
+                        peso_neto: pesoNeto,
+                        precio,
+                        subtotal: subtotal,
+                        tipo_pollo_id: $(this).data('tipo_pollo_id'),
+                        presentacion_pollo_id: $(this).data('presentacion_pollo_id'),
+                    });
+                });
+
+                // Validar que hay detalles en la tabla
+                if (detalles.length === 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Atención',
+                        text: 'La tabla no tiene datos.',
+                    });
+                    return;
+                }
+
+                let data = {
+                    cliente_id: clienteId,
+                    serie_venta: serie_venta,
+                    fecha_venta: fecha_venta,
+                    cantidad_pollos: totalChiken,
+                    peso_total_bruto: totalWeight,
+                    cantidad_jabas: totalBoxes,
+                    tara: totalTara,
+                    peso_total_neto: totalNetWeight,
+                    subtotal : subtotal,
+                    forma_de_pago  : $('#forma_de_pago').val(),
+                    metodo_pago_id  : $('#metodo_pago_id').val(),
+                    monto_recibido  : $('#monto_recibido').val(),
+                    monto_total  : $('#monto_total').val(),
+                    saldo_pendiente : $('#saldo_pendiente').val(),
+                    detalles: detalles, // Aquí se envían los detalles
+                    _token: $('meta[name="csrf-token"]').attr('content') // Token CSRF para protección
+                };
                 // Mostrar la ventana de confirmación con SweetAlert
                 Swal.fire({
                     title: '¿Estás seguro?',
@@ -407,8 +461,7 @@
                         $.ajax({
                             url: "{{ route('ventas.store') }}", // URL del método store
                             type: 'POST', // Método HTTP
-                            data: $('#ventaForm')
-                                .serialize(), // Serializa los datos del formulario
+                            data: data, // Serializa los datos del formulario
                             success: function(response) {
                                 Swal.fire({
                                     title: 'Éxito',
@@ -420,8 +473,7 @@
                                     // Redirigir o limpiar el formulario según sea necesario
                                     // window.location.reload(); // Opcional: recargar la página
                                     $('#selectDocumentTypeModal').modal('show');
-                                    setPdfUrl(response.urlPdf, response
-                                        .urlTicket);
+                                    setPrint(response.venta);
                                 });
                             },
                             error: function(xhr) {
@@ -438,37 +490,6 @@
                 });
             });
 
-
-            //calcular el saldo de manra automatica
-            function calcularSaldo() {
-                // Obtén los valores del monto total y monto recibido
-                var montoTotal = parseFloat($('#monto_total').val()) || 0;
-                var montoRecibido = parseFloat($('#monto_recibido').val()) || 0;
-
-                // Verifica si el monto recibido es mayor que el monto total
-                // if (montoRecibido > montoTotal) {
-                //     // Muestra una alerta usando SweetAlert2
-                //     Swal.fire({
-                //         icon: 'error',
-                //         title: 'Error',
-                //         text: 'El monto recibido no puede ser mayor que el monto total.',
-                //         confirmButtonText: 'Aceptar'
-                //     });
-
-                //     // Limpiar el campo de monto recibido para que el usuario pueda corregir el valor
-                //     $('#monto_recibido').val('');
-                //     $('#saldo').val('');
-                // } else {
-                //     // Calcula el saldo como la diferencia entre el monto total y el monto recibido
-                //     var saldo = montoTotal - montoRecibido;
-                //     $('#saldo').val(saldo.toFixed(2));
-                // }
-            }
-
-            // Calcula el saldo y valida cuando el monto recibido cambie
-            $('#monto_recibido').on('input', function() {
-                calcularSaldo();
-            });
 
             //seleccionar la forma de pago 0 contado, 1 credito
             $('#forma_de_pago').change(function() {
@@ -535,30 +556,10 @@
             let pdfUrl_ticket = ''
 
             // Suponiendo que la URL se obtiene cuando se registra el documento
-            function setPdfUrl(url_a4, url_ticket) {
-                pdfUrl_a4 = url_a4;
-                pdfUrl_ticket = url_ticket
+            function setPrint(venta) {
+                $('#btnDocumentA4').attr('href',venta.url_pdf);
+                $('#btnDocumentTicket').attr('href',venta.url_ticket);
             }
-
-            document.getElementById('btnDocumentA4').addEventListener('click', function() {
-                if (pdfUrl_a4) {
-                    window.open(pdfUrl_a4, '_blank');
-                } else {
-                    alert('La URL del documento no está disponible.');
-                }
-            });
-
-
-            document.getElementById('btnDocumentTicket').addEventListener('click', function() {
-                if (pdfUrl_ticket) {
-                    window.open(pdfUrl_ticket, '_blank');
-                } else {
-                    alert('La URL del documento no está disponible.');
-                }
-            });
-
-
-
             //btnReload pagina
             $('#btnReloadPage').click(function(e) {
                 e.preventDefault();
@@ -566,9 +567,164 @@
             });
 
 
+            document.getElementById('addDetailBtn').addEventListener('click', function () {
+                // Obtener los valores de los inputs
+                var cantidadPollos = document.getElementById('cantidad_pollos').value;
+                var pesoBruto = document.getElementById('peso_bruto').value;
+                var numeroJabas = document.getElementById('cantidad_jabas').value;
+                var tara = document.getElementById('tara').value;
+                const precio = document.getElementById('precio').value;
 
-            $('.select2').select2();
+                // Tara por defecto
+                var taraPorDefecto = tara; // 6 kg por jaba
 
+                // Validar que los campos no estén vacíos
+                if (!cantidadPollos || !pesoBruto || !numeroJabas) {
+                    alert('Por favor, complete todos los campos.');
+                    return;
+                }
+
+                // Calcular la tara
+                var tara = numeroJabas * taraPorDefecto;
+
+                // Calcular el peso neto
+                var pesoNeto = pesoBruto - tara;
+
+                //calcular sub total
+                var subtotal = precio * pesoNeto;
+
+                // Crear una nueva fila para la tabla de detalles
+                const tableBody = document.getElementById('detailsTable').getElementsByTagName('tbody')[0];
+                const newRow = tableBody.insertRow();
+
+                // Insertar celdas en la nueva fila
+                newRow.insertCell(0).textContent = cantidadPollos;
+                newRow.insertCell(1).textContent = pesoBruto;
+                newRow.insertCell(2).textContent = numeroJabas;
+                newRow.insertCell(3).textContent = tara.toFixed(2);
+                newRow.insertCell(4).textContent = precio;
+                newRow.insertCell(5).textContent = pesoNeto.toFixed(2);
+                newRow.insertCell(6).textContent = subtotal.toFixed(2);
+
+                newRow.dataset.tipo_pollo_id = $('#tipo_pollo_id').val();
+                newRow.dataset.presentacion_pollo_id = $('#presentacion_pollo_id').val();
+
+
+                // Crear el botón de eliminar y añadirlo a la última celda
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Eliminar';
+                deleteBtn.className = 'btn btn-danger btn-sm';
+                deleteBtn.onclick = function () {
+                    // Eliminar la fila de la tabla
+                    const rowIndex = newRow.rowIndex;
+                    if (rowIndex > 0) { // Asegurarse de que el índice sea válido
+                        tableBody.deleteRow(rowIndex - 1);
+                        updateTotals();
+                    }
+                };
+                newRow.insertCell(7).appendChild(deleteBtn);
+
+                // Limpiar los campos del formulario
+                document.getElementById('cantidad_pollos').value = '';
+                document.getElementById('peso_bruto').value = '';
+                document.getElementById('cantidad_jabas').value = '';
+                document.getElementById('pollos_jaba').value = '';
+                document.getElementById('cantidad_jabas').select();
+
+                // Actualizar los totales
+                updateTotals();
+            });
+
+            function updateTotals() {
+                var tableBody = document.getElementById('detailsTable').getElementsByTagName('tbody')[0];
+                var rows = tableBody.getElementsByTagName('tr');
+
+                var totalChiken = 0;
+                var totalWeight = 0;
+                var totalTara = 0;
+                var totalNetWeight = 0;
+                var totalBoxes = 0;
+                var subtotal = 0;
+
+                // Sumar los valores de cada fila
+                for (var i = 0; i < rows.length; i++) {
+                    var cells = rows[i].getElementsByTagName('td');
+                    totalChiken += parseInt(cells[0].textContent);
+                    totalWeight += parseFloat(cells[1].textContent);
+                    totalTara += parseFloat(cells[3].textContent);
+                    totalNetWeight += parseFloat(cells[5].textContent);
+                    totalBoxes += parseInt(cells[2].textContent);
+                    subtotal +=parseFloat(cells[6].textContent);
+                }
+
+                // Mostrar los totales en el pie de la tabla
+                document.getElementById('totalChiken').textContent = totalChiken.toFixed(2);
+                document.getElementById('totalWeight').textContent = totalWeight.toFixed(2);
+                document.getElementById('totalTara').textContent = totalTara.toFixed(2);
+                document.getElementById('totalNetWeight').textContent = totalNetWeight.toFixed(2);
+                document.getElementById('totalBoxes').textContent = totalBoxes;
+                document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+
+
+                const saldo = +$('#saldo_pendiente').val();
+                const totalPay = subtotal - saldo;
+                //monto total a pagar
+                $('#monto_total').val(totalPay.toFixed(2));
+            }
+
+            $('#presentacion_pollo_id').change(function (el) {
+                obtenerTara();
+                obtenerPrecio();
+            });
+
+            $('#tipo_pollo_id').change(function (el) {
+                obtenerPrecio();
+            });
+
+            function obtenerPrecio() {
+                const value_presentacion = $('#presentacion_pollo_id').val();
+                const value_tipo_pollo = $('#tipo_pollo_id').val();
+
+                const precioBuscado = prices.find(price => price.presentacion_pollo_id == value_presentacion &&
+                    price.tipo_pollo_id == value_tipo_pollo);
+
+                if (precioBuscado) {
+                    $('#precio').val(precioBuscado?.precio);
+                }
+            }
+
+            function obtenerTara() {
+                const value = $('#presentacion_pollo_id').val();
+                const type = presentacion_pollos.find(type => type.id == value);
+                if (type) {
+                    $('#tara').val(type?.tara)
+                }
+            }
+
+            function obtenerSaldo(){
+                const clienteId = $('#cliente_id').val();
+                if(clienteId){
+                    const clienteBuscado = clientes.find(cliente=>cliente.id == clienteId);
+                    $('#saldo_pendiente').val(clienteBuscado.saldos_sum_total|| 0)
+                }
+            }
+
+            $('#cliente_id').change(function(){
+                obtenerSaldo();
+            });
+
+            $('#cantidad_pollos').focus(function (e) {
+                e.preventDefault();
+
+                let cantidad_jabas = $('#cantidad_jabas').val();
+                let pollos_jaba = $('#pollos_jaba').val();
+
+                $('#cantidad_pollos').val(cantidad_jabas * pollos_jaba);
+
+            });
+
+            $('.select2').select2()
         });
     </script>
 @stop
+

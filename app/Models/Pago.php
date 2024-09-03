@@ -9,7 +9,15 @@ class Pago extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['venta_id', 'caja_id', 'metodo_pago_id', 'monto'];
+    protected $fillable = [
+        'venta_id',
+        'caja_id',
+        'metodo_pago_id',
+        'monto'
+    ];
+
+    public const FORMA_PAGO_CONTADO = 0;
+    public const FORMA_PAGO_CREDITO = 1;
 
     public function caja()
     {
@@ -18,7 +26,7 @@ class Pago extends Model
 
 
     // Relación con MetodoPago
-    public function metodoPago()
+    public function metodo_pago()
     {
         return $this->belongsTo(MetodoPago::class);
     }
