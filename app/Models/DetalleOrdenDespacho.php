@@ -21,6 +21,7 @@ class DetalleOrdenDespacho extends Model
         'tara',
         'peso_neto',
         'precio',
+        'subtotal',
         'estado'
     ];
 

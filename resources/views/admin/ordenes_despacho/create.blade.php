@@ -178,6 +178,7 @@
                             <th>Tara</th>
                             <th>Precio</th>
                             <th>Peso Neto</th>
+                            <th>Sub Total</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
@@ -191,8 +192,10 @@
                             <th id="totalWeight">0.00</th>
                             <th id="totalBoxes">0</th>
                             <th id="totalTara">0.00</th>
-                            <th id="totalPeso">0.00</th>
+                            <th id="precio">0.00</th>
                             <th id="totalNetWeight">0.00</th>
+                            <th id="subtotal">0.00</th>
+
                             <th></th>
                         </tr>
                         </tfoot>
@@ -445,6 +448,9 @@
                 // Calcular el peso neto
                 var pesoNeto = pesoBruto - tara;
 
+                //calcular sub total
+                var subtotal = precio * pesoNeto;
+
                 // Crear una nueva fila para la tabla de detalles
                 var tableBody = document.getElementById('detailsTable').getElementsByTagName('tbody')[0];
                 var newRow = tableBody.insertRow();
@@ -456,6 +462,7 @@
                 newRow.insertCell(3).textContent = tara.toFixed(2);
                 newRow.insertCell(4).textContent = precio;
                 newRow.insertCell(5).textContent = pesoNeto.toFixed(2);
+                newRow.insertCell(6).textContent = subtotal.toFixed(2);
 
                 newRow.dataset.tipo_pollo_id = $('#tipo_pollo_id').val();
                 newRow.dataset.presentacion_pollo_id = $('#presentacion_pollo_id').val();
@@ -473,7 +480,7 @@
                         updateTotals();
                     }
                 };
-                newRow.insertCell(6).appendChild(deleteBtn);
+                newRow.insertCell(7).appendChild(deleteBtn);
 
                 // Limpiar los campos del formulario
                 document.getElementById('cantidad_pollos').value = '';
@@ -495,6 +502,7 @@
                 var totalTara = 0;
                 var totalNetWeight = 0;
                 var totalBoxes = 0;
+                var subtotal = 0;
 
                 // Sumar los valores de cada fila
                 for (var i = 0; i < rows.length; i++) {
@@ -504,6 +512,7 @@
                     totalTara += parseFloat(cells[3].textContent);
                     totalNetWeight += parseFloat(cells[5].textContent);
                     totalBoxes += parseInt(cells[2].textContent);
+                    subtotal +=parseFloat(cells[6].textContent);
                 }
 
                 // Mostrar los totales en el pie de la tabla
@@ -512,6 +521,7 @@
                 document.getElementById('totalTara').textContent = totalTara.toFixed(2);
                 document.getElementById('totalNetWeight').textContent = totalNetWeight.toFixed(2);
                 document.getElementById('totalBoxes').textContent = totalBoxes;
+                document.getElementById('subtotal').textContent = subtotal.toFixed(2);
             }
 
             //fin detalle pedido
@@ -662,6 +672,7 @@
                 let totalBoxes = $('#totalBoxes').text();
                 let totalTara = $('#totalTara').text();
                 let totalNetWeight = $('#totalNetWeight').text();
+                let subtotal = $('#subtotal').text();
 
                 // Recoger los datos de la tabla
                 let detalles = [];
@@ -672,6 +683,7 @@
                     let tara = $(this).find('td:eq(3)').text();
                     let precio = $(this).find('td:eq(4)').text();
                     let pesoNeto = $(this).find('td:eq(5)').text();
+                    let subtotal = $(this).find('td:eq(6)').text();
 
                     detalles.push({
                         cantidad_pollos: cantidadPollos,
@@ -680,6 +692,7 @@
                         tara: tara,
                         peso_neto: pesoNeto,
                         precio,
+                        subtotal: subtotal,
                         tipo_pollo_id: $(this).data('tipo_pollo_id'),
                         presentacion_pollo_id: $(this).data('presentacion_pollo_id'),
                     });
@@ -707,6 +720,7 @@
                     cantidad_jabas: totalBoxes,
                     tara: totalTara,
                     peso_total_neto: totalNetWeight,
+                    subtotal : subtotal,
                     detalles: detalles, // Aquí se envían los detalles
                     _token: $('meta[name="csrf-token"]').attr('content') // Token CSRF para protección
                 };

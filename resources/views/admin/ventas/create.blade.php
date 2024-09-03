@@ -87,6 +87,7 @@
                                 <th>Cantidad de Jabas</th>
                                 <th>Tara</th>
                                 <th>Peso Neto</th>
+                                <th>Sub Total</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -95,10 +96,12 @@
                         <tfoot>
                             <tr>
                                 <th>Total</th>
+                                <th id="totalChiken">0</th>
                                 <th id="totalWeight">0.00</th>
                                 <th id="totalBoxes">0</th>
                                 <th id="totalTara">0.00</th>
                                 <th id="totalNetWeight">0.00</th>
+                                <th id="subtotal">0.00</th>
                             </tr>
                         </tfoot>
                     </table>
@@ -140,11 +143,11 @@
 
                     <!-- Información de Precios -->
                     <div class="col-md-4 mb-4">
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="precio_venta">Precio de Venta (por unidad)</label>
                             <input type="text" id="precio_venta" name="precio_venta" class="form-control"
                                 value="{{ $precio->precio ?? 0 }}" placeholder="Ingrese el precio de venta">
-                        </div>
+                        </div> --}}
                     </div>
 
                     <div class="col-md-4 mb-4">
@@ -285,12 +288,14 @@
                                 // Agregar filas con los detalles de la orden
                                 data.orden.detalles.forEach(function(detalle) {
                                     var row = '<tr>' +
-                                        '<td>' + detalle.tipo_pollo_descripcion + '</td>' +
+                                        '<td>' + detalle.tipo_pollo_descripcion +
+                                        '</td>' +
                                         '<td>' + detalle.cantidad_pollos + '</td>' +
                                         '<td>' + detalle.peso_bruto + '</td>' +
                                         '<td>' + detalle.cantidad_jabas + '</td>' +
                                         '<td>' + detalle.tara + '</td>' +
                                         '<td>' + detalle.peso_neto + '</td>' +
+                                        '<td>' + detalle.subtotal + '</td>' +
                                         '</tr>';
                                     $('#detailsTable tbody').append(row);
                                 });
@@ -316,27 +321,35 @@
 
             // Función para calcular y actualizar los totales
             function updateTotals() {
+                var totalChiken = 0;
                 var totalWeight = 0;
                 var totalBoxes = 0;
                 var totalTara = 0;
                 var totalNetWeight = 0;
+                var subtotal = 0;
 
                 $('#detailsTable tbody tr').each(function() {
                     var cells = $(this).find('td');
-                    totalWeight += parseFloat($(cells[1]).text()) || 0;
-                    totalBoxes += parseInt($(cells[2]).text()) || 0;
-                    totalTara += parseFloat($(cells[3]).text()) || 0;
-                    totalNetWeight += parseFloat($(cells[4]).text()) || 0;
+                    totalChiken += parseInt($(cells[1]).text()) || 0;
+                    totalWeight += parseFloat($(cells[2]).text()) || 0;
+                    totalBoxes += parseInt($(cells[3]).text()) || 0;
+                    totalTara += parseFloat($(cells[4]).text()) || 0;
+                    totalNetWeight += parseFloat($(cells[5]).text()) || 0;
+                    subtotal += parseFloat($(cells[6]).text()) || 0;
                 });
 
+                $('#totalChiken').text(totalChiken);
                 $('#totalWeight').text(totalWeight.toFixed(2));
                 $('#totalBoxes').text(totalBoxes);
                 $('#totalTara').text(totalTara.toFixed(2));
                 $('#totalNetWeight').text(totalNetWeight.toFixed(2));
+                $('#subtotal').text(subtotal.toFixed(2));
 
                 //tomar el peso neto para enviar
                 $('#peso_neto').val(totalNetWeight.toFixed(2));
 
+                //monto total a pagar
+                $('#monto_total').val(subtotal.toFixed(2));
             }
 
             // Función para eliminar una fila
@@ -355,7 +368,7 @@
             function updatePago() {
                 var precioVenta = parseFloat($('#precio_venta').val()) || 0;
                 var totalNetWeight = parseFloat($('#totalNetWeight').text()) || 0;
-                $('#monto_total').val((totalNetWeight * precioVenta).toFixed(2));
+                // $('#monto_total').val((totalNetWeight * precioVenta).toFixed(2));
             }
 
 
@@ -407,7 +420,8 @@
                                     // Redirigir o limpiar el formulario según sea necesario
                                     // window.location.reload(); // Opcional: recargar la página
                                     $('#selectDocumentTypeModal').modal('show');
-                                    setPdfUrl(response.urlPdf, response.urlTicket);
+                                    setPdfUrl(response.urlPdf, response
+                                        .urlTicket);
                                 });
                             },
                             error: function(xhr) {
@@ -432,23 +446,23 @@
                 var montoRecibido = parseFloat($('#monto_recibido').val()) || 0;
 
                 // Verifica si el monto recibido es mayor que el monto total
-                if (montoRecibido > montoTotal) {
-                    // Muestra una alerta usando SweetAlert2
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'El monto recibido no puede ser mayor que el monto total.',
-                        confirmButtonText: 'Aceptar'
-                    });
+                // if (montoRecibido > montoTotal) {
+                //     // Muestra una alerta usando SweetAlert2
+                //     Swal.fire({
+                //         icon: 'error',
+                //         title: 'Error',
+                //         text: 'El monto recibido no puede ser mayor que el monto total.',
+                //         confirmButtonText: 'Aceptar'
+                //     });
 
-                    // Limpiar el campo de monto recibido para que el usuario pueda corregir el valor
-                    $('#monto_recibido').val('');
-                    $('#saldo').val('');
-                } else {
-                    // Calcula el saldo como la diferencia entre el monto total y el monto recibido
-                    var saldo = montoTotal - montoRecibido;
-                    $('#saldo').val(saldo.toFixed(2));
-                }
+                //     // Limpiar el campo de monto recibido para que el usuario pueda corregir el valor
+                //     $('#monto_recibido').val('');
+                //     $('#saldo').val('');
+                // } else {
+                //     // Calcula el saldo como la diferencia entre el monto total y el monto recibido
+                //     var saldo = montoTotal - montoRecibido;
+                //     $('#saldo').val(saldo.toFixed(2));
+                // }
             }
 
             // Calcula el saldo y valida cuando el monto recibido cambie

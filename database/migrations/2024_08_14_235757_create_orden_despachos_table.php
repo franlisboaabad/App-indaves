@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('cantidad_jabas');
             $table->integer('tara');
             $table->decimal('peso_total_neto');
+            $table->decimal('subtotal');
             $table->string('url_orden_documento_a4')->nullable();
             $table->string('url_orden_documento_ticket')->nullable();
             $table->boolean('estado_despacho')->default(0);

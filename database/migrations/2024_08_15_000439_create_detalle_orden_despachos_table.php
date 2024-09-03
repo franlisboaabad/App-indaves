@@ -24,6 +24,7 @@ return new class extends Migration
             $table->decimal('tara', 8, 2);
             $table->decimal('peso_neto', 8, 2);
             $table->decimal('precio', 8, 2);
+            $table->decimal('subtotal', 8, 2);
             $table->boolean('estado')->default(1);
             $table->timestamps();
         });

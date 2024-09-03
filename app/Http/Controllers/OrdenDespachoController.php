@@ -64,6 +64,10 @@ class OrdenDespachoController extends Controller
     {
         $serie = Serie::query()->where('number', 'OD01')->first();
         $cajas = Caja::get();
+        // $clientes = Cliente::where('estado', 1)->get();
+        // $stockPollo = OrdenIngreso::where('estado',1)->orderBy('id','desc')->first(); // SUMAR LA COLUMNA
+        // $tipoPollos = TipoPollo::where('estado',1)->get();
+
         $clientes = Cliente::query()->where('estado', 1)->get();
         $stockPollo = OrdenIngreso::query()
             ->where('estado', GlobalStateEnum::STATUS_ACTIVE)
@@ -73,9 +77,7 @@ class OrdenDespachoController extends Controller
 
         $prices = ListaPrecio::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
 
-        return view('admin.ordenes_despacho.create',
-            compact('clientes', 'cajas', 'serie', 'stockPollo', 'tipoPollos', 'presentacionPollos', 'prices')
-        );
+        return view('admin.ordenes_despacho.create',compact('clientes', 'cajas', 'serie', 'stockPollo', 'tipoPollos', 'presentacionPollos', 'prices'));
     }
 
     public function store(StoreOrdenDespachoRequest $request)
@@ -105,6 +107,7 @@ class OrdenDespachoController extends Controller
                 'cantidad_jabas' => $request->cantidad_jabas,
                 'tara' => $request->tara,
                 'peso_total_neto' => $request->peso_total_neto,
+                'subtotal' => $request->subtotal,
                 'presentacion_pollo' => $request->presentacion_pollo,
             ]);
 
@@ -123,6 +126,7 @@ class OrdenDespachoController extends Controller
                     'tara' => $detalle['tara'],
                     'peso_neto' => $detalle['peso_neto'],
                     'precio' => $detalle['precio'],
+                    'subtotal' => $detalle['subtotal'],
                     'tipo_pollo_id' => $detalle['tipo_pollo_id'],
                     'presentacion_pollo_id' => $detalle['presentacion_pollo_id'],
                 ]);
