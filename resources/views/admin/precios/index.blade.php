@@ -260,12 +260,12 @@
                             title: 'Éxito!',
                             text: 'El precio se ha actualizado correctamente.',
                             icon: 'success',
-                            showConfirmButton: false,
+                            showConfirmButton: true,
                             timer: 1500
                         }).then((result) => {
-                            if (result.isConfirmed) {
-                                location.reload(); // Recarga la página para actualizar la lista
-                            }
+                            $('#addPriceModal').modal('hide');
+                            // Opcionalmente, recargar la tabla o hacer otras actualizaciones
+                            location.reload();
                         });
                     },
                     error: function (xhr) {

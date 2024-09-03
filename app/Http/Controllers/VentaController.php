@@ -164,7 +164,7 @@ class VentaController extends Controller
                 $pago->venta_id = $venta->id;
                 $pago->caja_id = $cajaAbierta->id;
                 $pago->metodo_pago_id = $venta->metodo_pago_id;
-                $pago->monto = $venta->monto_total;
+                $pago->monto = $venta->monto_recibido;
                 $pago->save();
 
 
