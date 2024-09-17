@@ -126,7 +126,7 @@ const { form, formItem,addItem,deleteItem, sendForm}  = useFormIngreso(props.pre
             </div>
 
             <button type="button"  class="btn btn-success"
-                    
+
                     @click="sendForm(props.routeSave)">Registrar Orden</button>
         </div>
     </div>

@@ -18,7 +18,7 @@
                 <div class="row">
 
                     <!-- Serie de Venta -->
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="serie_venta">Serie de Venta</label>
                             <input type="text" id="serie_venta" name="serie_venta" class="form-control" required
@@ -30,7 +30,7 @@
                     </div>
 
                     <!-- Fecha de Venta -->
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="fecha_venta">Fecha de Venta</label>
                             <input type="date" id="fecha_venta" name="fecha_venta" class="form-control" required>
@@ -40,15 +40,8 @@
                         </div>
                     </div>
 
-                    <!-- Espacio vacío para alineación -->
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="">Stock Cantidad de pollos</label>
-                            <input type="text" readonly class="form-control" value="{{ $stockPollo }}">
-                        </div>
-                    </div>
                     <!-- Select Cliente -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="cliente_id">Cliente</label>
                             <select id="cliente_id" name="cliente_id" class="form-control select2" required>
@@ -68,7 +61,7 @@
                             <i class="fa fa-user"></i> Nuevo Cliente
                         </button>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="saldo">Saldo</label>
                             <input type="text" id="saldo_pendiente" name="saldo_pendiente" class="form-control" readonly

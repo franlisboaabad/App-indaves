@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Venta | INDAVES</title>
+    <title>ORDEN | INDAVES</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;

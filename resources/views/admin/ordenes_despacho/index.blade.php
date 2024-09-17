@@ -47,16 +47,25 @@
                             </td>
 
                             <td>
-                                <!-- Aquí puedes añadir botones para ver, editar o eliminar -->
-                                <a href="{{ route('ordenes-de-despacho.show', $orden->id) }}" class="btn btn-info btn-sm">Ver</a>
-                                {{-- <a href="{{ route('ordenes-de-despacho.edit', $orden->id) }}" class="btn btn-warning btn-sm">Editar</a> --}}
-                                <a href="{{ route('ordenes-de-despacho.print', ['id'=> $orden->id, 'format' => 'a4'] ) }}" class="btn btn-sm btn-primary" target="_Blank"> PDF </a>
+                                <!-- Example single danger button -->
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Acciones
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <!-- Aquí puedes añadir botones para ver, editar o eliminar -->
+                                        <a class="dropdown-item" href="{{ route('ordenes-de-despacho.show', $orden->id) }}">Ver</a>
+                                        {{-- <a href="{{ route('ordenes-de-despacho.edit', $orden->id) }}" class="btn btn-warning btn-sm">Editar</a> --}}
+                                        <a class="dropdown-item"  href="{{ route('ordenes-de-despacho.venta', ['id'=> $orden->id] ) }}" > Generar venta </a>
+                                        <a class="dropdown-item"  href="{{ route('ordenes-de-despacho.print', ['id'=> $orden->id, 'format' => 'a4'] ) }}" target="_Blank"> PDF </a>
 
-                                @if (!$orden->estado_despacho)
-                                    <!-- Botón para eliminar -->
-                                    @csrf
-                                    <button type="button" class="btn btn-danger btn-sm delete-button" data-id="{{ $orden->id }}">Eliminar</button>
-                                @endif
+                                        @if (!$orden->estado_despacho)
+                                            <!-- Botón para eliminar -->
+                                            @csrf
+                                            <button type="button" class="btn btn-danger btn-sm delete-button" data-id="{{ $orden->id }}">Eliminar</button>
+                                        @endif
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

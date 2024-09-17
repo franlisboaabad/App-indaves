@@ -31,26 +31,17 @@ use Mpdf\Mpdf;
 
 class VentaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $ventas = Venta::with('ordenDespacho') // Incluye relaciones si es necesario
-        ->orderBy('fecha_venta', 'desc') // Ordenar por fecha de venta
-        ->get();
+            ->orderBy('fecha_venta', 'desc') // Ordenar por fecha de venta
+            ->get();
         $metodos = MetodoPago::get();
 
         return view('admin.ventas.index', compact('ventas', 'metodos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         $serie = Serie::first();

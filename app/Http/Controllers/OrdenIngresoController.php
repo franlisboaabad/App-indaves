@@ -32,6 +32,7 @@ class OrdenIngresoController extends Controller
     {
         $ordenes_ingreso = OrdenIngreso::query()
             ->where('estado', GlobalStateEnum::STATUS_ACTIVE)
+            ->withSum('detalle','cantidad_pollos')
             ->get();
 
         $cantidad_pollos_pendientes = $ordenes_ingreso->sum('cantidad_pollos_stock');

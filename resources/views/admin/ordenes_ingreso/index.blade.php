@@ -23,9 +23,10 @@
                         <thead>
                             <th>#</th>
                             <th>N° guía</th>
-                            <th>Cantidad de jabas</th>
-                            <th>Cantidad de pollos Ingreso</th>
-                            <th>Peso total</th>
+                            <th>Peso Bruto</th>
+                            <th>Peso Tara</th>
+                            <th>Peso Neto</th>
+                            <th>Total Aves</th>
                             <th>Estado</th>
                             <th>Fecha de registro</th>
                             <th>Acciones</th>
@@ -35,9 +36,10 @@
                                 <tr>
                                     <td>{{ $orden->id }}</td>
                                     <td>{{ $orden->numero_guia }}</td>
-                                    <td>{{ $orden->cantidad_jabas }}</td>
-                                    <td>{{ $orden->cantidad_pollos }}</td>
-                                    <td>{{ $orden->peso_total }}</td>
+                                    <td>{{ $orden->peso_bruto }}</td>
+                                    <td>{{ $orden->peso_tara }}</td>
+                                    <td>{{ $orden->peso_neto }}</td>
+                                    <td>{{ $orden->detalle_sum_cantidad_pollos }}</td>
                                     <td>
                                         @if ($orden->estado)
                                             <span class="badge badge-success">Activo</span>

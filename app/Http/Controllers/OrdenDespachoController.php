@@ -6,6 +6,7 @@ use App\Enums\GlobalStateEnum;
 use App\Http\Requests\StoreOrdenDespachoRequest;
 use App\Models\Inventory;
 use App\Models\ListaPrecio;
+use App\Models\MetodoPago;
 use App\Models\PresentacionPollo;
 use App\Models\Venta;
 use App\Services\InventoryService;
@@ -77,7 +78,7 @@ class OrdenDespachoController extends Controller
 
         $prices = ListaPrecio::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
 
-        return view('admin.ordenes_despacho.create',compact('clientes', 'cajas', 'serie', 'stockPollo', 'tipoPollos', 'presentacionPollos', 'prices'));
+        return view('admin.ordenes_despacho.create', compact('clientes', 'cajas', 'serie', 'stockPollo', 'tipoPollos', 'presentacionPollos', 'prices'));
     }
 
     public function store(StoreOrdenDespachoRequest $request)
@@ -109,7 +110,7 @@ class OrdenDespachoController extends Controller
                     'cantidad_jabas' => $detalle['cantidad_jabas'],
                     'tara' => $detalle['tara'],
                     'peso_neto' => $detalle['peso_neto'],
-                    'precio' =>  $detalle['precio'] ?? 0,
+                    'precio' => $detalle['precio'] ?? 0,
                     'subtotal' => $detalle['subtotal'] ?? 0,
                     'tipo_pollo_id' => $detalle['tipo_pollo_id'],
                     'presentacion_pollo_id' => $detalle['presentacion_pollo_id'],
@@ -125,8 +126,8 @@ class OrdenDespachoController extends Controller
             // Confirmar la transacción
             DB::commit();
 
-            $ordenDespacho->url_pdf =  route('ordenes-de-despacho.print',['id' => $ordenDespacho->getKey(),'format' => 'a4']);
-            $ordenDespacho->url_ticket = route('ordenes-de-despacho.print',['id' => $ordenDespacho->getKey(),'format' => 'ticket']);
+            $ordenDespacho->url_pdf = route('ordenes-de-despacho.print', ['id' => $ordenDespacho->getKey(), 'format' => 'a4']);
+            $ordenDespacho->url_ticket = route('ordenes-de-despacho.print', ['id' => $ordenDespacho->getKey(), 'format' => 'ticket']);
 
             return response()->json([
                 'message' => 'Orden de despacho registrada exitosamente.',
@@ -150,10 +151,10 @@ class OrdenDespachoController extends Controller
     public function show(OrdenDespacho $ordenDespacho)
     {
         $orden = OrdenDespacho::query()
-        ->with('detalles',
-            fn($query)=>$query->withAggregate('tipo_pollo','descripcion')
-                ->withAggregate('presentacion_pollo','descripcion')
-        )->findOrFail($ordenDespacho->id);
+            ->with('detalles',
+                fn($query) => $query->withAggregate('tipo_pollo', 'descripcion')
+                    ->withAggregate('presentacion_pollo', 'descripcion')
+            )->findOrFail($ordenDespacho->id);
 
         return view('admin.ordenes_despacho.show', compact('orden'));
     }
@@ -175,14 +176,14 @@ class OrdenDespachoController extends Controller
         try {
 
             DB::beginTransaction();
-           $ordenDespacho->load('detalles');
+            $ordenDespacho->load('detalles');
             foreach ($ordenDespacho->detalles as $detalle) {
                 InventoryService::increment(
                     $detalle->tipo_pollo_id,
                     $detalle->peso_neto,
                     $detalle->cantidad_pollos,
                 );
-           }
+            }
 
             $ordenDespacho->estado = OrdenDespacho::ESTADO_INACTIVE;
             $ordenDespacho->save();
@@ -201,6 +202,37 @@ class OrdenDespachoController extends Controller
         return strtolower($format) == 'ticket' ? $this->generateTicket($orden) : $this->generatePdf_A4($orden);
     }
 
+
+    public function venta($id)
+    {
+        $serie = Serie::query()->first();
+        $cajas = Caja::get();
+        $precio = ListaPrecio::query()
+            ->where('estado', GlobalStateEnum::STATUS_ACTIVE)
+            ->latest('id')
+            ->first();
+        $metodos = MetodoPago::get();
+        $stockPollo = Inventory::query()->get();
+        $prices = ListaPrecio::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
+
+        $orden = OrdenDespacho::query()
+            ->withAggregate('cliente', 'razon_social')
+            ->with('detalles',
+                fn($query) => $query->withAggregate('tipo_pollo', 'descripcion')
+                    ->withAggregate('presentacion_pollo', 'descripcion')
+            )->findOrFail($id);
+
+        $cliente = Cliente::query()
+            ->where('estado', GlobalStateEnum::STATUS_ACTIVE)
+            ->withSum('saldos','total')
+            ->where('id',$orden->cliente_id)
+            ->first();
+
+        return view('admin.ventas.create-despacho',
+            compact( 'cajas', 'serie', 'precio', 'metodos',
+                'stockPollo','prices','orden','cliente'));
+    }
+
     private function generatePdf_A4($id)
     {
         // Obtener la orden y la empresa
@@ -213,7 +245,7 @@ class OrdenDespachoController extends Controller
                     ->withAggregate('presentacion_pollo', 'descripcion')
             )->findOrFail($id);
 
-        $pdf = Pdf::loadView('pdf.ordenes_despacho.orden_a4',[
+        $pdf = Pdf::loadView('pdf.ordenes_despacho.orden_a4', [
             'venta' => $venta,
             'empresa' => $empresa
         ]);
