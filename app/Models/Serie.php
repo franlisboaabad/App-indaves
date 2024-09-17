@@ -10,4 +10,7 @@ class Serie extends Model
     use HasFactory;
     protected $fillable = ['number', 'serie'];
 
+
+    public const DEFAULT_SERIE_DESPACHO = 2;
+    public const DEFAULT_SERIE_VENTA= 1;
 }

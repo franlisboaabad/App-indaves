@@ -115,7 +115,7 @@ Route::resource('ventas', VentaController::class)->middleware('auth');
 Route::get('ventas/{id}/{format}', [VentaController::class,'print'])->name('ventas.print')->middleware('auth');
 Route::get('ordenes/{id}', [VentaController::class, 'getOrdenDetalles'])->middleware('auth');
 Route::resource('ordenes-de-despacho',OrdenDespachoController::class)->middleware('auth')->parameters(['ordenes-de-despacho' => 'ordenDespacho']);
-Route::get('/ordenes-de-despacho/{id}/preview', [OrdenDespachoController::class, 'previewPdf'])->name('ordenes-de-despacho.preview')->middleware('auth');
+Route::get('ordenes-de-despacho/{id}/{format}', [OrdenDespachoController::class,'print'])->name('ordenes-de-despacho.print')->middleware('auth');
 Route::resource('lista-de-precios',ListaPrecioController::class)->middleware('auth')->parameters(['lista-de-precios' => 'listaPrecio']);
 Route::resource('pagos',PagoController::class)->middleware('auth');
 

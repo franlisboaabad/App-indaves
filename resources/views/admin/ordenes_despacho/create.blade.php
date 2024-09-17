@@ -16,7 +16,7 @@
                 <div class="row">
 
                     <!-- Serie de Venta -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="serie_orden">Serie de Orden</label>
                             <input type="text" id="serie_orden" name="serie_orden" class="form-control" required
@@ -28,22 +28,13 @@
                     </div>
 
                     <!-- Fecha de Venta -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="fecha_despacho">Fecha de Despacho</label>
                             <input type="date" id="fecha_despacho" name="fecha_despacho" class="form-control" required>
                             @error('fecha_despacho')
                             <span class="text-danger">{{ $message }}</span>
                             @enderror
-                        </div>
-                    </div>
-
-                    <!-- stock de pollos  -->
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="">Stock Cantidad de pollos</label>
-                            <input type="text" readonly class="form-control"
-                                   value="{{ $stockPollo  }}">
                         </div>
                     </div>
 
@@ -65,7 +56,7 @@
                     </div>
 
                     <!-- Espacios vacíos para alineación -->
-                    <div class="col-md-6">
+                    <div class="col-md-2">
                         <button type="button" class="btn btn-info" data-toggle="modal" data-target="#createClientModal"
                                 style="margin-top: 35px">
                             <i class="fa fa-user"></i> Nuevo Cliente
@@ -78,7 +69,7 @@
 
                 <div class="row mt-5">
 
-                    <div class="col-md-4 mb-5">
+                    <div class="col-md-2 mb-5">
                         <div class="form-grup">
                             <label for="presentacion_pollo_id">Presentacion de Pollo:</label>
                             <select id="presentacion_pollo_id" name="presentacion_pollo_id" class="form-control">
@@ -89,7 +80,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-4 mb-5">
+                    <div class="col-md-2 mb-5">
                         <div class="form-grup">
                             <label for="tipo_pollo">Tipo de Pollo:</label>
                             <select id="tipo_pollo_id" name="tipo_pollo_id" class="form-control">
@@ -101,19 +92,35 @@
                     </div>
                     <div class="col-md-2 mb-5">
                         <div class="form-group">
+                            <label for="tara">Cantidad disponible</label>
+                            <input type="text" id="cantidad_disponible_tipo" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-5">
+                        <div class="form-group">
+                            <label for="tara">Peso disponible</label>
+                            <input type="text" id="peso_disponible_tipo" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-5">
+                        <div class="form-group">
                             <label for="tara">Tara kg.</label>
                             <input type="text" id="tara" name="tara" class="form-control">
                         </div>
                     </div>
 
-                    <div class="col-md-2 mb-5">
+                    <div class="col-md-2 mb-5 d-none">
                         <div class="form-group">
                             <label for="precio">Precio.</label>
                             <input type="number" id="precio" name="precio" class="form-control">
                         </div>
                     </div>
                     <!-- Número de Jabas -->
-                    <div class="col-md-4 mb-3">
+
+                    <div class="col-md-2"></div>
+
+
+                    <div class="col-md-2 mb-3">
                         <div class="form-group">
                             <label for="cantidad_jabas">Número de Jabas</label>
                             <input type="number" id="cantidad_jabas" name="cantidad_jabas" class="form-control">
@@ -122,7 +129,6 @@
                             @enderror
                         </div>
                     </div>
-
 
                     <!-- Cantidad de Pollos -->
                     <div class="col-md-2">
@@ -149,7 +155,7 @@
 
 
                     <!-- Peso Bruto -->
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="peso_bruto">Peso Bruto</label>
                             <input type="number" step="0.01" id="peso_bruto" name="peso_bruto" class="form-control">
@@ -161,8 +167,8 @@
 
 
                     <!-- Botón para agregar detalles -->
-                    <div class="col-md-12">
-                        <button type="button" id="addDetailBtn" class="btn btn-primary">Agregar al Detalle</button>
+                    <div class="col-md-3 pt-2">
+                        <button type="button" id="addDetailBtn" class="btn btn-primary mt-4">Agregar al Detalle</button>
                     </div>
 
                 </div>
@@ -172,13 +178,15 @@
                     <table class="table table-bordered" id="detailsTable">
                         <thead>
                         <tr>
+                            <th>Presentación de Pollo</th>
+                            <th>Tipo de Pollo</th>
                             <th>Cantidad de Pollos</th>
                             <th>Peso Bruto</th>
                             <th>Cantidad de Jabas</th>
                             <th>Tara</th>
-                            <th>Precio</th>
+                            <th class="d-none">Precio</th>
                             <th>Peso Neto</th>
-                            <th>Sub Total</th>
+                            <th class="d-none">Sub Total</th>
                             <th>Acciones</th>
                         </tr>
                         </thead>
@@ -188,13 +196,15 @@
                         <tfoot>
                         <tr>
                             {{-- <th>Total</th> --}}
+                            <th id="presentacionPolloId">-</th>
+                            <th id="tipoPolloId">-</th>
                             <th id="totalChiken">0.00</th>
                             <th id="totalWeight">0.00</th>
                             <th id="totalBoxes">0</th>
                             <th id="totalTara">0.00</th>
-                            <th id="precio">0.00</th>
+                            <th id="precio" class="d-none">0.00</th>
                             <th id="totalNetWeight">0.00</th>
-                            <th id="subtotal">0.00</th>
+                            <th id="subtotal" class="d-none">0.00</th>
 
                             <th></th>
                         </tr>
@@ -344,8 +354,8 @@
                     <p>Seleccione el tipo de documento que desea generar:</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnDocumentA4">Documento A4</button>
-                    <button type="button" class="btn btn-secondary" id="btnDocumentTicket">Documento Ticket</button>
+                    <a class="btn btn-primary" id="btnDocumentA4" target="_blank">Documento A4</a>
+                    <a class="btn btn-secondary" id="btnDocumentTicket" target="_blank">Documento Ticket</a>
                     <!-- Button to close the modal and reload the page -->
                     <button type="button" class="btn btn-danger" id="btnReloadPage">Cerrar y Recargar</button>
                 </div>
@@ -371,11 +381,13 @@
         const tipo_pollos = @json($tipoPollos);
         const presentacion_pollos = @json($presentacionPollos);
         const prices = @json($prices);
+        const stocks = @json($stockPollo);
 
         document.addEventListener('DOMContentLoaded', function () {
 
             obtenerPrecio();
             obtenerTara();
+            obtenerDisponibilidad();
             //peso api
             $('#peso_bruto').on('focus', function () {
                 // Realiza la solicitud AJAX cuando el campo reciba foco
@@ -395,9 +407,7 @@
                     }
                 });
             });
-
             //calcular cantidad de pollos
-
             $('#cantidad_pollos').focus(function (e) {
                 e.preventDefault();
 
@@ -407,10 +417,7 @@
                 $('#cantidad_pollos').val(cantidad_jabas * pollos_jaba);
 
             });
-
-
             let detailIndex = 1;
-
             // Función para obtener la fecha en formato YYYY-MM-DD en la zona horaria local
             function getLocalDateString() {
                 const today = new Date();
@@ -455,31 +462,25 @@
                 var tableBody = document.getElementById('detailsTable').getElementsByTagName('tbody')[0];
                 var newRow = tableBody.insertRow();
 
-                // Insertar celdas en la nueva fila
-                newRow.insertCell(0).textContent = cantidadPollos;
-                newRow.insertCell(1).textContent = pesoBruto;
-                newRow.insertCell(2).textContent = numeroJabas;
-                newRow.insertCell(3).textContent = tara.toFixed(2);
-                newRow.insertCell(4).textContent = precio;
-                newRow.insertCell(5).textContent = pesoNeto.toFixed(2);
-                newRow.insertCell(6).textContent = subtotal.toFixed(2);
-
                 newRow.dataset.tipo_pollo_id = $('#tipo_pollo_id').val();
                 newRow.dataset.presentacion_pollo_id = $('#presentacion_pollo_id').val();
 
+                const presentation = presentacion_pollos.find(presentation=> presentation.id == newRow.dataset.presentacion_pollo_id);
+                const type = tipo_pollos.find(type=> type.id == newRow.dataset.tipo_pollo_id);
+                // Insertar celdas en la nueva fila
+                newRow.insertCell(0).textContent = presentation.descripcion;
+                newRow.insertCell(1).textContent = type.descripcion;
+                newRow.insertCell(2).textContent = cantidadPollos;
+                newRow.insertCell(3).textContent = pesoBruto;
+                newRow.insertCell(4).textContent = numeroJabas;
+                newRow.insertCell(5).textContent = tara.toFixed(2);
+                newRow.insertCell(6).textContent = pesoNeto.toFixed(2);
 
-                // Crear el botón de eliminar y añadirlo a la última celda
-                var deleteBtn = document.createElement('button');
+                const deleteBtn = document.createElement('button');
                 deleteBtn.textContent = 'Eliminar';
-                deleteBtn.className = 'btn btn-danger btn-sm';
-                deleteBtn.onclick = function () {
-                    // Eliminar la fila de la tabla
-                    var rowIndex = newRow.rowIndex;
-                    if (rowIndex > 0) { // Asegurarse de que el índice sea válido
-                        tableBody.deleteRow(rowIndex - 1);
-                        updateTotals();
-                    }
-                };
+                deleteBtn.className = 'btn btn-danger btn-sm btn-delete';
+                deleteBtn.setAttribute('type','button');
+
                 newRow.insertCell(7).appendChild(deleteBtn);
 
                 // Limpiar los campos del formulario
@@ -493,26 +494,30 @@
                 updateTotals();
             });
 
-            function updateTotals() {
-                var tableBody = document.getElementById('detailsTable').getElementsByTagName('tbody')[0];
-                var rows = tableBody.getElementsByTagName('tr');
+            $(document).on('click','.btn-delete',function(){
+                $(this).parents('tr').remove();
+                updateTotals();
+            })
 
-                var totalChiken = 0;
-                var totalWeight = 0;
-                var totalTara = 0;
-                var totalNetWeight = 0;
-                var totalBoxes = 0;
-                var subtotal = 0;
+            function updateTotals() {
+                const tableBody = document.getElementById('detailsTable').getElementsByTagName('tbody')[0];
+                const rows = tableBody.getElementsByTagName('tr');
+
+                let totalChiken = 0;
+                let totalWeight = 0;
+                let totalTara = 0;
+                let totalNetWeight = 0;
+                let totalBoxes = 0;
+                let subtotal = 0;
 
                 // Sumar los valores de cada fila
-                for (var i = 0; i < rows.length; i++) {
-                    var cells = rows[i].getElementsByTagName('td');
-                    totalChiken += parseInt(cells[0].textContent);
-                    totalWeight += parseFloat(cells[1].textContent);
-                    totalTara += parseFloat(cells[3].textContent);
-                    totalNetWeight += parseFloat(cells[5].textContent);
-                    totalBoxes += parseInt(cells[2].textContent);
-                    subtotal +=parseFloat(cells[6].textContent);
+                for (let i = 0; i < rows.length; i++) {
+                    const cells = rows[i].getElementsByTagName('td');
+                    totalChiken += parseInt(cells[2].textContent);
+                    totalWeight += parseFloat(cells[3].textContent);
+                    totalBoxes += parseInt(cells[4].textContent);
+                    totalTara += parseFloat(cells[5].textContent);
+                    totalNetWeight += parseFloat(cells[6].textContent);
                 }
 
                 // Mostrar los totales en el pie de la tabla
@@ -520,11 +525,8 @@
                 document.getElementById('totalWeight').textContent = totalWeight.toFixed(2);
                 document.getElementById('totalTara').textContent = totalTara.toFixed(2);
                 document.getElementById('totalNetWeight').textContent = totalNetWeight.toFixed(2);
-                document.getElementById('totalBoxes').textContent = totalBoxes;
-                document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+                document.getElementById('totalBoxes').textContent = totalBoxes.toFixed(2);
             }
-
-            //fin detalle pedido
 
             //buscar documento dni , ruc
             $('#searchDocumentBtn').on('click', function () {
@@ -574,7 +576,6 @@
                 });
             });
             //end search
-
 
             //guardar cliente
             $('#saveClientBtn').on('click', function () {
@@ -637,7 +638,6 @@
                 });
             });
 
-
             // Función para añadir el cliente al select
             function addClientToSelect(cliente) {
                 var $select = $('#cliente_id');
@@ -677,13 +677,11 @@
                 // Recoger los datos de la tabla
                 let detalles = [];
                 $('#detailsTable tbody tr').each(function () {
-                    let cantidadPollos = $(this).find('td:eq(0)').text();
-                    let pesoBruto = $(this).find('td:eq(1)').text();
-                    let cantidadJabas = $(this).find('td:eq(2)').text();
-                    let tara = $(this).find('td:eq(3)').text();
-                    let precio = $(this).find('td:eq(4)').text();
-                    let pesoNeto = $(this).find('td:eq(5)').text();
-                    let subtotal = $(this).find('td:eq(6)').text();
+                    let cantidadPollos = $(this).find('td:eq(2)').text();
+                    let pesoBruto = $(this).find('td:eq(3)').text();
+                    let cantidadJabas = $(this).find('td:eq(4)').text();
+                    let tara = $(this).find('td:eq(5)').text();
+                    let pesoNeto = $(this).find('td:eq(6)').text();
 
                     detalles.push({
                         cantidad_pollos: cantidadPollos,
@@ -691,8 +689,6 @@
                         cantidad_jabas: cantidadJabas,
                         tara: tara,
                         peso_neto: pesoNeto,
-                        precio,
-                        subtotal: subtotal,
                         tipo_pollo_id: $(this).data('tipo_pollo_id'),
                         presentacion_pollo_id: $(this).data('presentacion_pollo_id'),
                     });
@@ -720,7 +716,6 @@
                     cantidad_jabas: totalBoxes,
                     tara: totalTara,
                     peso_total_neto: totalNetWeight,
-                    subtotal : subtotal,
                     detalles: detalles, // Aquí se envían los detalles
                     _token: $('meta[name="csrf-token"]').attr('content') // Token CSRF para protección
                 };
@@ -750,8 +745,7 @@
                                     showConfirmButton: false,
                                     timer: 1500
                                 }).then(() => {
-                                    setPdfUrl(response.pdf_url_a4, response
-                                        .pdf_url_ticket);
+                                    setPrint(response.data);
                                     $('#selectDocumentTypeModal').modal('show');
                                 });
                             },
@@ -771,36 +765,12 @@
 
             });
 
-            //fin button orde de despacho
-
-            //ruta de pdf
-            // Variable global para guardar la URL del PDF
-            let pdfUrl_a4 = '';
-            let pdfUrl_ticket = ''
-
-            // Suponiendo que la URL se obtiene cuando se registra el documento
-            function setPdfUrl(url_a4, url_ticket) {
-                pdfUrl_a4 = url_a4;
-                pdfUrl_ticket = url_ticket
+            function setPrint(orden) {
+                $('#btnDocumentA4').attr('href', orden.url_pdf);
+                $('#btnDocumentTicket').attr('href', orden.url_ticket);
             }
 
 
-            document.getElementById('btnDocumentA4').addEventListener('click', function () {
-                if (pdfUrl_a4) {
-                    window.open(pdfUrl_a4, '_blank');
-                } else {
-                    alert('La URL del documento no está disponible.');
-                }
-            });
-
-
-            document.getElementById('btnDocumentTicket').addEventListener('click', function () {
-                if (pdfUrl_ticket) {
-                    window.open(pdfUrl_ticket, '_blank');
-                } else {
-                    alert('La URL del documento no está disponible.');
-                }
-            });
 
             document.getElementById('btnReloadPage').addEventListener('click', function () {
                 location.reload();
@@ -817,6 +787,7 @@
 
             $('#tipo_pollo_id').change(function (el) {
                 obtenerPrecio();
+                obtenerDisponibilidad();
             });
 
             function obtenerPrecio() {
@@ -836,6 +807,15 @@
                 const type = presentacion_pollos.find(type => type.id == value);
                 if (type) {
                     $('#tara').val(type?.tara)
+                }
+            }
+
+            function obtenerDisponibilidad(){
+                const type = $('#tipo_pollo_id').val();
+                const stock = stocks.find(stock =>stock.tipo_pollo_id == type);
+                if(stock){
+                    $('#cantidad_disponible_tipo').val(stock.total_pollos);
+                    $('#peso_disponible_tipo').val(stock.total_peso);
                 }
             }
         });

@@ -6,6 +6,7 @@ use App\CoreDevPro\Template;
 use App\Enums\GlobalStateEnum;
 use App\Http\Requests\StoreVentaRequest;
 use App\Models\Caja;
+use App\Models\Inventory;
 use App\Models\OrdenIngreso;
 use App\Models\Pago;
 use App\Models\PresentacionPollo;
@@ -18,6 +19,7 @@ use App\Models\Empresa;
 use App\Models\MetodoPago;
 use App\Models\ListaPrecio;
 use App\Models\DetalleVenta;
+use App\Services\SeriesService;
 use Illuminate\Http\Request;
 use App\Models\OrdenDespacho;
 use Illuminate\Session\Store;
@@ -53,13 +55,12 @@ class VentaController extends Controller
     {
         $serie = Serie::first();
         $cajas = Caja::get();
-        $precio = ListaPrecio::where('estado', 1)
-            ->latest('id') // Ordenar en orden descendente por el campo `id`
-            ->first(); // Obtener el primer registro de la lista ordenada
-        $metodos = MetodoPago::get();
-        $stockPollo = OrdenIngreso::query()
+        $precio = ListaPrecio::query()
             ->where('estado', GlobalStateEnum::STATUS_ACTIVE)
-            ->sum('cantidad_pollos_stock');
+            ->latest('id')
+            ->first();
+        $metodos = MetodoPago::get();
+        $stockPollo = Inventory::query()->get();
         $tipoPollos = TipoPollo::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
         $presentacionPollos = PresentacionPollo::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
         $prices = ListaPrecio::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
@@ -112,7 +113,7 @@ class VentaController extends Controller
             ]);
             //serie
             // Aumentar el número de serie (1) nota de venta | 2 orden despacho
-            $this->incrementarSerieVenta();
+            SeriesService::increment(Serie::DEFAULT_SERIE_VENTA);
 
             $ordenIngreso = OrdenIngreso::orderBy('id', 'desc')->first();
             // Verificar si se encontró un registro
@@ -335,12 +336,4 @@ class VentaController extends Controller
     {
         return $format == 'ticket' ? $this->generateTicket($venta) : $this->generatePdf_A4($venta);
     }
-
-    private function incrementarSerieVenta(): void
-    {
-        $serie = Serie::query()->findOrFail(1);
-        $serie->serie = $serie->serie + 1;
-        $serie->save();
-    }
-
 }

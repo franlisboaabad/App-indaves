@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Enums\GlobalStateEnum;
 use App\Http\Requests\StoreOrdenDespachoRequest;
+use App\Models\Inventory;
 use App\Models\ListaPrecio;
 use App\Models\PresentacionPollo;
+use App\Models\Venta;
+use App\Services\InventoryService;
+use App\Services\SeriesService;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -21,6 +26,7 @@ use App\Models\DetalleOrdenDespacho;
 use App\Models\OrdenIngreso;
 use App\Models\TipoPollo;
 use Illuminate\Support\Facades\Storage;
+use Mpdf\Mpdf;
 
 
 class OrdenDespachoController extends Controller
@@ -64,14 +70,8 @@ class OrdenDespachoController extends Controller
     {
         $serie = Serie::query()->where('number', 'OD01')->first();
         $cajas = Caja::get();
-        // $clientes = Cliente::where('estado', 1)->get();
-        // $stockPollo = OrdenIngreso::where('estado',1)->orderBy('id','desc')->first(); // SUMAR LA COLUMNA
-        // $tipoPollos = TipoPollo::where('estado',1)->get();
-
         $clientes = Cliente::query()->where('estado', 1)->get();
-        $stockPollo = OrdenIngreso::query()
-            ->where('estado', GlobalStateEnum::STATUS_ACTIVE)
-            ->sum('cantidad_pollos_stock');
+        $stockPollo = Inventory::query()->get();
         $tipoPollos = TipoPollo::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
         $presentacionPollos = PresentacionPollo::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
 
@@ -82,22 +82,9 @@ class OrdenDespachoController extends Controller
 
     public function store(StoreOrdenDespachoRequest $request)
     {
-
-        // Verificar si existe una caja abierta
-        //  $cajaAbierta = Caja::where('estado_caja', 1)->first();
-        $OrdenIngreso = OrdenIngreso::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
-
-        if (!$OrdenIngreso) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se ha registrado Orden de Ingreso',
-            ], 400); // Código de estado 400 para error de solicitud
-        }
-
-        DB::beginTransaction(); // Iniciar una transacción
+        DB::beginTransaction();
 
         try {
-            // Crear la OrdenDespacho
             $ordenDespacho = OrdenDespacho::create([
                 'cliente_id' => $request->cliente_id,
                 'serie_orden' => $request->serie_orden,
@@ -109,65 +96,46 @@ class OrdenDespachoController extends Controller
                 'peso_total_neto' => $request->peso_total_neto,
                 'subtotal' => $request->subtotal,
                 'presentacion_pollo' => $request->presentacion_pollo,
+                'estado_despacho' => OrdenDespacho::ESTADO_DESPACHADO
             ]);
 
-            // Aumentar el número de serie
-            $serie = Serie::findOrFail(2);
-            $serie->serie = $serie->serie + 1;
-            $serie->save();
+            SeriesService::increment(Serie::DEFAULT_SERIE_DESPACHO);
 
-            // Guardar los detalles
-            foreach ($request->detalles as $detalle) {
-                DetalleOrdenDespacho::create([
+            foreach ($request->collect('detalles') as $detalle) {
+                DetalleOrdenDespacho::query()->create([
                     'orden_despacho_id' => $ordenDespacho->id,
                     'cantidad_pollos' => $detalle['cantidad_pollos'],
                     'peso_bruto' => $detalle['peso_bruto'],
                     'cantidad_jabas' => $detalle['cantidad_jabas'],
                     'tara' => $detalle['tara'],
                     'peso_neto' => $detalle['peso_neto'],
-                    'precio' => $detalle['precio'],
-                    'subtotal' => $detalle['subtotal'],
+                    'precio' =>  $detalle['precio'] ?? 0,
+                    'subtotal' => $detalle['subtotal'] ?? 0,
                     'tipo_pollo_id' => $detalle['tipo_pollo_id'],
                     'presentacion_pollo_id' => $detalle['presentacion_pollo_id'],
                 ]);
+
+                InventoryService::decrement(
+                    $detalle['tipo_pollo_id'],
+                    $detalle['peso_neto'],
+                    $detalle['cantidad_pollos']
+                );
             }
-
-            //descontar cantidad de pollos en Orden de Ingreso
-
-            $ordenIngreso = OrdenIngreso::orderBy('id', 'desc')->first();
-            $ordenIngreso->cantidad_pollos_stock -= $request->cantidad_pollos;
-            $ordenIngreso->save();
-
-
-            // Generar los PDFs
-            $pdfFileNameA4 = $this->generatePdf_A4($ordenDespacho->id);
-            $pdfFilePathA4 = 'ordenesA4/' . $pdfFileNameA4;
-
-            $pdfFileNameTicket = $this->generatePdf_Ticket($ordenDespacho->id);
-            $pdfFilePathTicket = 'ordenesTicket/' . $pdfFileNameTicket;
-
-            // Almacenar las rutas del PDF en el modelo
-            $ordenDespacho->url_orden_documento_a4 = $pdfFilePathA4;
-            $ordenDespacho->url_orden_documento_ticket = $pdfFilePathTicket;
-            $ordenDespacho->save();
-
-            // Generar las URL públicas
-            $pdfUrlA4 = Storage::url($pdfFilePathA4);
-            $pdfUrlTicket = Storage::url($pdfFilePathTicket);
 
             // Confirmar la transacción
             DB::commit();
 
-            // Responder con éxito y proporcionar las URLs del PDF
+            $ordenDespacho->url_pdf =  route('ordenes-de-despacho.print',['id' => $ordenDespacho->getKey(),'format' => 'a4']);
+            $ordenDespacho->url_ticket = route('ordenes-de-despacho.print',['id' => $ordenDespacho->getKey(),'format' => 'ticket']);
+
             return response()->json([
                 'message' => 'Orden de despacho registrada exitosamente.',
-                'pdf_url_a4' => $pdfUrlA4,
-                'pdf_url_ticket' => $pdfUrlTicket,
+                'data' => $ordenDespacho
             ], 200);
 
 
         } catch (\Exception $e) {
-            DB::rollBack(); // Revertir la transacción en caso de error
+            DB::rollBack();
 
             report($e);
             // Responder con error
@@ -178,196 +146,120 @@ class OrdenDespachoController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Models\OrdenDespacho $ordenDespacho
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(OrdenDespacho $ordenDespacho)
     {
-        // Obtener la orden de despacho con el ID dado
         $orden = OrdenDespacho::query()
         ->with('detalles',
             fn($query)=>$query->withAggregate('tipo_pollo','descripcion')
                 ->withAggregate('presentacion_pollo','descripcion')
         )->findOrFail($ordenDespacho->id);
 
-        // Pasar la orden y sus detalles a la vista
         return view('admin.ordenes_despacho.show', compact('orden'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Models\OrdenDespacho $ordenDespacho
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(OrdenDespacho $ordenDespacho)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\OrdenDespacho $ordenDespacho
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, OrdenDespacho $ordenDespacho)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\Models\OrdenDespacho $ordenDespacho
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(OrdenDespacho $ordenDespacho)
     {
         try {
-            $orden = OrdenDespacho::findOrFail($ordenDespacho->id);
 
+            DB::beginTransaction();
+           $ordenDespacho->load('detalles');
+            foreach ($ordenDespacho->detalles as $detalle) {
+                InventoryService::increment(
+                    $detalle->tipo_pollo_id,
+                    $detalle->peso_neto,
+                    $detalle->cantidad_pollos,
+                );
+           }
 
-            $ordenIngreso = OrdenIngreso::orderBy('id', 'desc')->first();
-            $ordenIngreso->cantidad_pollos_stock += $orden->cantidad_pollos;
-            $ordenIngreso->save();
+            $ordenDespacho->estado = OrdenDespacho::ESTADO_INACTIVE;
+            $ordenDespacho->save();
 
-
-            // Cambiar el estado en lugar de eliminar el registro
-            $orden->estado = 0; // O el valor que corresponda para marcar como despachado
-            $orden->save();
-
+            DB::commit();
             return response()->json(['success' => true, 'message' => 'Orden de despacho dado de baja.'], 200);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function print($orden, $format)
+    {
+
+        return strtolower($format) == 'ticket' ? $this->generateTicket($orden) : $this->generatePdf_A4($orden);
     }
 
     private function generatePdf_A4($id)
     {
         // Obtener la orden y la empresa
-        $ordenDespacho = OrdenDespacho::query()
+        $empresa = Empresa::query()->firstOrFail();
+        $venta = OrdenDespacho::query()
+            ->withAggregate('cliente', 'razon_social')
+            ->with('cliente', fn($query) => $query->withSum('saldos', 'total'))
             ->with('detalles',
-                fn($query)=>$query->withAggregate('tipo_pollo','descripcion')
-                    ->withAggregate('presentacion_pollo','descripcion')
-            )
-            ->find($id);
-        $empresa = Empresa::first(); // O el método que utilices para obtener la empresa
+                fn($query) => $query->withAggregate('tipo_pollo', 'descripcion')
+                    ->withAggregate('presentacion_pollo', 'descripcion')
+            )->findOrFail($id);
 
-        // Configurar Dompdf
-        $options = new Options();
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('isPhpEnabled', true); // Habilitar PHP si es necesario
-        $dompdf = new Dompdf($options);
-
-        // Cargar la vista Blade
-        $html = view('pdf.orden_a4', [
-            'orden' => $ordenDespacho,
+        $pdf = Pdf::loadView('pdf.ordenes_despacho.orden_a4',[
+            'venta' => $venta,
             'empresa' => $empresa
-        ])->render();
+        ]);
 
-        // Cargar HTML en Dompdf
-        $dompdf->loadHtml($html);
-
-        // (Opcional) Configurar tamaño de página y orientación
-        $dompdf->setPaper('A4', 'portrait');
-
-        // Renderizar el PDF
-        $dompdf->render();
-
-        // Generar un nombre único para el archivo
-        $fileName = 'orden_despacho_' . $id . '.pdf';
-
-        // Ruta donde se almacenará el archivo PDF
-        $storagePath = storage_path('app/public/ordenesA4/' . $fileName);
-
-        // Crear el directorio si no existe
-        if (!is_dir(dirname($storagePath))) {
-            mkdir(dirname($storagePath), 0755, true);
-        }
-
-        // Guardar el PDF en la carpeta especificada
-        file_put_contents($storagePath, $dompdf->output());
-
-        return $fileName; // Devuelve el nombre del archivo generado
+        return $pdf->stream();
     }
 
-
-    private function generatePdf_Ticket($id)
+    private function generateTicket($id)
     {
         // Obtener la orden y la empresa
-        $ordenDespacho = OrdenDespacho::find($id);
-        $empresa = Empresa::first(); // O el método que utilices para obtener la empresa
+        $empresa = Empresa::query()->firstOrFail();
+        $venta = OrdenDespacho::query()
+            ->withAggregate('cliente', 'razon_social')
+            ->with('cliente', fn($query) => $query->withSum('saldos', 'total'))
+            ->with('detalles',
+                fn($query) => $query->withAggregate('tipo_pollo', 'descripcion')
+                    ->withAggregate('presentacion_pollo', 'descripcion')
+            )->findOrFail($id);
 
-        // Configurar Dompdf
-        $options = new Options();
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('isPhpEnabled', true); // Habilitar PHP si es necesario
-        $dompdf = new Dompdf($options);
+        ini_set('pcre.backtrack_limit', '5000000');
 
-        // Cargar la vista Blade
-        $html = view('pdf.orden_ticket', [
-            'orden' => $ordenDespacho,
-            'empresa' => $empresa
-        ])->render();
+        $html = view('pdf.ordenes_despacho.orden_ticket',
+            ['venta' => $venta,
+                'empresa' => $empresa
+            ]
+        )->render();
 
-        // Cargar HTML en Dompdf
-        $dompdf->loadHtml($html);
+        $company_name = (strlen($empresa->name) / 20) * 10;
+        $quantity_rows = count($venta->detalles);
+        $pdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => [
+                78,
+                210 +
+                14 +
+                ($quantity_rows * 8) +
+                $company_name
+            ],
+            'margin_top' => 2,
+            'margin_right' => 5,
+            'margin_bottom' => 0,
+            'margin_left' => 5,
+        ]);
 
-        // (Opcional) Configurar tamaño de página y orientación
-        $dompdf->setPaper('A4', 'portrait');
+        $pdf->WriteHTML($html);
 
-        // Renderizar el PDF
-        $dompdf->render();
-
-        // Generar un nombre único para el archivo
-        $fileName = 'orden_despacho_' . $id . '.pdf';
-
-        // Ruta donde se almacenará el archivo PDF
-        $storagePath = storage_path('app/public/ordenesTicket/' . $fileName);
-
-        // Crear el directorio si no existe
-        if (!is_dir(dirname($storagePath))) {
-            mkdir(dirname($storagePath), 0755, true);
-        }
-
-        // Guardar el PDF en la carpeta especificada
-        file_put_contents($storagePath, $dompdf->output());
-
-        return $fileName; // Devuelve el nombre del archivo generado
+        return $pdf->Output();
     }
-
-
-    //preview
-    public function previewPdf($orderId)
-    {
-        // Obtener la orden desde la base de datos
-        $orden = OrdenDespacho::findOrFail($orderId);
-        $empresa = Empresa::first();
-
-        // Configurar DOMPDF
-        $options = new Options();
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('isPhpEnabled', true);
-
-        $dompdf = new Dompdf($options);
-
-        // Cargar la vista y renderizar el PDF
-        $view = view('pdf.ordenes_despacho.preview', compact('orden', 'empresa'))->render();
-        $dompdf->loadHtml($view);
-
-        // (Opcional) Configura el tamaño y orientación del papel
-        $dompdf->setPaper('A4', 'portrait');
-
-        // Renderizar el PDF
-        $dompdf->render();
-
-        // Devolver el PDF como una vista previa en el navegador
-        return $dompdf->stream('orden_preview.pdf', ['Attachment' => false]);
-    }
-
 }

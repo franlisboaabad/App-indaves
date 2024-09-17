@@ -15,9 +15,9 @@ class StoreOrdenIngresoRequest extends FormRequest
     public function rules()
     {
         return [
-            'cantidad_jabas' => 'required|integer',
-            'cantidad_pollos' => 'required|integer',
-            'peso_total' => 'required|numeric',
+            'peso_bruto' => 'required|integer',
+            'peso_tara' => 'required|integer',
+            'peso_neto' => 'required|numeric',
             'numero_guia' => 'required'
         ];
     }

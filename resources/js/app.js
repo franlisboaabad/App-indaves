@@ -1,7 +1,11 @@
 import './bootstrap';
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+import NotaIngreso from './components/NotaIngreso.vue'
+import { createApp } from 'vue'
 
-import Alpine from 'alpinejs';
+const app = createApp()
+app.component('nota-ingreso', NotaIngreso)
 
-window.Alpine = Alpine;
-
-Alpine.start();
+app.use(VueSweetalert2);
+app.mount('#app')

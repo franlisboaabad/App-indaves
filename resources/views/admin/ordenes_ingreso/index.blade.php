@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            <a href="#" class="btn btn-primary mb-3" data-toggle="modal" data-target="#nuevoOrdenModal">Nueva Orden</a>
+            <a href="{{ route('ordenes-ingreso.create') }}" class="btn btn-primary mb-3" >Nueva Orden</a>
 
 
             <div class="card">
@@ -25,7 +25,6 @@
                             <th>N° guía</th>
                             <th>Cantidad de jabas</th>
                             <th>Cantidad de pollos Ingreso</th>
-                            <th>Cantidad de pollos Stock</th>
                             <th>Peso total</th>
                             <th>Estado</th>
                             <th>Fecha de registro</th>
@@ -38,7 +37,6 @@
                                     <td>{{ $orden->numero_guia }}</td>
                                     <td>{{ $orden->cantidad_jabas }}</td>
                                     <td>{{ $orden->cantidad_pollos }}</td>
-                                    <td>{{ $orden->cantidad_pollos_stock }}</td>
                                     <td>{{ $orden->peso_total }}</td>
                                     <td>
                                         @if ($orden->estado)

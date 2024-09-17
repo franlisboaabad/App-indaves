@@ -50,7 +50,7 @@
                                 <!-- Aquí puedes añadir botones para ver, editar o eliminar -->
                                 <a href="{{ route('ordenes-de-despacho.show', $orden->id) }}" class="btn btn-info btn-sm">Ver</a>
                                 {{-- <a href="{{ route('ordenes-de-despacho.edit', $orden->id) }}" class="btn btn-warning btn-sm">Editar</a> --}}
-                                <a href="{{ route('ordenes-de-despacho.preview', $orden->id ) }}" class="btn btn-sm btn-primary" target="_Blank"> PDF </a>
+                                <a href="{{ route('ordenes-de-despacho.print', ['id'=> $orden->id, 'format' => 'a4'] ) }}" class="btn btn-sm btn-primary" target="_Blank"> PDF </a>
 
                                 @if (!$orden->estado_despacho)
                                     <!-- Botón para eliminar -->

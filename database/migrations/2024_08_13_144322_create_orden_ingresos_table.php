@@ -6,31 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('orden_ingresos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
             $table->string('numero_guia');
-            $table->integer('cantidad_jabas');
-            $table->integer('cantidad_pollos');
-            $table->integer('cantidad_pollos_stock');
-            $table->decimal('peso_total', 8, 2); // Peso total en kilogramos (o la unidad que prefieras)
+            $table->decimal('peso_bruto', 8, 2);
+            $table->decimal('peso_tara', 8, 2);
+            $table->decimal('peso_neto', 8, 2);
             $table->boolean('estado')->default(true);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('orden_ingresos');
     }

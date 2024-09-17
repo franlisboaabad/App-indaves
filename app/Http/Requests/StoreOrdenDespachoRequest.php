@@ -19,7 +19,7 @@ class StoreOrdenDespachoRequest extends FormRequest
             'serie_orden' => 'required|string|max:255',
             'fecha_despacho' => 'required|date',
             'peso_total_bruto' => 'required|numeric',
-            'cantidad_jabas' => 'required|integer',
+            'cantidad_jabas' => 'required|numeric',
             'tara' => 'required|numeric',
             'peso_total_neto' => 'required|numeric',
             'detalles' => 'required|array',
