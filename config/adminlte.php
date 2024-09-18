@@ -405,6 +405,12 @@ return [
                     'can' => 'admin.precios.index'
                 ],
 
+                [
+                    'text' => 'Presentaciones',
+                    'route'  => 'presentacion-pollo.index',
+                    'can' => 'admin.presentacion-pollo.index'
+                ],
+
 
 
             ],

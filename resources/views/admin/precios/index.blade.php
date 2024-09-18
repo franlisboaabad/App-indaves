@@ -173,8 +173,7 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet"
-          href="{{ asset('vendor/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
 @stop
 
 @section('js')

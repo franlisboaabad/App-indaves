@@ -25,6 +25,7 @@ use App\Http\Controllers\OrdenDeServicioController;
 use App\Http\Controllers\OrdenDespachoController;
 use App\Http\Controllers\OrdenIngresoController;
 use App\Http\Controllers\PagoController;
+use App\Http\Controllers\PresentacionPolloController;
 use App\Http\Controllers\VentaController;
 use App\Models\OrdenDespacho;
 use App\Models\OrdenIngreso;
@@ -119,6 +120,7 @@ Route::get('ordenes-de-despacho/crear-venta/{id}', [OrdenDespachoController::cla
 Route::get('ordenes-de-despacho/{id}/{format}', [OrdenDespachoController::class,'print'])->name('ordenes-de-despacho.print')->middleware('auth');
 Route::resource('lista-de-precios',ListaPrecioController::class)->middleware('auth')->parameters(['lista-de-precios' => 'listaPrecio']);
 Route::resource('pagos',PagoController::class)->middleware('auth');
+Route::resource('presentacion-pollo',PresentacionPolloController::class)->middleware('auth')->parameters(['presentacion-pollo' => 'presentacionPollo']);
 
 
 
