@@ -44,28 +44,36 @@
             <h3 class="mt-4">Pagos Asociados</h3>
             <table class="table table-bordered">
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <td>Serie de venta</td>
-                        <th>Monto</th>
-                        <th>Método de Pago</th>
-                        <th>Fecha</th>
-                    </tr>
+                <tr>
+                    <th>ID</th>
+                    <th>CLIENTE</th>
+                    <td>Serie de venta</td>
+                    <th>Monto</th>
+                    <th>Método de Pago</th>
+                    <th>Fecha</th>
+                    <th></th>
+                </tr>
                 </thead>
                 <tbody>
-                    @forelse($caja->pagos as $pago)
-                        <tr>
-                            <td>{{ $pago->id }}</td>
-                            <td>{{ $pago->venta->serie_venta }}</td>
-                            <td>{{ number_format($pago->monto, 2) }}</td>
-                            <td>{{ $pago->metodo_pago->descripcion }}</td>
-                            <td>{{ $pago->created_at->format('d/m/Y H:i') }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4">No hay pagos registrados para esta caja.</td>
-                        </tr>
-                    @endforelse
+                @forelse($caja->pagos as $pago)
+                    <tr>
+                        <td>{{ $pago->id }}</td>
+                        <td>{{ $pago->venta?->cliente_razon_social }}</td>
+                        <td>{{ $pago->venta->serie_venta }}</td>
+                        <td>{{ number_format($pago->monto, 2) }}</td>
+                        <td>{{ $pago->metodo_pago->descripcion }}</td>
+                        <td>{{ $pago->created_at->format('d/m/Y H:i') }}</td>
+                        <td>
+                            @if($pago->imagen)
+                                <a href="{{ \Illuminate\Support\Facades\Storage::url($pago->imagen) }}">Ver</a>
+                            @endif
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4">No hay pagos registrados para esta caja.</td>
+                    </tr>
+                @endforelse
                 </tbody>
             </table>
         </div>
@@ -86,8 +94,8 @@
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $(document).ready(function() {
-            $('#closeCajaBtn').on('click', function() {
+        $(document).ready(function () {
+            $('#closeCajaBtn').on('click', function () {
                 var cajaId = $(this).data('id');
 
                 Swal.fire({
@@ -108,18 +116,18 @@
                                 _token: '{{ csrf_token() }}',
                                 fecha_cierre: new Date().toISOString()
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 Swal.fire({
                                     icon: 'success',
                                     title: '¡Éxito!',
                                     text: 'Caja cerrada exitosamente.',
                                     timer: 3000,
                                     showConfirmButton: false
-                                }).then(function() {
+                                }).then(function () {
                                     window.location.reload(); // Recargar la página después de la notificación
                                 });
                             },
-                            error: function(xhr) {
+                            error: function (xhr) {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Error',

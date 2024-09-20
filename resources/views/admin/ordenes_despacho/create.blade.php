@@ -549,13 +549,6 @@
                             $('#departamento').val(response.data.departamento);
                             $('#provincia').val(response.data.provincia);
                             $('#distrito').val(response.data.distrito);
-
-                            Swal.fire({
-                                title: 'Información encontrada',
-                                text: 'Datos actualizados.',
-                                icon: 'info',
-                                confirmButtonText: 'OK'
-                            });
                         } else {
                             Swal.fire({
                                 title: 'Error!',
@@ -579,7 +572,7 @@
 
             //guardar cliente
             $('#saveClientBtn').on('click', function () {
-                var formData = new FormData($('#createClientForm')[0]);
+                const formData = new FormData($('#createClientForm')[0]);
 
                 $.ajax({
                     url: "{{ route('clientes.store') }}", // Cambia la URL al endpoint adecuado
@@ -589,20 +582,11 @@
                     processData: false,
                     success: function (response) {
                         if (response.success) {
-                            Swal.fire({
-                                title: 'Éxito!',
-                                text: 'Cliente creado correctamente.',
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    $('#createClientModal').modal('hide');
-                                    $('#createClientForm')[0].reset();
+                            $('#createClientModal').modal('hide');
+                            $('#createClientForm')[0].reset();
 
-                                    // Añadir el nuevo cliente al select
-                                    addClientToSelect(response.cliente);
-                                }
-                            });
+                            // Añadir el nuevo cliente al select
+                            addClientToSelect(response.cliente);
                         }
                     },
                     error: function (xhr) {

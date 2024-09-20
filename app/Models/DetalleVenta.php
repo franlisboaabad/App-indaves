@@ -19,6 +19,7 @@ class DetalleVenta extends Model
         'cantidad_jabas',
         'tara',
         'peso_neto',
+        'descuento_peso',
         'precio',
         'subtotal',
         'estado',

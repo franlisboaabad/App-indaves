@@ -21,10 +21,10 @@ class StoreVentaRequest extends FormRequest
         return [
             'serie_venta' => 'required|string|max:255',
             'fecha_venta' => 'required|date',
-            'forma_de_pago' => 'required|in:0,1', // 0: CONTADO ; 1 A CREDITO
-            'metodo_pago_id' => 'required|exists:metodo_pagos,id',
+            'payment.forma_de_pago' => 'required|in:0,1',
+            'payment.metodo_pago_id' => 'required|exists:metodo_pagos,id',
             'monto_total' => 'required|numeric',
-            'monto_recibido' => 'required|numeric',
+            'payment.monto_recibido' => 'required|numeric',
         ];
     }
 }

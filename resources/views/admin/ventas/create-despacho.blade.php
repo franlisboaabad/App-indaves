@@ -13,5 +13,5 @@
         :payment-methods="{{$metodos}}"
         serie="{{ $serie->number }}-{{$serie->serie}}"
         :cliente="{{ $cliente }}"
-        route-save="{{ route('ordenes-ingreso.store') }}"/>
+        route-save="{{ route('ventas.store') }}"/>
 @stop

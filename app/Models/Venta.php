@@ -11,18 +11,16 @@ class Venta extends Model
 
     // Los atributos que se pueden asignar masivamente.
     protected $fillable = [
+        'orden_despacho_id',
         'cliente_id',
         'serie_venta',
         'fecha_venta',
         'peso_neto',
         'forma_de_pago',
-        'metodo_pago_id',
         'monto_total',
         'monto_recibido',
+        'comentario'.
         'saldo',
-        'pagada',
-        'url_venta_documento_a4',
-        'url_venta_documento_ticket',
         'estado',
     ];
 

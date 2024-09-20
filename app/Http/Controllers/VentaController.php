@@ -69,68 +69,39 @@ class VentaController extends Controller
 
     public function store(StoreVentaRequest $request)
     {
-        // Verificar si existe una caja abierta
-        $cajaAbierta = Caja::query()->where('estado_caja', GlobalStateEnum::STATUS_ACTIVE)->first();
+
+        $cajaAbierta = Caja::query()
+            ->where('estado_caja', GlobalStateEnum::STATUS_ACTIVE)
+            ->first();
 
         if (!$cajaAbierta) {
             return response()->json([
                 'success' => false,
                 'message' => 'No hay una caja abierta.',
-            ], 422); // Código de estado 400 para error de solicitud
+            ], 422);
         }
 
-        // Iniciar la transacción para garantizar la integridad de los datos
         DB::beginTransaction();
 
         try {
-
-            $monto_recibido = $request->input('monto_recibido', 0);
+            $monto_recibido = $request->input('payment.monto_recibido', 0);
             $monto_total = $request->input('monto_total');
             $saldo = $monto_total - $monto_recibido;
-            $pagada = $saldo <= 0;
 
             // Crear la nueva venta
             $venta = Venta::query()->create([
+                'orden_despacho_id' => $request->input('orden_despacho_id'),
                 'cliente_id' => $request->input('cliente_id'),
                 'serie_venta' => $request->input('serie_venta'),
                 'fecha_venta' => $request->input('fecha_venta'),
-                'peso_neto' => $request->input('peso_total_neto'),
-                'forma_de_pago' => $request->input('forma_de_pago'),
-                'metodo_pago_id' => $request->input('metodo_pago_id'),
+                'peso_neto' => $request->input('peso_neto'),
+                'comentario' => $request->input('comentario'),
+                'forma_de_pago' => $request->input('payment.forma_de_pago'),
                 'monto_total' => $request->input('monto_total'),
-                'monto_recibido' => $request->input('monto_recibido'),
-                'saldo' => $saldo,
-                'pagada' => $pagada
+                'monto_recibido' => $request->input('payment.monto_recibido'),
             ]);
-            //serie
             // Aumentar el número de serie (1) nota de venta | 2 orden despacho
             SeriesService::increment(Serie::DEFAULT_SERIE_VENTA);
-
-            $ordenIngreso = OrdenIngreso::orderBy('id', 'desc')->first();
-            // Verificar si se encontró un registro
-            if ($ordenIngreso) {
-                // Asegurarse de que la cantidad a restar no sea mayor que el stock disponible
-                if ($ordenIngreso->cantidad_pollos_stock >= $request->cantidad_pollos) {
-                    // Restar la cantidad de pollos del stock
-                    $ordenIngreso->cantidad_pollos_stock -= $request->cantidad_pollos;
-                    // Guardar los cambios en la base de datos
-                    $ordenIngreso->save();
-                } else {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'No hay suficiente stock de pollos.',
-                    ], 422); // Código de estado 400 para error de solicitud
-                }
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No se encontró ningún registro de orden de ingreso para actualizar.',
-                ], 422); // Código de estado 400 para error de solicitud
-            }
-
-            // Crear el detalle de la venta
-            // Encuentra la orden de despacho relacionada
-            $ordenDespacho = OrdenDespacho::query()->find($venta->orden_despacho_id);
 
             foreach ($request->detalles as $detalle) {
                 DetalleVenta::query()->create([
@@ -144,22 +115,23 @@ class VentaController extends Controller
                     'subtotal' => $detalle['subtotal'],
                     'tipo_pollo_id' => $detalle['tipo_pollo_id'],
                     'presentacion_pollo_id' => $detalle['presentacion_pollo_id'],
+                    'descuento_peso' =>  $detalle['descuento_peso']
                 ]);
             }
 
 
 
             if ($request->input('forma_de_pago') == Pago::FORMA_PAGO_CONTADO) {
-
                 // Registrar el pago
                 $pago = new Pago();
                 $pago->venta_id = $venta->id;
                 $pago->caja_id = $cajaAbierta->id;
-                $pago->metodo_pago_id = $venta->metodo_pago_id;
-                $pago->monto = $venta->monto_recibido;
+                $pago->metodo_pago_id = $request->input('payment.metodo_pago_id');
+                $pago->monto = $request->input('payment.monto_recibido');
+                if($request->hasFile('imagen')){
+                    $pago->imagen =  $request->file('imagen')->store('pagos');
+                }
                 $pago->save();
-
-
                 if($request->input('saldo_pendiente')> 0){
                     // Registrar el pago
                     $pago = new Pago();
@@ -168,12 +140,7 @@ class VentaController extends Controller
                     $pago->metodo_pago_id = MetodoPago::METODO_PAGO_SALDO;
                     $pago->monto = $request->input('saldo_pendiente');
                     $pago->save();
-
-                    $cajaAbierta->monto_cierre += $pago->monto;
                 }
-                // Actualizar el monto de la caja
-                $cajaAbierta->monto_cierre += $pago->monto;
-                $cajaAbierta->save();
             }
 
             if($saldo < 0 ){

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('cantidad_jabas');
             $table->double('tara',8,2);
             $table->double('peso_neto');
+            $table->double('descuento_peso')->nullable();
             $table->decimal('precio', 8, 2);
             $table->decimal('subtotal', 8, 2);
             $table->boolean('estado')->default(1);

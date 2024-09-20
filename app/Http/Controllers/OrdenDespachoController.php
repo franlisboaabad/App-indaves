@@ -228,6 +228,13 @@ class OrdenDespachoController extends Controller
             ->where('id',$orden->cliente_id)
             ->first();
 
+        $orden->detalles?->each(function($detalle) use($prices){
+            $detalle->precio = $prices->where('tipo_pollo_id',$detalle->tipo_pollo_id)->first()?->precio;
+            $detalle->subtotal = $detalle->precio * $detalle->peso_neto;
+            $detalle->peso_neto = floatval($detalle->peso_neto);
+            $detalle->descuento_peso = 0;
+        });
+
         return view('admin.ventas.create-despacho',
             compact( 'cajas', 'serie', 'precio', 'metodos',
                 'stockPollo','prices','orden','cliente'));

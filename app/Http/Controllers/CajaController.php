@@ -2,40 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\GlobalStateEnum;
 use Carbon\Carbon;
 use App\Models\Caja;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class CajaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $cajas = Caja::where('estado',1)->get();
+        $cajas = Caja::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
+
         return view('admin.cajas.index', compact('cajas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('admin.cajas.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         $request->validate([
@@ -55,16 +44,13 @@ class CajaController extends Controller
         return response()->json(['success' => true]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Caja  $caja
-     * @return \Illuminate\Http\Response
-     */
     public function show(Caja $caja)
     {
-        $caja = Caja::with('pagos')->findOrFail($caja->id);
-
+        $caja = Caja::query()
+            ->with('pagos',function(HasMany $query){
+                $query->with('venta',fn(BelongsTo $q)=> $q->withAggregate('cliente','razon_social'));
+            })
+            ->findOrFail($caja->id);
         // Asegurarse de que las fechas sean objetos Carbon
         $caja->fecha_apertura = Carbon::parse($caja->fecha_apertura);
         $caja->fecha_cierre = $caja->fecha_cierre ? Carbon::parse($caja->fecha_cierre) : null;
@@ -72,24 +58,11 @@ class CajaController extends Controller
         return view('admin.cajas.show', compact('caja'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Caja  $caja
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Caja $caja)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Caja  $caja
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Caja $caja)
     {
         try {
@@ -125,12 +98,7 @@ class CajaController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Caja  $caja
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Caja $caja)
     {
         try {

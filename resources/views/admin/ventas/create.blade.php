@@ -215,7 +215,6 @@
                             </select>
                         </div>
                     </div>
-
                     <div class="col-md-4 mb-4">
                         <div class="form-group">
                             <label for="metodo_pago_id">Método de Pago</label>
@@ -226,7 +225,6 @@
                             </select>
                         </div>
                     </div>
-
                     <div class="col-md-4 mb-4"></div>
                     <div class="col-md-4 mb-4">
                         <div class="form-group">
@@ -234,7 +232,6 @@
                             <input type="text" id="monto_total" name="monto_total" class="form-control" readonly>
                         </div>
                     </div>
-
                     <!-- Información de Pago -->
                     <div class="col-md-2 mb-4">
                         <div class="form-group"> <br>
@@ -244,16 +241,12 @@
                             </label>
                         </div>
                     </div>
-
-
-
                     <div class="col-md-2 mb-4">
                         <div class="form-group">
                             <label for="monto_recibido">Monto Recibido</label>
                             <input type="text" id="monto_recibido" name="monto_recibido" class="form-control">
                         </div>
                     </div>
-
                     <div class="col-md-4 mb-4">
                         <div class="form-group">
                             <label for="saldo">Saldo</label>
