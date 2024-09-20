@@ -28,15 +28,21 @@
                                     <td>{{ $presentacion->id }}</td>
                                     <td>{{ $presentacion->descripcion }}</td>
                                     <td>{{ $presentacion->tara }}</td>
-                                    <td>{{ $presentacion->estado }}</td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                        @if ($presentacion->estado)
+                                            <span class="badge badge-success">Activo</span>
+                                        @else
+                                            <span class="badge badge-danger">Inactivo</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-info" data-bs-toggle="modal"
                                             data-bs-target="#editModal" data-id="{{ $presentacion->id }}"
                                             data-descripcion="{{ $presentacion->descripcion }}"
                                             data-tara="{{ $presentacion->tara }}" data-estado="{{ $presentacion->estado }}">
                                             Editar
                                         </a>
-                                        <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
+                                        {{-- <a href="#" class="btn btn-sm btn-danger">Eliminar</a> --}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -70,7 +76,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" id="saveChanges">Guardar cambios</button>
                 </div>
             </div>
@@ -82,13 +88,11 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
 @stop
 
 @section('js')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
@@ -128,24 +132,39 @@
                     type: 'PUT',
                     data: {
                         _token: $('meta[name="csrf-token"]').attr(
-                        'content'), // Token CSRF para la solicitud
+                            'content'), // Token CSRF para la solicitud
                         descripcion: descripcion,
                         tara: tara,
                         id: id
                     },
                     success: function(response) {
-
                         // Cierra el modal
                         $('#editModal').modal('hide');
-                        location.reload();
+
+                        // Alerta de éxito
+                        Swal.fire({
+                            title: '¡Éxito!',
+                            text: 'Los cambios se han guardado correctamente.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            location.reload();
+                        });
                     },
                     error: function(xhr) {
                         console.log('Error:', xhr.responseText);
+
+                        // Alerta de error
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Ocurrió un error al guardar los cambios.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                     }
                 });
+
             });
-
-
 
         });
     </script>

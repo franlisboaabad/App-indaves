@@ -73,7 +73,8 @@ class OrdenIngresoController extends Controller
 
     public function show(OrdenIngreso $ordenIngreso)
     {
-        //
+        $ordenIngreso = OrdenIngreso::with('detalle')->findOrFail($ordenIngreso->id);
+        return view('admin.ordenes_ingreso.show', compact('ordenIngreso'));
     }
 
     public function edit(OrdenIngreso $ordenIngreso)

@@ -47,12 +47,14 @@
                                     </td>
                                     <td>{{ $orden->created_at }}</td>
                                     <td>
-                                        <form action="{{ route('ordenes-ingreso.destroy', $orden) }}" method="POST"
-                                            class="delete-form" id="delete-form-{{ $orden->id }}">
+
+
+                                        <form action="{{ route('ordenes-ingreso.destroy', $orden) }}" method="POST" class="delete-form" id="delete-form-{{ $orden->id }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button" class="btn btn-danger btn-sm btn-delete"
-                                                data-id="{{ $orden->id }}">Eliminar</button>
+
+                                            <a href="{{ route('ordenes-ingreso.show', $orden) }}" class="btn btn-primary btn-primary btn-sm">Ver</a>
+                                            <button type="button" class="btn btn-danger btn-sm btn-delete" data-id="{{ $orden->id }}">Eliminar</button>
                                         </form>
                                     </td>
                                 </tr>

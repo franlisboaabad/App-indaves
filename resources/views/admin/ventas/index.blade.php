@@ -38,14 +38,14 @@
                             <td>{{ number_format($venta->monto_recibido, 2) }}</td>
                             <td>{{ number_format($venta->saldo, 2) }}</td>
                             <td>
-                                @if ($venta->pagada)
+                                @if ($venta->saldo <= 0)
                                     <span class="badge badge-success">Pagada</span>
                                 @else
                                     <span class="badge badge-danger">Pendiente de pago</span>
                                 @endif
                             </td>
                             <td>
-                                @if (!$venta->pagada)
+                                @if (!$venta->saldo <= 0)
                                     <a href="#" class="btn btn-sm btn-primary" data-toggle="modal"
                                         data-target="#agregarPagoModal" data-venta-monto="{{ $venta->saldo }}"
                                         data-venta-id="{{ $venta->id }}">

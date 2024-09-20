@@ -3,7 +3,7 @@
 @section('title', 'Empresa')
 @section('plugins.Datatables', true)
 @section('content_header')
-    <h1>Mi Empresa</h1>
+    <h1>Sucursal</h1>
 @stop
 
 @section('content')

@@ -29,6 +29,7 @@ export function useFormIngreso(presentations, types) {
     formItem.presentacion_pollo_id = presentations.length ? presentations[0].id : null;
 
     function addItem() {
+
         const type = types.find(type => type.id == formItem.tipo_pollo_id);
         formItem.tipo_pollo_descripcion = type?.descripcion;
         const presentation = presentations.find(type => type.id == formItem.presentacion_pollo_id);
@@ -36,6 +37,7 @@ export function useFormIngreso(presentations, types) {
         formItem.peso_promedio = _.round(formItem.peso_neto / formItem.cantidad_pollos,2);
         form.items.push({...formItem});
         calculateTotals();
+        resetForm();
     }
 
     function deleteItem(index) {
@@ -47,6 +49,13 @@ export function useFormIngreso(presentations, types) {
         form.cantidad_jabas = _.sumBy(form.items,'cantidad_jabas');
         form.cantidad_pollos = _.sumBy(form.items,'cantidad_pollos');
         form.peso_total = _.sumBy(form.items,'peso_bruto');
+    }
+
+    function resetForm()
+    {
+        formItem.cantidad_jabas = null;
+        formItem.cantidad_pollos =  null;
+        formItem.peso_neto =  null;
     }
 
     function sendForm(url) {

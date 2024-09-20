@@ -9,7 +9,7 @@
 @section('content')
 
 
-    <a href="{{ route('roles.create') }}" class="btn btn-primary mb-3">Agregar Nuevo Rol</a>
+    <a href="{{ route('roles.create') }}" class="btn btn-primary mb-3">Nuevo Rol</a>
 
     <div class="card">
         <div class="card-header">

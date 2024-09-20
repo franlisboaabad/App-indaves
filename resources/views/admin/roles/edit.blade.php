@@ -22,8 +22,7 @@
 
                         <div class="form-group">
                             <label for="name">Nombre del Rol</label>
-                            <input type="text" id="name" name="name" placeholder="Ingrese Rol"
-                                class="form-control" required>
+                            <input type="text" id="name" name="name" placeholder="Ingrese Rol" class="form-control" required value="{{ $role->name }}">
                         </div>
 
                         <hr>

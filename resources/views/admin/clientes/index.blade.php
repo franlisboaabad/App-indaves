@@ -8,8 +8,7 @@
 
 @section('content')
 
-    <a href="#" class="btn btn-primary mb-3" data-toggle="modal" data-target="#createClientModal">Agregar Nuevo
-        Cliente</a>
+    <a href="#" class="btn btn-primary mb-3" data-toggle="modal" data-target="#createClientModal">Nuevo Cliente</a>
 
 
     <div class="card">

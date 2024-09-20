@@ -27,6 +27,7 @@ class OrdenDespacho extends Model
 
     public const ESTADO_DESPACHADO = 1;
     public const ESTADO_INACTIVE = 0;
+
     public function detalles()
     {
         return $this->hasMany(DetalleOrdenDespacho::class);

@@ -30,14 +30,15 @@ class DetalleOrdenIngreso extends Model
         return $this->belongsTo(OrdenIngreso::class);
     }
 
-    public function tipo_pollo (): BelongsTo
+    public function tipo_pollo(): BelongsTo
     {
         return $this->belongsTo(TipoPollo::class);
     }
 
-    public function presentacion_pollo (): BelongsTo
+    public function presentacion_pollo(): BelongsTo
     {
         return $this->belongsTo(PresentacionPollo::class);
     }
+
 
 }

@@ -341,10 +341,12 @@ return [
                 [
                     'text' => 'Nueva Orden',
                     'route'  => 'ordenes-de-despacho.create',
+                    'can' => 'admin.ordenes-despacho.create'
                 ],
                 [
                     'text' => 'Lista de Ordenes',
                     'route'  => 'ordenes-de-despacho.index',
+                    'can' => 'admin.ordenes-despacho.index'
                 ],
             ],
 
@@ -359,10 +361,12 @@ return [
                 [
                     'text' => 'Nueva Venta',
                     'route'  => 'ventas.create',
+                    'can' => 'admin.ventas.create'
                 ],
                 [
                     'text' => 'Lista de Ventas',
                     'route'  => 'ventas.index',
+                    'can' => 'admin.ventas.index'
                 ],
             ],
 

@@ -10,7 +10,7 @@
     <p>Lista de usuarios</p>
 
       <!-- Botón para abrir el modal -->
-      <a href="#" class="btn btn-primary mb-3" data-toggle="modal" data-target="#createUserModal">Agregar Nuevo Usuario</a>
+      <a href="#" class="btn btn-primary mb-3" data-toggle="modal" data-target="#createUserModal">Nuevo Usuario</a>
 
     <div class="card">
         <div class="card-header">
