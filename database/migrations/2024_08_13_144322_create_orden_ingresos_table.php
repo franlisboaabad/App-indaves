@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('orden_ingresos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
+            $table->date('fecha_ingreso')->nullable();
             $table->string('numero_guia');
             $table->decimal('peso_bruto', 8, 2);
             $table->decimal('peso_tara', 8, 2);

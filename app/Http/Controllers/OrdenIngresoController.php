@@ -55,7 +55,8 @@ class OrdenIngresoController extends Controller
     public function store(StoreOrdenIngresoRequest $request)
     {
        /** @var OrdenIngreso $order */
-        $order = OrdenIngreso::query()->create($request->validated() + ['user_id' => Auth::id()]);
+        $order = OrdenIngreso::query()->create($request->validated() +
+            ['user_id' => Auth::id() , 'fecha_ingreso' => now()]);
 
         foreach ($request->collect('items') as $item){
             $order->detalle()->create($item);

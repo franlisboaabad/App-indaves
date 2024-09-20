@@ -459,11 +459,13 @@
                 var subtotal = precio * pesoNeto;
 
                 // Crear una nueva fila para la tabla de detalles
-                var tableBody = document.getElementById('detailsTable').getElementsByTagName('tbody')[0];
-                var newRow = tableBody.insertRow();
+                const tableBody = document.getElementById('detailsTable').getElementsByTagName('tbody')[0];
+                const newRow = tableBody.insertRow();
 
                 newRow.dataset.tipo_pollo_id = $('#tipo_pollo_id').val();
                 newRow.dataset.presentacion_pollo_id = $('#presentacion_pollo_id').val();
+                newRow.dataset.precio = precio;
+                newRow.dataset.subtotal = subtotal;
 
                 const presentation = presentacion_pollos.find(presentation=> presentation.id == newRow.dataset.presentacion_pollo_id);
                 const type = tipo_pollos.find(type=> type.id == newRow.dataset.tipo_pollo_id);
@@ -666,7 +668,8 @@
                     let cantidadJabas = $(this).find('td:eq(4)').text();
                     let tara = $(this).find('td:eq(5)').text();
                     let pesoNeto = $(this).find('td:eq(6)').text();
-
+                    let precio = $(this).data('precio');
+                    let subtotalItem = $(this).data('subtotal');
                     detalles.push({
                         cantidad_pollos: cantidadPollos,
                         peso_bruto: pesoBruto,
@@ -675,6 +678,8 @@
                         peso_neto: pesoNeto,
                         tipo_pollo_id: $(this).data('tipo_pollo_id'),
                         presentacion_pollo_id: $(this).data('presentacion_pollo_id'),
+                        precio : precio,
+                        subtotal :subtotalItem
                     });
                 });
 

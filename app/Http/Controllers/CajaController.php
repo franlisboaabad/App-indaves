@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Enums\GlobalStateEnum;
+use App\Models\Empresa;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Carbon\Carbon;
 use App\Models\Caja;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CajaController extends Controller
@@ -29,7 +32,6 @@ class CajaController extends Controller
     {
         $request->validate([
             'monto_apertura' => 'required|numeric',
-            'fecha_apertura' => 'required|date',
         ]);
 
         // Puedes añadir aquí cualquier lógica adicional para el usuario
@@ -38,7 +40,7 @@ class CajaController extends Controller
         Caja::create([
             'user_id' => $userId,
             'monto_apertura' => $request->monto_apertura,
-            'fecha_apertura' => $request->fecha_apertura,
+            'fecha_apertura' => now(),
         ]);
 
         return response()->json(['success' => true]);
@@ -47,15 +49,16 @@ class CajaController extends Controller
     public function show(Caja $caja)
     {
         $caja = Caja::query()
-            ->with('pagos',function(HasMany $query){
-                $query->with('venta',fn(BelongsTo $q)=> $q->withAggregate('cliente','razon_social'));
+            ->with('pagos', function (HasMany $query) {
+                $query->with('venta', fn(BelongsTo $q) => $q->withAggregate('cliente', 'razon_social'));
             })
             ->findOrFail($caja->id);
-        // Asegurarse de que las fechas sean objetos Carbon
-        $caja->fecha_apertura = Carbon::parse($caja->fecha_apertura);
+
         $caja->fecha_cierre = $caja->fecha_cierre ? Carbon::parse($caja->fecha_cierre) : null;
 
-        return view('admin.cajas.show', compact('caja'));
+        $reports = $this->getSummary($caja);
+
+        return view('admin.cajas.show', compact('caja', 'reports'));
     }
 
     public function edit(Caja $caja)
@@ -125,5 +128,47 @@ class CajaController extends Controller
                 'message' => 'Hubo un error al eliminar la caja.'
             ], 500); // Código de estado HTTP 500 para errores del servidor
         }
+    }
+
+    public function summary(Caja $caja)
+    {
+        $reports = $this->getSummary($caja);
+        $empresa = Empresa::query()->firstOrFail();
+        $pdf = Pdf::loadView('pdf.cajas.print_a4',[
+            'reports' => $reports,
+            'caja'  => $caja,
+            'empresa' => $empresa
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->stream();
+    }
+
+
+    private function getSummary($caja): array
+    {
+        return DB::select("SELECT
+            cli.razon_social as cliente,
+            de.cantidad_pollos,
+            de.peso_total_neto,
+            round(de.peso_total_bruto / de.cantidad_pollos,2) as promedio,
+            @precio :=(
+                SELECT ROUND(avg(precio),2) from detalle_orden_despachos where orden_despacho_id = de.id
+            ) as precio,
+            @totalventa := round(de.peso_total_neto * @precio,2) as total_venta,
+            @saldo:=(
+                SELECT IFNULL(round(sum(deuda_anterior),2),0) from ventas where cliente_id = de.cliente_id
+            ) as saldo,
+            @total :=ROUND(@totalventa + @saldo,2) as total,
+
+            @pagado :=(
+                SELECT IFNULL(sum(monto),0) from pagos where venta_id = ven.id and DATE(created_at) = de.fecha_despacho
+            ) as monto_pagado,
+
+            round(@total - @pagado,2) as pendiente
+            FROM orden_despachos de
+            INNER JOIN clientes cli on de.cliente_id = cli.id
+            LEFT JOIN ventas ven on de.id = ven.orden_despacho_id
+            where de.fecha_despacho = ?;
+        ", [$caja->fecha_apertura->format('Y-m-d')]);
     }
 }

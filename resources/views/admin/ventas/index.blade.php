@@ -154,7 +154,9 @@
     <script>
         $(document).ready(function() {
             $('#table-ventas').DataTable({
-                // Opciones de DataTables, como la longitud de la página, la búsqueda, etc.
+                language: {
+                    "url": "/js/spanish.json"
+                },
             });
 
 

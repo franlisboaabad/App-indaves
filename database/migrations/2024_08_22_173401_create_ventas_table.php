@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('ventas', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('orden_despacho_id')
+                ->nullable()
+                ->references('id')
+                ->on('orden_despachos');
             $table->unsignedBigInteger('cliente_id');
             $table->string('serie_venta');
             $table->date('fecha_venta');
@@ -22,7 +26,9 @@ return new class extends Migration
             $table->string('forma_de_pago');
             $table->double('monto_total');
             $table->decimal('monto_recibido', 8, 2)->nullable();
+            $table->decimal('monto_pendiente', 8, 2)->nullable();
             $table->decimal('saldo', 8, 2)->default(0);
+            $table->decimal('deuda_anterior', 8, 2)->default(0);
             $table->text('comentario')->nullable();
             $table->boolean('estado')->default(1);
             $table->foreign('cliente_id')->references('id')->on('clientes');

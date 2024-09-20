@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('caja_id')->constrained()->onDelete('cascade');
             $table->foreignId('metodo_pago_id')->constrained()->onDelete('cascade');
             $table->decimal('monto', 10, 2);
+            $table->string('imagen')->nullable();
             $table->timestamps();
         });
     }

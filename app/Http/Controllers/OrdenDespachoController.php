@@ -235,6 +235,8 @@ class OrdenDespachoController extends Controller
             $detalle->descuento_peso = 0;
         });
 
+        $cliente->setAttribute('deuda_pendiente', Venta::query()->where('cliente_id', $orden->cliente_id)->sum('monto_pendiente'));
+
         return view('admin.ventas.create-despacho',
             compact( 'cajas', 'serie', 'precio', 'metodos',
                 'stockPollo','prices','orden','cliente'));

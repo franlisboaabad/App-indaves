@@ -19,6 +19,8 @@ class Venta extends Model
         'forma_de_pago',
         'monto_total',
         'monto_recibido',
+        'monto_pendiente',
+        'deuda_anterior',
         'comentario'.
         'saldo',
         'estado',

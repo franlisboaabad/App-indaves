@@ -41,13 +41,13 @@
             </div>
 
             <!-- Mostrar los pagos asociados -->
-            <h3 class="mt-4">Pagos Asociados</h3>
+            <h5 class="mt-4">Pagos Asociados</h5>
             <table class="table table-bordered">
                 <thead>
                 <tr>
                     <th>ID</th>
                     <th>CLIENTE</th>
-                    <td>Serie de venta</td>
+                    <th>Serie de venta</th>
                     <th>Monto</th>
                     <th>Método de Pago</th>
                     <th>Fecha</th>
@@ -76,13 +76,53 @@
                 @endforelse
                 </tbody>
             </table>
+
+            <!-- Mostrar los pagos asociados -->
+            <h5 class="mt-4">Resumen</h5>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>CLIENTE</th>
+                    <th>UNIDAD</th>
+                    <th>KG</th>
+                    <th>PROM</th>
+                    <th>PRECIO</th>
+                    <th>VTA. DIA</th>
+                    <th>SALDO ANTERIOR</th>
+                    <th>TOTAL</th>
+                    <th>ABONO</th>
+                    <th>SALDO A COBRAR</th>
+                </tr>
+                </thead>
+                <tbody>
+                @forelse($reports as $pago)
+                    <tr>
+                        <td>{{ $pago->cliente }}</td>
+                        <td>{{ $pago->cantidad_pollos }}</td>
+                        <td>{{ $pago->peso_total_neto }}</td>
+                        <td>{{ $pago->promedio }}</td>
+                        <td>{{ $pago->precio }}</td>
+                        <td>{{ $pago->total_venta }}</td>
+                        <td>{{ $pago->saldo }}</td>
+                        <td>{{ $pago->total }}</td>
+                        <td>{{ $pago->monto_pagado }}</td>
+                        <td>{{ $pago->pendiente }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4">No hay pagos registrados para esta caja.</td>
+                    </tr>
+                @endforelse
+                </tbody>
+            </table>
+            <a href="{{ route('cajas.resumen', $caja->id) }}" class="btn btn-info btn-sm mt-2 float-right ml-3" target="_blank"><i class="fa fa-print pr-2"></i>Imprimir Resumen</a>
         </div>
         <div class="card-footer">
             <!-- Botón para cerrar la caja -->
             @if($caja->estado_caja)
                 <button class="btn btn-danger" id="closeCajaBtn" data-id="{{ $caja->id }}">Cerrar Caja</button>
             @endif
-            <a href="{{ route('cajas.index') }}" class="btn btn-secondary">Volver</a>
+            <a href="{{ route('cajas.index') }}" class="btn btn-secondary ml-3">Volver</a>
         </div>
     </div>
 @stop

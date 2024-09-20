@@ -11,6 +11,7 @@ class OrdenIngreso extends Model
 
     protected $fillable = [
         'user_id',
+        'fecha_ingreso',
         'numero_guia',
         'peso_bruto',
         'peso_tara',

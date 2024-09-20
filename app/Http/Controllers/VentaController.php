@@ -85,9 +85,11 @@ class VentaController extends Controller
 
         try {
             $monto_recibido = $request->input('payment.monto_recibido', 0);
-            $monto_total = $request->input('monto_total');
-            $saldo = $monto_total - $monto_recibido;
+            $monto_total = $request->input('payment.monto_total');
+            $monto_pendiente = $monto_total - $monto_recibido;
 
+
+            Venta::query()->where('cliente_id', $request->input('cliente_id'))->update(['monto_pendiente' => 0]);
             // Crear la nueva venta
             $venta = Venta::query()->create([
                 'orden_despacho_id' => $request->input('orden_despacho_id'),
@@ -99,6 +101,8 @@ class VentaController extends Controller
                 'forma_de_pago' => $request->input('payment.forma_de_pago'),
                 'monto_total' => $request->input('monto_total'),
                 'monto_recibido' => $request->input('payment.monto_recibido'),
+                'monto_pendiente' => $monto_pendiente,
+                'saldo' => $request->input('payment.saldo'),
             ]);
             // Aumentar el número de serie (1) nota de venta | 2 orden despacho
             SeriesService::increment(Serie::DEFAULT_SERIE_VENTA);
@@ -143,11 +147,11 @@ class VentaController extends Controller
                 }
             }
 
-            if($saldo < 0 ){
+            if($monto_pendiente < 0 ){
                 Saldo::query()->create([
                     'cliente_id' => $venta->cliente_id,
                     'reference_id' => $venta->getKey(),
-                    'total' => abs($saldo)
+                    'total' => abs($monto_pendiente)
                 ]);
             }
 

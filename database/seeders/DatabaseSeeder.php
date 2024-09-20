@@ -90,5 +90,9 @@ class DatabaseSeeder extends Seeder
                 'descripcion' => $descripcion,
             ]);
         }
+
+
+
+
     }
 }

@@ -359,11 +359,6 @@ return [
             'icon' => 'fa fa-credit-card',
             'submenu' => [
                 [
-                    'text' => 'Nueva Venta',
-                    'route'  => 'ventas.create',
-                    'can' => 'admin.ventas.create'
-                ],
-                [
                     'text' => 'Lista de Ventas',
                     'route'  => 'ventas.index',
                     'can' => 'admin.ventas.index'

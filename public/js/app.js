@@ -24185,13 +24185,12 @@ var _hoisted_29 = {
 var _hoisted_30 = ["textContent"];
 var _hoisted_31 = ["textContent"];
 var _hoisted_32 = {
-  "class": "row"
+  key: 0,
+  "class": "mr-3 w-50"
 };
-var _hoisted_33 = {
-  "class": "col-md-4 mb-4"
-};
+var _hoisted_33 = ["textContent"];
 var _hoisted_34 = {
-  "class": "form-group"
+  "class": "row"
 };
 var _hoisted_35 = {
   "class": "col-md-4 mb-4"
@@ -24199,36 +24198,42 @@ var _hoisted_35 = {
 var _hoisted_36 = {
   "class": "form-group"
 };
-var _hoisted_37 = ["value", "textContent"];
+var _hoisted_37 = {
+  "class": "col-md-4 mb-4"
+};
 var _hoisted_38 = {
-  "class": "col-md-4 mb-4"
-};
-var _hoisted_39 = {
-  "class": "col-md-4 mb-4"
-};
-var _hoisted_40 = {
   "class": "form-group"
 };
+var _hoisted_39 = ["value", "textContent"];
+var _hoisted_40 = {
+  "class": "col-md-4 mb-4"
+};
 var _hoisted_41 = {
-  "class": "col-md-2 mb-4"
+  "class": "col-md-4 mb-4"
 };
 var _hoisted_42 = {
   "class": "form-group"
 };
 var _hoisted_43 = {
+  "class": "col-md-2 mb-4"
+};
+var _hoisted_44 = {
+  "class": "form-group"
+};
+var _hoisted_45 = {
   "for": "checkPagoCompleto",
   "class": "checkbox-label"
 };
-var _hoisted_44 = {
+var _hoisted_46 = {
   "class": "col-md-2 mb-4"
 };
-var _hoisted_45 = {
+var _hoisted_47 = {
   "class": "form-group"
 };
-var _hoisted_46 = {
+var _hoisted_48 = {
   "class": "col-md-4 mb-4"
 };
-var _hoisted_47 = {
+var _hoisted_49 = {
   "class": "form-group"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -24328,7 +24333,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, "TOTAL DE VENTA: ", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", {
     textContent: (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.monto_total),
     "class": "text-right w-25"
-  }, null, 8 /* PROPS */, _hoisted_31)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, [_cache[21] || (_cache[21] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  }, null, 8 /* PROPS */, _hoisted_31), $setup.form.payment.deuda > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h4", _hoisted_32, "DEUDA ANTERIOR: ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.form.payment.deuda > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h4", {
+    key: 1,
+    textContent: (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.payment.deuda),
+    "class": "text-right w-25"
+  }, null, 8 /* PROPS */, _hoisted_33)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [_cache[21] || (_cache[21] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "forma_de_pago"
   }, "Forma de Pago", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
     "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
@@ -24339,7 +24348,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     value: "0"
   }, "Contado", -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
     value: "1"
-  }, "Credito", -1 /* HOISTED */)]), 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $setup.form.payment.forma_de_pago]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [_cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  }, "Credito", -1 /* HOISTED */)]), 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $setup.form.payment.forma_de_pago]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [_cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "metodo_pago_id"
   }, "Método de Pago", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
     "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
@@ -24350,15 +24359,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
       value: method.id,
       textContent: (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(method.descripcion)
-    }, null, 8 /* PROPS */, _hoisted_37);
-  }), 256 /* UNKEYED_FRAGMENT */))], 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $setup.form.payment.metodo_pago_id]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    }, null, 8 /* PROPS */, _hoisted_39);
+  }), 256 /* UNKEYED_FRAGMENT */))], 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $setup.form.payment.metodo_pago_id]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "file",
     name: "image",
     onChange: _cache[4] || (_cache[4] = function () {
       return $setup.getImage && $setup.getImage.apply($setup, arguments);
     }),
     accept: "image/*"
-  }, null, 32 /* NEED_HYDRATION */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_39, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [_cache[23] || (_cache[23] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  }, null, 32 /* NEED_HYDRATION */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_42, [_cache[23] || (_cache[23] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "monto_total"
   }, "Monto Total a Pagar", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
@@ -24366,7 +24375,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     "class": "form-control",
     readonly: ""
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.payment.monto_total]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Información de Pago "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_42, [_cache[25] || (_cache[25] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_43, [_cache[24] || (_cache[24] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Desea hacer el pago completo? ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.payment.monto_total]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Información de Pago "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [_cache[25] || (_cache[25] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_45, [_cache[24] || (_cache[24] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Desea hacer el pago completo? ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "checkbox",
     "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
       return $setup.form.payment.pago_completo = $event;
@@ -24374,7 +24383,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onChange: _cache[7] || (_cache[7] = function () {
       return $setup.togglePagoCompleto && $setup.togglePagoCompleto.apply($setup, arguments);
     })
-  }, null, 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelCheckbox, $setup.form.payment.pago_completo]])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_45, [_cache[26] || (_cache[26] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  }, null, 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelCheckbox, $setup.form.payment.pago_completo]])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [_cache[26] || (_cache[26] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "monto_recibido"
   }, "Monto Recibido", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
@@ -24385,15 +24394,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onChange: _cache[9] || (_cache[9] = function () {
       return $setup.calculateTotalsPay && $setup.calculateTotalsPay.apply($setup, arguments);
     })
-  }, null, 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.payment.monto_recibido]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [_cache[27] || (_cache[27] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  }, null, 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.payment.monto_recibido]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_49, [_cache[27] || (_cache[27] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "saldo"
-  }, "Saldo", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  }, "Monto Pendiente", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "onUpdate:modelValue": _cache[10] || (_cache[10] = function ($event) {
-      return $setup.form.payment.saldo = $event;
+      return $setup.form.payment.monto_pendiente = $event;
     }),
     "class": "form-control",
     readonly: ""
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.payment.saldo]])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.payment.monto_pendiente]])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "btn btn-success",
     onClick: _cache[11] || (_cache[11] = function ($event) {
@@ -24614,8 +24623,9 @@ function useVenta(order, paymentMethods, cliente, serie) {
       metodo_pago_id: paymentMethods !== null && paymentMethods !== void 0 && paymentMethods.length ? paymentMethods[0].id : null,
       pago_completo: false,
       monto_recibido: null,
+      monto_pendiente: null,
       monto_total: 0,
-      saldo: 0,
+      deuda: cliente.deuda_pendiente,
       image: null
     }
   });
@@ -24627,9 +24637,9 @@ function useVenta(order, paymentMethods, cliente, serie) {
   function calculateTotalsPay() {
     var _form$cliente, _form$cliente2;
     var saldoActual = _.isNil((_form$cliente = form.cliente) === null || _form$cliente === void 0 ? void 0 : _form$cliente.saldos_sum_total) ? 0 : (_form$cliente2 = form.cliente) === null || _form$cliente2 === void 0 ? void 0 : _form$cliente2.saldos_sum_total;
-    form.payment.monto_total = _.round(form.monto_total - saldoActual, 2);
+    form.payment.monto_total = _.round(form.monto_total - saldoActual + +form.payment.deuda, 2);
     if (form.payment.monto_recibido) {
-      form.payment.saldo = +form.payment.monto_recibido - +form.payment.monto_total;
+      form.payment.monto_pendiente = +form.payment.monto_recibido - +form.payment.monto_total;
     }
   }
   function calculateSubTotal(index) {
@@ -64438,13 +64448,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _NotaIngreso_vue_vue_type_template_id_73a6c448__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./NotaIngreso.vue?vue&type=template&id=73a6c448 */ "./resources/js/components/NotaIngreso.vue?vue&type=template&id=73a6c448");
 /* harmony import */ var _NotaIngreso_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./NotaIngreso.vue?vue&type=script&setup=true&lang=js */ "./resources/js/components/NotaIngreso.vue?vue&type=script&setup=true&lang=js");
-/* harmony import */ var C_laragon_www_App_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_laragon_www_app_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_laragon_www_App_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_NotaIngreso_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_NotaIngreso_vue_vue_type_template_id_73a6c448__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/NotaIngreso.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_laragon_www_app_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_NotaIngreso_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_NotaIngreso_vue_vue_type_template_id_73a6c448__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/NotaIngreso.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -64466,13 +64476,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Venta_vue_vue_type_template_id_a7d2461e__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Venta.vue?vue&type=template&id=a7d2461e */ "./resources/js/components/Venta.vue?vue&type=template&id=a7d2461e");
 /* harmony import */ var _Venta_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Venta.vue?vue&type=script&setup=true&lang=js */ "./resources/js/components/Venta.vue?vue&type=script&setup=true&lang=js");
-/* harmony import */ var C_laragon_www_App_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_laragon_www_app_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_laragon_www_App_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Venta_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Venta_vue_vue_type_template_id_a7d2461e__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/Venta.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_laragon_www_app_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Venta_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Venta_vue_vue_type_template_id_a7d2461e__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/Venta.vue"]])
 /* hot reload */
 if (false) {}
 

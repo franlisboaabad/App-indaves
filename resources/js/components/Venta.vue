@@ -113,6 +113,8 @@ calculateTotals()
                         <h4 v-text="form.peso_neto" class="text-right w-25"></h4>
                         <h4 class="mr-3 w-50">TOTAL DE VENTA: </h4>
                         <h4 v-text="form.monto_total" class="text-right w-25"></h4>
+                        <h4 class="mr-3 w-50" v-if="form.payment.deuda > 0">DEUDA ANTERIOR: </h4>
+                        <h4 v-if="form.payment.deuda > 0" v-text="form.payment.deuda" class="text-right w-25"></h4>
                     </div>
                 </div>
             </div>
@@ -175,8 +177,8 @@ calculateTotals()
                 </div>
                 <div class="col-md-4 mb-4">
                     <div class="form-group">
-                        <label for="saldo">Saldo</label>
-                        <input v-model="form.payment.saldo" class="form-control" readonly>
+                        <label for="saldo">Monto Pendiente</label>
+                        <input v-model="form.payment.monto_pendiente" class="form-control" readonly>
                     </div>
                 </div>
             </div>

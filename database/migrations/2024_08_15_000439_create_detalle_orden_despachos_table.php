@@ -25,6 +25,7 @@ return new class extends Migration
             $table->decimal('peso_neto', 8, 2)->nullable();
             $table->decimal('precio', 8, 2)->nullable();
             $table->decimal('subtotal', 8, 2)->nullable();
+            $table->decimal('peso_promedio', 8, 2)->nullable();
             $table->boolean('estado')->default(1);
             $table->timestamps();
         });

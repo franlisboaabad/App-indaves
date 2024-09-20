@@ -118,7 +118,6 @@
                     data: {
                         _token: '{{ csrf_token() }}',
                         monto_apertura: $('#monto_apertura').val(),
-                        fecha_apertura: new Date().toISOString().split('T')[0], // Fecha actual
                     },
                     success: function(response) {
                         $('#aperturaCajaModal').modal('hide');

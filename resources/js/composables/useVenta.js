@@ -22,8 +22,9 @@ export function useVenta(order, paymentMethods, cliente,serie) {
             metodo_pago_id: paymentMethods?.length ? paymentMethods[0].id : null,
             pago_completo: false,
             monto_recibido: null,
+            monto_pendiente: null,
             monto_total: 0,
-            saldo: 0,
+            deuda : cliente.deuda_pendiente,
             image: null
         }
     })
@@ -36,9 +37,9 @@ export function useVenta(order, paymentMethods, cliente,serie) {
 
     function calculateTotalsPay() {
         const saldoActual = _.isNil(form.cliente?.saldos_sum_total) ? 0 : form.cliente?.saldos_sum_total;
-        form.payment.monto_total = _.round(form.monto_total - saldoActual, 2);
+        form.payment.monto_total = _.round(form.monto_total - saldoActual + +form.payment.deuda, 2);
         if (form.payment.monto_recibido) {
-            form.payment.saldo = +form.payment.monto_recibido - +form.payment.monto_total;
+            form.payment.monto_pendiente = +form.payment.monto_recibido - +form.payment.monto_total;
         }
     }
 

@@ -49,7 +49,7 @@
                             <td>
                                 <!-- Example single danger button -->
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Acciones
                                     </button>
                                     <div class="dropdown-menu">
@@ -89,7 +89,11 @@
     <script>
         $(document).ready(function() {
 
-            $('#table-clientes').DataTable();
+            $('#table-clientes').DataTable({
+                language: {
+                    "url": "/js/spanish.json"
+                },
+            });
 
             // Maneja el clic en el botón de eliminación
             $(document).on('click', '.delete-button', function() {
