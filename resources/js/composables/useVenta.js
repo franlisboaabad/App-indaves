@@ -31,7 +31,7 @@ export function useVenta(order, paymentMethods, cliente,serie) {
     })
 
     function calculateTotals() {
-        form.monto_total = _.sumBy(form.detalles, 'subtotal');
+        form.monto_total = _.round(_.sumBy(form.detalles, 'subtotal'),2);
         form.peso_neto = _.sumBy(form.detalles, 'peso_neto') - _.sumBy(form.detalles, 'descuento_peso');
         calculateTotalsPay();
     }
@@ -40,7 +40,7 @@ export function useVenta(order, paymentMethods, cliente,serie) {
         const saldoActual = _.isNil(form.cliente?.saldos_sum_total) ? 0 : form.cliente?.saldos_sum_total;
         form.payment.monto_total = _.round(form.monto_total - saldoActual + +form.payment.deuda, 2);
         if (form.payment.monto_recibido) {
-            form.payment.monto_pendiente = +form.payment.monto_recibido - +form.payment.monto_total;
+            form.payment.monto_pendiente =  _.round(+form.payment.monto_recibido - +form.payment.monto_total,2);
         }
     }
 

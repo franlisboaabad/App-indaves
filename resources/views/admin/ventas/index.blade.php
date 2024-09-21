@@ -53,13 +53,13 @@
                                         Acciones
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        @if ($venta->monto_pendiente > 0)
+                                        {{-- @if ($venta->monto_pendiente > 0)
                                             <a class="dropdown-item" href="#" data-toggle="modal"
                                                data-target="#agregarPagoModal" data-venta-monto="{{ $venta->monto_pendiente }}"
                                                data-venta-id="{{ $venta->id }}">
                                                 Agregar Pago
                                             </a>
-                                        @endif
+                                        @endif --}}
                                         <a class="dropdown-item" href="{{ route('ventas.show', $venta->id) }}">
                                             Ver
                                         </a>

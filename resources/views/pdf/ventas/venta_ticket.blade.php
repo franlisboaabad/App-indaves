@@ -92,6 +92,10 @@
             /* color: #555;  */
             /* Color del texto en el pie de página */
         }
+
+        .text-small{
+            font-size: 12px;
+        }
     </style>
 </head>
 
@@ -108,12 +112,13 @@
     <!-- Información de la Venta -->
     <div>
         <h2>Información de la Venta</h2>
-        <p><strong>ID de Venta:</strong> {{ $venta->serie_venta }} | <strong>Cliente:</strong> {{ $venta->cliente->razon_social }} | <strong>Fecha:</strong> {{ $venta->created_at->format('d/m/Y') }}</p>
+        <p><strong>ID de Venta:</strong> {{ $venta->serie_venta }} | <strong>Cliente:</strong>
+            {{ $venta->cliente->razon_social }} | <strong>Fecha:</strong> {{ $venta->created_at->format('d/m/Y') }}</p>
         <p><strong>Forma de pago:</strong> {{ $venta->forma_de_pago ? 'Crédito' : 'Contado' }}</p>
         <p><strong>Monto a pagar:</strong> {{ number_format($venta->monto_total, 2) }} </p>
 
         <h5>PAGOS</h5>
-        @foreach($venta->pagos as $pago)
+        @foreach ($venta->pagos as $pago)
             <p><strong> {{ $pago->metodo_pago->descripcion }}:</strong> {{ number_format($pago->monto, 2) }} </p>
         @endforeach
 
@@ -124,39 +129,43 @@
     <div>
         <h2>Detalles de la Venta</h2>
         <table>
-            <thead>
-                <tr>
-                    <th>Presentación</th>
-                    <th>Tipo</th>
-                    <th>C.Pollos</th>
-                    <th>P.Bruto</th>
-                    <th>C.Jabas</th>
-                    <th>Tara</th>
-                    <th>P.Neto</th>
-                </tr>
-            </thead>
             <tbody>
                 @foreach ($venta->detalles as $detalle)
                     <tr>
-                        <td>{{ $detalle->presentacion_pollo_descripcion }}</td>
-                        <td>{{ $detalle->tipo_pollo_descripcion }}</td>
-                        <td>{{ $detalle->cantidad_pollos }}</td>
-                        <td>{{ number_format($detalle->peso_bruto, 2) }}</td>
-                        <td>{{ $detalle->cantidad_jabas }}</td>
-                        <td>{{ number_format($detalle->tara, 2) }}</td>
-                        <td>{{ number_format($detalle->peso_neto, 2) }}</td>
+                        <td class="text-small">Presentacion</td>
+                        <td class="text-small">{{ $detalle->presentacion_pollo_descripcion }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-small">T.Pollo</td>
+                        <td class="text-small">{{ $detalle->tipo_pollo_descripcion }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-small"># Pollos</td>
+                        <td class="text-small">{{ $detalle->cantidad_pollos }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-small">Peso Bruto</td>
+                        <td class="text-small">{{ number_format($detalle->peso_bruto, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-small"># Jabas</td>
+                        <td class="text-small">{{ $detalle->cantidad_jabas }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-small">Tara</td>
+                        <td class="text-small">{{ number_format($detalle->tara, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-small">Peso Neto</td>
+                        <td class="text-small">{{ number_format($detalle->peso_neto, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
-            {{-- <tfoot>
-                <tr>
-                    <th colspan="3">Total</th>
-                    <th>{{ number_format($venta->peso_total_bruto, 2) }}</th>
-                    <th>{{ $venta->cantidad_jabas }}</th>
-                    <th>{{ number_format($venta->tara, 2) }}</th>
-                    <th>{{ number_format($venta->peso_neto, 2) }}</th>
-                </tr>
-            </tfoot> --}}
         </table>
     </div>
 

@@ -57,7 +57,10 @@
                                         <a class="dropdown-item" href="{{ route('ordenes-de-despacho.show', $orden->id) }}">Ver</a>
                                         {{-- <a href="{{ route('ordenes-de-despacho.edit', $orden->id) }}" class="btn btn-warning btn-sm">Editar</a> --}}
 
+                                        @if( !$orden->ventas->isNotEmpty())
                                         <a class="dropdown-item"  href="{{ route('ordenes-de-despacho.venta', ['id'=> $orden->id] ) }}" > Generar venta </a>
+                                        @endif
+
 
                                         <a class="dropdown-item"  href="{{ route('ordenes-de-despacho.print', ['id'=> $orden->id, 'format' => 'a4'] ) }}" target="_Blank"> PDF </a>
 

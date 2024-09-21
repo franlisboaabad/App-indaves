@@ -62,8 +62,8 @@ calculateTotals()
 
             <!-- Tabla de Detalles -->
             <div class="mt-4">
-                <table class="table table-bordered" id="detailsTable">
-                    <thead>
+                <table class="table table-bordered table-hover" id="detailsTable">
+                    <thead class="thead-dark">
                     <tr>
                         <th>Presentación</th>
                         <th>Tipo</th>
@@ -71,7 +71,7 @@ calculateTotals()
                         <th># de Aves</th>
                         <th>Precio</th>
                         <th>Peso Neto</th>
-                        <th>Descuento</th>
+                        <th>Descuento Peso</th>
                         <th>Sub Total</th>
                     </tr>
                     </thead>
@@ -98,29 +98,44 @@ calculateTotals()
                 </table>
             </div>
 
-            <div class="row">
-                <div class="col-md-8">
 
+            <div class="row">
+                <div class="col-md-6">
                     <div class="form-group">
                         <label for="saldo">Comentario</label>
-                        <textarea v-text="form.comentario" class="form-control"></textarea>
+                        <textarea v-model="form.comentario" class="form-control" placeholder="Escribir comentario sobre la venta" rows="5"></textarea>
                     </div>
-
                 </div>
-                <div class="col-md-4">
-                    <div class="form-inline mt-5">
-                        <h4 class="mr-3 w-50">PESO NETO TOTAL: </h4>
-                        <h4 v-text="form.peso_neto" class="text-right w-25"></h4>
-                        <h4 class="mr-3 w-50">TOTAL DE VENTA: </h4>
-                        <h4 v-text="form.monto_total" class="text-right w-25"></h4>
-                        <h4 class="mr-3 w-50" v-if="form.payment.deuda > 0">DEUDA ANTERIOR: </h4>
-                        <h4 v-if="form.payment.deuda > 0" v-text="form.payment.deuda" class="text-right w-25"></h4>
+
+                <div class="col-md-6" style="margin-top: -20px;">
+                    <div class="mt-5">
+                        <h4 class="mb-2">Resumen de Transacción</h4>
+                        <div class="d-flex justify-content-between">
+                            <span>PESO NETO TOTAL (KG):</span>
+                            <span v-text="form.peso_neto" class="font-weight-bold"></span>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <span>TOTAL DE VENTA S/:</span>
+                            <span v-text="form.monto_total" class="font-weight-bold"></span>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <span>TOTAL A PAGAR S/:</span>
+                            <span v-text="form.payment.monto_total" class="font-weight-bold"></span>
+                        </div>
+                        <div v-if="form.payment.deuda > 0" class="d-flex justify-content-between mt-2">
+                            <span>DEUDA ANTERIOR S/:</span>
+                            <span v-text="form.payment.deuda" class="font-weight-bold text-danger"></span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-4 mb-4">
+
+
+            <hr>
+
+            <div class="row mt-5">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="forma_de_pago">Forma de Pago</label>
                         <select
@@ -131,7 +146,7 @@ calculateTotals()
                         </select>
                     </div>
                 </div>
-                <div class="col-md-4 mb-4">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="metodo_pago_id">Método de Pago</label>
                         <select
@@ -142,30 +157,33 @@ calculateTotals()
                         </select>
                     </div>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <div>
-                        <input type="file" name="image" @change="getImage" accept="image/*">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="comprobante" class="form-label">Seleccionar Comprobante</label>
+                        <input type="file" id="comprobante" name="image" @change="getImage" accept="image/*" class="form-control-file">
+                        <small class="form-text text-muted">Formato aceptado: JPG, PNG, PDF.</small>
                     </div>
                 </div>
-                <div class="col-md-4 mb-4">
+
+                <!-- <div class="col-md-4">
                     <div class="form-group">
                         <label for="monto_total">Monto Total a Pagar</label>
                         <input
                             v-model="form.payment.monto_total"
                             class="form-control" readonly>
                     </div>
-                </div>
+                </div> -->
                 <!-- Información de Pago -->
-                <div class="col-md-2 mb-4">
+                <div class="col-md-2">
                     <div class="form-group"><br>
                         <label for="checkPagoCompleto" class="checkbox-label">
-                            Desea hacer el pago completo?
+                            Pago Completo?
                             <input type="checkbox" v-model="form.payment.pago_completo"
                                    @change="togglePagoCompleto">
                         </label>
                     </div>
                 </div>
-                <div class="col-md-2 mb-4">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label for="monto_recibido">Monto Recibido</label>
                         <input
@@ -175,13 +193,15 @@ calculateTotals()
                             @change="calculateTotalsPay">
                     </div>
                 </div>
-                <div class="col-md-4 mb-4">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="saldo">Monto Pendiente</label>
                         <input v-model="form.payment.monto_pendiente" class="form-control" readonly>
                     </div>
                 </div>
             </div>
+
+
 
             <button type="button" class="btn btn-success" @click="sendForm(props.routeSave)">Registrar Venta</button>
         </div>
