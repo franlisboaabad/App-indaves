@@ -1,17 +1,18 @@
-import { getCurrentInstance, reactive} from "vue";
+import { getCurrentInstance, reactive } from "vue";
 import moment from "moment";
-export function useFormIngreso(presentations, types) {
+import Swal from "sweetalert2";
 
+export function useFormIngreso(presentations, types) {
     const { proxy } = getCurrentInstance();
 
     const form = reactive({
         numero_guia: null,
-        fecha_despacho: moment().format('YYYY-MM-DD'),
+        fecha_despacho: moment().format("YYYY-MM-DD"),
         peso_bruto: 0,
         peso_tara: 0,
         peso_neto: 0,
-        items: []
-    })
+        items: [],
+    });
 
     const formItem = reactive({
         tipo_pollo_id: null,
@@ -21,21 +22,41 @@ export function useFormIngreso(presentations, types) {
         cantidad_jabas: null,
         cantidad_pollos: null,
         peso_neto: null,
-        tara : 0,
-        peso_promedio : 0
-    })
+        tara: 0,
+        peso_promedio: 0,
+    });
 
     formItem.tipo_pollo_id = types.length ? types[0].id : null;
-    formItem.presentacion_pollo_id = presentations.length ? presentations[0].id : null;
+    formItem.presentacion_pollo_id = presentations.length
+        ? presentations[0].id
+        : null;
 
     function addItem() {
-
-        const type = types.find(type => type.id == formItem.tipo_pollo_id);
+        if (
+            !formItem.tipo_pollo_id ||
+            !formItem.presentacion_pollo_id ||
+            !formItem.peso_neto ||
+            !formItem.cantidad_pollos
+        ) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Por favor, complete todos los campos requeridos.",
+            });
+            return;
+        }
+        const type = types.find((type) => type.id == formItem.tipo_pollo_id);
         formItem.tipo_pollo_descripcion = type?.descripcion;
-        const presentation = presentations.find(type => type.id == formItem.presentacion_pollo_id);
+        const presentation = presentations.find(
+            (type) => type.id == formItem.presentacion_pollo_id
+        );
         formItem.presentacion_pollo_descripcion = presentation?.descripcion;
-        formItem.peso_promedio = _.round(formItem.peso_neto / formItem.cantidad_pollos,2);
-        form.items.push({...formItem});
+
+        formItem.peso_promedio = _.round(
+            formItem.peso_neto / formItem.cantidad_pollos,
+            2
+        );
+        form.items.push({ ...formItem });
         calculateTotals();
         resetForm();
     }
@@ -45,35 +66,48 @@ export function useFormIngreso(presentations, types) {
         calculateTotals();
     }
 
-    function calculateTotals(){
-        form.cantidad_jabas = _.sumBy(form.items,'cantidad_jabas');
-        form.cantidad_pollos = _.sumBy(form.items,'cantidad_pollos');
-        form.peso_total = _.sumBy(form.items,'peso_bruto');
+    function calculateTotals() {
+        form.cantidad_jabas = _.sumBy(form.items, "cantidad_jabas");
+        form.cantidad_pollos = _.sumBy(form.items, "cantidad_pollos");
+        form.peso_total = _.sumBy(form.items, "peso_bruto");
     }
 
-    function resetForm()
-    {
+    function resetForm() {
         formItem.cantidad_jabas = null;
-        formItem.cantidad_pollos =  null;
-        formItem.peso_neto =  null;
+        formItem.cantidad_pollos = null;
+        formItem.peso_neto = null;
     }
 
     function sendForm(url) {
-        axios.post(url, form)
-            .then(({data})=>{
-                proxy.$swal({
-                    toast: true,
-                    icon: 'success',
-                    title: data.message,
-                    animation: false,
-                    position: 'top-right',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                }).then(()=>{
-                    location.href= '/ordenes-ingreso';
-                });
+        axios
+            .post(url, form)
+            .then(({ data }) => {
+                proxy
+                    .$swal({
+                        icon: "success",
+                        title: "Éxito",
+                        text: data.message,
+                        animation: false,
+                        position: "center",
+                        confirmButtonText: "Aceptar",
+                    })
+                    .then(() => {
+                        location.href = "/ordenes-ingreso";
+                    });
             })
+            .catch(({ response }) => {
+                const errorMessage =
+                    response?.data?.message ||
+                    "Ocurrió un error al enviar el formulario.";
+                proxy.$swal({
+                    icon: "error",
+                    title: "Error",
+                    text: errorMessage,
+                    animation: false,
+                    position: "center",
+                    confirmButtonText: "Aceptar",
+                });
+            });
     }
 
     return {
@@ -81,6 +115,6 @@ export function useFormIngreso(presentations, types) {
         formItem,
         addItem,
         deleteItem,
-        sendForm
+        sendForm,
     };
 }

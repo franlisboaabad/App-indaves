@@ -24,36 +24,38 @@
 
             <hr>
 
-            <h3>Detalles de la Orden</h3>
+            <h3>Detalles:</h3>
             <table class="table">
                 <thead>
                     <tr>
                         <th>Tipo de Pollo</th>
                         <th>Presentación</th>
                         <th>Cantidad Pollos</th>
-                        {{-- <th>Peso Bruto</th> --}}
                         <th>Cantidad Jabas</th>
-                        {{-- <th>Tara</th> --}}
                         <th>Peso Neto</th>
-                        {{-- <th>Precio</th>
-                        <th>Subtotal</th> --}}
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($ordenIngreso->detalle as $detalle)
                         <tr>
-                            <td>{{ $detalle->tipo_pollo_id }}</td>
-                            <td>{{ $detalle->presentacion_pollo_id }}</td>
+                            <td>{{ $detalle->tipo_pollo->descripcion }}</td>
+                            <td>{{ $detalle->presentacion_pollo->descripcion }}</td>
                             <td>{{ $detalle->cantidad_pollos }}</td>
-                            {{-- <td>{{ $detalle->peso_bruto }}</td> --}}
                             <td>{{ $detalle->cantidad_jabas }}</td>
-                            {{-- <td>{{ $detalle->tara }}</td> --}}
                             <td>{{ $detalle->peso_neto }}</td>
-                            {{-- <td>{{ $detalle->precio }}</td>
-                            <td>{{ $detalle->subtotal }}</td> --}}
                         </tr>
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td>-</td>
+                        <td colspan="1"> <b>TOTALES:</b> </td>
+                        <td id="totalPollos">0</td>
+                        <td id="totalJabas">0</td>
+                        <td id="totalPesoNeto">0</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
@@ -64,5 +66,32 @@
 @endsection
 
 @section('js')
+<script>
+$(document).ready(function() {
+    function sumarColumnas() {
+        let totalPollos = 0;
+        let totalJabas = 0;
+        let totalPesoNeto = 0;
 
+        // Iterar sobre cada fila de la tabla (excluyendo el encabezado y el pie de tabla)
+        $('.table tbody tr').each(function() {
+            const cantidadPollos = parseInt($(this).find('td:nth-child(3)').text()) || 0;
+            const cantidadJabas = parseInt($(this).find('td:nth-child(4)').text()) || 0;
+            const pesoNeto = parseFloat($(this).find('td:nth-child(5)').text()) || 0;
+
+            totalPollos += cantidadPollos;
+            totalJabas += cantidadJabas;
+            totalPesoNeto += pesoNeto;
+        });
+
+        // Mostrar los totales en el tfoot
+        $('#totalPollos').text(totalPollos);
+        $('#totalJabas').text(totalJabas);
+        $('#totalPesoNeto').text(totalPesoNeto.toFixed(2)); // Limitar a 2 decimales
+    }
+
+    // Llamar a la función para sumar al cargar la página
+    sumarColumnas();
+});
+</script>
 @endsection

@@ -18,11 +18,10 @@ class OrdenDespacho extends Model
         'cantidad_jabas',
         'tara',
         'peso_total_neto',
-        'subtotal',
-        'url_orden_documento_a4',
-        'url_orden_documento_ticket',
         'estado_despacho',
-        'estado'
+        'subtotal',
+        'estado',
+        'type',
     ];
 
     public const ESTADO_DESPACHADO = 1;

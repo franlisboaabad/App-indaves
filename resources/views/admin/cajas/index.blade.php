@@ -48,7 +48,7 @@
                                     id="delete-form-{{ $caja->id }}">
                                     @csrf
                                     @method('DELETE')
-                                    <a href="{{ route('cajas.show', $caja->id) }}" class="btn btn-info btn-sm">Ver |
+                                    <a href="{{ route('cajas.show', $caja->id) }}" class="btn btn-info btn-sm mr-2">Ver |
                                         Cerrar</a>
                                     <button type="button" class="btn btn-danger btn-sm btn-delete"
                                         data-id="{{ $caja->id }}">Eliminar</button>

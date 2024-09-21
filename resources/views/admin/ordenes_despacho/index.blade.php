@@ -56,7 +56,9 @@
                                         <!-- Aquí puedes añadir botones para ver, editar o eliminar -->
                                         <a class="dropdown-item" href="{{ route('ordenes-de-despacho.show', $orden->id) }}">Ver</a>
                                         {{-- <a href="{{ route('ordenes-de-despacho.edit', $orden->id) }}" class="btn btn-warning btn-sm">Editar</a> --}}
+
                                         <a class="dropdown-item"  href="{{ route('ordenes-de-despacho.venta', ['id'=> $orden->id] ) }}" > Generar venta </a>
+
                                         <a class="dropdown-item"  href="{{ route('ordenes-de-despacho.print', ['id'=> $orden->id, 'format' => 'a4'] ) }}" target="_Blank"> PDF </a>
 
                                         @if (!$orden->estado_despacho)

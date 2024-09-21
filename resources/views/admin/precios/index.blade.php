@@ -53,7 +53,7 @@
                         </td>
                         <td>
                             @can('admin.precios.edit')
-                                <a href="#" class="btn btn-info btn-sm" data-toggle="modal"
+                                <a href="#" class="btn btn-info btn-sm mr-2" data-toggle="modal"
                                    data-target="#editPriceModal" data-id="{{ $precio->id }}"
                                    data-precio="{{ $precio->precio }}"
                                    data-descripcion="{{ $precio->descripcion }}"

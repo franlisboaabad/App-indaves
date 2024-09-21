@@ -97,7 +97,8 @@ class OrdenDespachoController extends Controller
                 'peso_total_neto' => $request->peso_total_neto,
                 'subtotal' => $request->subtotal,
                 'presentacion_pollo' => $request->presentacion_pollo,
-                'estado_despacho' => OrdenDespacho::ESTADO_DESPACHADO
+                'estado_despacho' => OrdenDespacho::ESTADO_DESPACHADO,
+                'subtotal' => $detalle['subtotal'] ?? 0
             ]);
 
             SeriesService::increment(Serie::DEFAULT_SERIE_DESPACHO);

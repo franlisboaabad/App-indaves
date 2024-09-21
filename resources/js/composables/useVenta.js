@@ -1,6 +1,7 @@
 import {getCurrentInstance, onMounted, reactive} from "vue";
 import moment from "moment";
 
+
 export function useVenta(order, paymentMethods, cliente,serie) {
 
     const {proxy} = getCurrentInstance();
@@ -77,38 +78,36 @@ export function useVenta(order, paymentMethods, cliente,serie) {
 
         return formData;
     }
+
     function sendForm(url) {
         const newForm = makeForm();
         axios.post(url, newForm)
             .then(({data}) => {
                 proxy.$swal({
-                    toast: true,
                     icon: 'success',
-                    title: data.message,
-                    animation: false,
-                    position: 'top-right',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
+                    title: 'Éxito',
+                    text: data.message,
+                    confirmButtonText: 'Aceptar',
+                    animation: true,
+                })
+                .then(() => {
+                    location.href = "/ventas";
                 });
                 console.log(data);
-
             })
-            .catch(({response}) =>{
-                if(response.data){
+            .catch(({response}) => {
+                if (response.data) {
                     proxy.$swal({
-                        toast: true,
                         icon: 'error',
-                        title: response.data.message,
-                        animation: false,
-                        position: 'top-right',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
+                        title: 'Error',
+                        text: response.data.message,
+                        confirmButtonText: 'Aceptar',
+                        animation: true,
                     });
                 }
-            })
+            });
     }
+
 
     return {
         form,

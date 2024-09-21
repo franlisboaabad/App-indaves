@@ -53,7 +53,7 @@
                                             @csrf
                                             @method('DELETE')
 
-                                            <a href="{{ route('ordenes-ingreso.show', $orden) }}" class="btn btn-primary btn-primary btn-sm">Ver</a>
+                                            <a href="{{ route('ordenes-ingreso.show', $orden) }}" class="btn btn-primary btn-primary btn-sm mr-2">Ver</a>
                                             <button type="button" class="btn btn-danger btn-sm btn-delete" data-id="{{ $orden->id }}">Eliminar</button>
                                         </form>
                                     </td>

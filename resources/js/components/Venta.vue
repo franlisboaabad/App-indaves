@@ -187,5 +187,4 @@ calculateTotals()
         </div>
 
     </div>
-
 </template>

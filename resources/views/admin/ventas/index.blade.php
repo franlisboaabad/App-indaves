@@ -20,7 +20,8 @@
                         <th>Forma de Pago</th>
                         <th>Monto Total</th>
                         <th>Monto Recibido</th>
-                        <th>Saldo</th>
+                        <th>Saldo Favor</th>
+                        <th>Monto Pendiente</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -37,6 +38,7 @@
                             <td>{{ number_format($venta->monto_total, 2) }}</td>
                             <td>{{ number_format($venta->monto_recibido, 2) }}</td>
                             <td>{{ number_format($venta->saldo, 2) }}</td>
+                            <td>{{ number_format($venta->monto_pendiente, 2) }}</td>
                             <td>
                                 @if ($venta->saldo <= 0)
                                     <span class="badge badge-success">Pagada</span>
@@ -44,25 +46,40 @@
                                     <span class="badge badge-danger">Pendiente de pago</span>
                                 @endif
                             </td>
+
                             <td>
-                                @if (!$venta->saldo <= 0)
-                                    <a href="#" class="btn btn-sm btn-primary" data-toggle="modal"
-                                        data-target="#agregarPagoModal" data-venta-monto="{{ $venta->saldo }}"
-                                        data-venta-id="{{ $venta->id }}">
-                                        Agregar Pago
-                                    </a>
-                                @endif
-                                <a href="{{ route('ventas.show', $venta->id) }}" class="btn btn-info btn-sm">Ver</a>
-                                {{-- <a href="{{ route('ventas.edit', $venta->id) }}" class="btn btn-warning btn-sm">Editar</a> --}}
-                                <a href="{{ route('ventas.print', ['id' => $venta->id,'format'=>'a4']) }}" target="_blank" class="btn btn-danger btn-sm">A4</a>
-                                <a href="{{ route('ventas.print', ['id' => $venta->id,'format'=>'ticket']) }}" target="_blank" class="btn btn-primary btn-sm">TICKET</a>
-                                <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST"
-                                    style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                                </form>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Acciones
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        @if ($venta->monto_pendiente > 0)
+                                            <a class="dropdown-item" href="#" data-toggle="modal"
+                                               data-target="#agregarPagoModal" data-venta-monto="{{ $venta->monto_pendiente }}"
+                                               data-venta-id="{{ $venta->id }}">
+                                                Agregar Pago
+                                            </a>
+                                        @endif
+                                        <a class="dropdown-item" href="{{ route('ventas.show', $venta->id) }}">
+                                            Ver
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('ventas.print', ['id' => $venta->id,'format'=>'a4']) }}" target="_blank">
+                                            PDF
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('ventas.print', ['id' => $venta->id,'format'=>'ticket']) }}" target="_blank">
+                                            Ticket
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="dropdown-item" style="color: red;">Eliminar</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </td>
+
+
                         </tr>
                     @endforeach
                 </tbody>
