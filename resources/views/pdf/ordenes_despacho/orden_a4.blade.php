@@ -140,15 +140,15 @@
                     </tr>
                 @endforeach
             </tbody>
-            {{-- <tfoot>
+            <tfoot>
                 <tr>
                     <th colspan="3">Total</th>
                     <th>{{ number_format($venta->peso_total_bruto, 2) }}</th>
                     <th>{{ $venta->cantidad_jabas }}</th>
                     <th>{{ number_format($venta->tara, 2) }}</th>
-                    <th>{{ number_format($venta->peso_neto, 2) }}</th>
+                    <th>{{ number_format($venta->peso_total_neto, 2) }}</th>
                 </tr>
-            </tfoot> --}}
+            </tfoot>
         </table>
     </div>
 

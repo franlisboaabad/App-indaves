@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('presentacion_pollo_id')->nullable();
             $table->foreignId('tipo_pollo_id')->nullable();
             $table->decimal('total_peso',8,2);
             $table->decimal('total_pollos',8,2);

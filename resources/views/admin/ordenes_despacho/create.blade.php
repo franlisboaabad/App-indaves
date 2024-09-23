@@ -62,7 +62,14 @@
                             <i class="fa fa-user"></i> Nuevo Cliente
                         </button>
                     </div>
-                    <div class="col-md-2"></div>
+                    <div class="col-md-5">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" name="generar-nota-ingreso" id="generateNotaIngreso">
+                            <label class="form-check-label" for="generateNotaIngreso">
+                                Generar nota de ingreso automáticamente para pollo beneficiado
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <hr>
@@ -116,14 +123,12 @@
                         </div>
                     </div>
                     <!-- Número de Jabas -->
-
                     <div class="col-md-2"></div>
-
 
                     <div class="col-md-2 mb-3">
                         <div class="form-group">
                             <label for="cantidad_jabas">Número de Jabas</label>
-                            <input type="number" id="cantidad_jabas" name="cantidad_jabas" class="form-control">
+                            <input type="number" id="cantidad_jabas" name="cantidad_jabas" class="form-control" min="0">
                             @error('cantidad_jabas')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -134,32 +139,30 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="pollos_jaba">Pollos por jaba</label>
-                            <input type="number" id="pollos_jaba" name="pollos_jaba" class="form-control">
+                            <input type="number" id="pollos_jaba" name="pollos_jaba" class="form-control" min="0">
                             @error('pollos_jaba')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
 
-
                     <!-- Cantidad de Pollos -->
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="cantidad_pollos">Cantidad de Pollos</label>
-                            <input type="number" id="cantidad_pollos" name="cantidad_pollos" class="form-control">
+                            <input type="number" id="cantidad_pollos" name="cantidad_pollos" class="form-control" min="0">
                             @error('cantidad_pollos')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
 
-
                     <!-- Peso Bruto -->
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="peso_bruto">Peso Bruto</label>
                             <input type="number" step="0.01" id="peso_bruto" name="peso_bruto"
-                                class="form-control">
+                                class="form-control" min="0">
                             @error('peso_bruto')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -276,9 +279,8 @@
             obtenerDisponibilidad();
             //peso api
             $('#peso_bruto').on('focus', function() {
-                // Realiza la solicitud AJAX cuando el campo reciba foco
                 $.ajax({
-                    url: 'http://127.0.0.1:8000/api/peso', // URL del endpoint
+                    url: "{{env('APP_URL')}}/api/peso", // URL del endpoint
                     method: 'GET',
                     success: function(response) {
                         // Asigna el peso al campo de texto
@@ -293,18 +295,14 @@
                     }
                 });
             });
-            //calcular cantidad de pollos
+
             $('#cantidad_pollos').focus(function(e) {
                 e.preventDefault();
-
-                let cantidad_jabas = $('#cantidad_jabas').val();
-                let pollos_jaba = $('#pollos_jaba').val();
-
+                const cantidad_jabas = $('#cantidad_jabas').val();
+                const pollos_jaba = $('#pollos_jaba').val();
                 $('#cantidad_pollos').val(cantidad_jabas * pollos_jaba);
-
             });
-            let detailIndex = 1;
-            // Función para obtener la fecha en formato YYYY-MM-DD en la zona horaria local
+
             function getLocalDateString() {
                 const today = new Date();
                 const year = today.getFullYear();
@@ -417,10 +415,6 @@
                 document.getElementById('totalBoxes').textContent = totalBoxes.toFixed(2);
             }
 
-
-
-
-            //Button orden de despacho
             $('#saveOrderBtn').click(function() {
                 // Recoger los datos del formulario
                 let clienteId = $('#cliente_id').val();
@@ -448,6 +442,7 @@
                 let totalTara = $('#totalTara').text();
                 let totalNetWeight = $('#totalNetWeight').text();
                 let subtotal = $('#subtotal').text();
+                const generateNotaIngreso = $('#generateNotaIngreso').is(':checked');
 
                 // Recoger los datos de la tabla
                 let detalles = [];
@@ -494,6 +489,7 @@
                     cantidad_jabas: totalBoxes,
                     tara: totalTara,
                     peso_total_neto: totalNetWeight,
+                    generar_nota_ingreso: generateNotaIngreso,
                     detalles: detalles, // Aquí se envían los detalles
                     _token: $('meta[name="csrf-token"]').attr('content') // Token CSRF para protección
                 };
@@ -514,8 +510,10 @@
                         $.ajax({
                             url: '{{ route('ordenes-de-despacho.store') }}', // Utiliza el nombre de la ruta
                             method: 'POST',
-                            data: data,
-                            success: function(response) {
+                            data: data
+                        })
+                            .then(function(response){
+                                console.log(response);
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Éxito',
@@ -526,17 +524,18 @@
                                     setPrint(response.data);
                                     $('#selectDocumentTypeModal').modal('show');
                                 });
-                            },
-                            error: function(xhr, status, error) {
-                                var response = xhr.responseJSON;
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: response.message ||
-                                        'Ocurrió un error',
-                                });
-                            }
-                        });
+                            })
+                            .fail(function(error){
+                                if(error.responseJSON){
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: error.responseJSON.error ||
+                                            'Ocurrió un error',
+                                    });
+                                }
+
+                            });
 
                     }
                 });
@@ -556,10 +555,10 @@
 
             $('.select2').select2();
 
-
             $('#presentacion_pollo_id').change(function(el) {
                 obtenerTara();
                 obtenerPrecio();
+                obtenerDisponibilidad();
             });
 
             $('#tipo_pollo_id').change(function(el) {
@@ -589,19 +588,16 @@
 
             function obtenerDisponibilidad() {
                 const type = $('#tipo_pollo_id').val();
-                const stock = stocks.find(stock => stock.tipo_pollo_id == type);
+                const presentation = $('#presentacion_pollo_id').val();
+                const stock = stocks.find(stock => stock.tipo_pollo_id == type && stock.presentacion_pollo_id == presentation);
                 if (stock) {
                     $('#cantidad_disponible_tipo').val(stock.total_pollos);
                     $('#peso_disponible_tipo').val(stock.total_peso);
+                }else{
+                    $('#cantidad_disponible_tipo').val(0);
+                    $('#peso_disponible_tipo').val(0);
                 }
             }
-
-
-
-
-
-
-
         });
     </script>
 @stop

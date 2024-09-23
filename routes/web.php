@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\Reportes\ReporteIngresosController;
 use App\Models\Equipment;
 use App\Models\OrdenDeServicio;
 use App\Http\Controllers\Dashboard;
@@ -122,6 +125,14 @@ Route::get('ordenes-de-despacho/{id}/{format}', [OrdenDespachoController::class,
 Route::resource('lista-de-precios',ListaPrecioController::class)->middleware('auth')->parameters(['lista-de-precios' => 'listaPrecio']);
 Route::resource('pagos',PagoController::class)->middleware('auth');
 Route::resource('presentacion-pollo',PresentacionPolloController::class)->middleware('auth')->parameters(['presentacion-pollo' => 'presentacionPollo']);
+
+
+Route::get('inventarios',[InventoryController::class,'index'])->name('inventarios.index')->middleware('auth');
+
+Route::get('reportes/ingresos',[ReporteIngresosController::class,'index'])->name('reportes.ingresos.index')->middleware('auth');
+Route::post('reportes/ingresos',[ReporteIngresosController::class,'search'])->name('reportes.ingresos.search')->middleware('auth');
+Route::post('reportes/ingresos/export/{format}',[ReporteIngresosController::class,'export'])->name('reportes.ingresos.export')->middleware('auth');
+
 
 
 

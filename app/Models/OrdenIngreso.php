@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class OrdenIngreso extends Model
 {
@@ -19,8 +21,12 @@ class OrdenIngreso extends Model
         'estado'
     ];
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
-    public function detalle()
+    public function detalle(): HasMany
     {
         return $this->hasMany(DetalleOrdenIngreso::class);
     }

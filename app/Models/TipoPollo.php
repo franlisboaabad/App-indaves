@@ -11,6 +11,8 @@ class TipoPollo extends Model
 
     protected $fillable = ['descripcion', 'estado'];
 
+    public  const POLLO_BENEFICIADO_ID = 2;
+
     public function ordenes()
     {
         return $this->hasMany(OrdenDespacho::class, 'tipo_pollo_id');

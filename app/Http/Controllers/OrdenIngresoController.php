@@ -62,6 +62,7 @@ class OrdenIngresoController extends Controller
             $order->detalle()->create($item);
 
             InventoryService::increment(
+                $item['presentacion_pollo_id'],
                 $item['tipo_pollo_id'],
                 $item['peso_neto'],
                 $item['cantidad_pollos']
@@ -97,6 +98,7 @@ class OrdenIngresoController extends Controller
 
         foreach ($ordenIngreso->detalle as $item){
             InventoryService::increment(
+                array_get($item,'presentacion_pollo_id'),
                 array_get($item,'tipo_pollo_id'),
                 array_get($item,'peso_neto'),
                 array_get($item,'total_pollos'),

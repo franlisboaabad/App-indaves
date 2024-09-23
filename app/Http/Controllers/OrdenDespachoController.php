@@ -85,6 +85,9 @@ class OrdenDespachoController extends Controller
     {
         DB::beginTransaction();
 
+        $subTotal  = $request->collect('detalles')->sum('subtotal');
+        $createNotaIngreso = $request->boolean('generar_nota_ingreso');
+        $presentacionPolloBeneficiado = PresentacionPollo::query()->findOrFail(TipoPollo::POLLO_BENEFICIADO_ID);
         try {
             $ordenDespacho = OrdenDespacho::create([
                 'cliente_id' => $request->cliente_id,
@@ -95,10 +98,9 @@ class OrdenDespachoController extends Controller
                 'cantidad_jabas' => $request->cantidad_jabas,
                 'tara' => $request->tara,
                 'peso_total_neto' => $request->peso_total_neto,
-                'subtotal' => $request->subtotal,
                 'presentacion_pollo' => $request->presentacion_pollo,
                 'estado_despacho' => OrdenDespacho::ESTADO_DESPACHADO,
-                'subtotal' => $detalle['subtotal'] ?? 0
+                'subtotal' => $subTotal
             ]);
 
             SeriesService::increment(Serie::DEFAULT_SERIE_DESPACHO);
@@ -118,10 +120,20 @@ class OrdenDespachoController extends Controller
                 ]);
 
                 InventoryService::decrement(
+                    $detalle['presentacion_pollo_id'],
                     $detalle['tipo_pollo_id'],
                     $detalle['peso_neto'],
                     $detalle['cantidad_pollos']
                 );
+
+                if($createNotaIngreso){
+                    InventoryService::increment(
+                        $presentacionPolloBeneficiado->getKey(),
+                        $detalle['tipo_pollo_id'],
+                        $detalle['peso_neto'],
+                        $detalle['cantidad_pollos']
+                    );
+                }
             }
 
             // Confirmar la transacción
@@ -180,6 +192,7 @@ class OrdenDespachoController extends Controller
             $ordenDespacho->load('detalles');
             foreach ($ordenDespacho->detalles as $detalle) {
                 InventoryService::increment(
+                    $detalle->presentacion_pollo_id,
                     $detalle->tipo_pollo_id,
                     $detalle->peso_neto,
                     $detalle->cantidad_pollos,

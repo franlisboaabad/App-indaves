@@ -352,8 +352,6 @@ return [
 
 
         ],
-
-
         [
             'text' => 'Ventas',
             'icon' => 'fa fa-credit-card',
@@ -364,8 +362,23 @@ return [
                     'can' => 'admin.ventas.index'
                 ],
             ],
+        ],
+        [
+            'text'        => 'Stock',
+            'route'         => 'inventarios.index',
+            'icon'        => 'fa fa-star',
+        ],
 
-
+        ['header' => 'account_settings'],
+        [
+            'text' => 'Reportes',
+            'icon' => 'fa fa-cart-plus',
+            'submenu' => [
+                [
+                    'text' => 'Ordenes',
+                    'route'  => 'reportes.ingresos.index',
+                ],
+            ],
         ],
         ['header' => 'account_settings'],
         [
