@@ -3,7 +3,7 @@
 @section('title', 'Reporte Ingresos')
 @section('plugins.Datatables', true)
 @section('content_header')
-    <h1>Reporte de Ingresos</h1>
+    <h4>Reporte de Ingresos</h4>
 @stop
 
 @section('content')

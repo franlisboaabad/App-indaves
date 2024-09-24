@@ -54,15 +54,4 @@ class Venta extends Model
     {
         return $this->belongsTo(OrdenDespacho::class, 'orden_despacho_id');
     }
-
-    /**
-     * Obtener el método de pago asociado a la venta.
-     */
-    public function metodo_pago()
-    {
-        return $this->belongsTo(MetodoPago::class, 'metodo_pago_id');
-    }
-
-
-
 }

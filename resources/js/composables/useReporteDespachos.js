@@ -2,7 +2,7 @@ import {getCurrentInstance, reactive} from "vue";
 import moment from "moment";
 import Swal from "sweetalert2";
 
-export function useReporteIngresos() {
+export function useReporteDespachos() {
     const {proxy} = getCurrentInstance();
 
     const form = reactive({
@@ -10,16 +10,19 @@ export function useReporteIngresos() {
         date_end: moment().format("YYYY-MM-DD"),
         tipo_pollo_id: null,
         presentacion_pollo_id: null,
-        items : []
+        items : [],
+        cliente_id: null
     });
 
     function resetForm() {
         form.date_init = moment().startOf('month').format("YYYY-MM-DD");
         form.date_end = moment().format("YYYY-MM-DD");
+        form.cliente_id = null;
         form.items = []
     }
 
     function sendForm(url) {
+        delete form.items
         axios.post(url, form)
             .then(({data}) => {
 

@@ -378,6 +378,14 @@ return [
                     'text' => 'Ordenes',
                     'route'  => 'reportes.ingresos.index',
                 ],
+                [
+                    'text' => 'Despachos',
+                    'route'  => 'reportes.despachos.index',
+                ],
+                [
+                    'text' => 'Cuentas por cobrar',
+                    'route'  => 'reportes.cuentas-por-cobrar.index',
+                ],
             ],
         ],
         ['header' => 'account_settings'],

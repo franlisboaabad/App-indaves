@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\Reportes\ReporteCuentasPorPagarController;
+use App\Http\Controllers\Reportes\ReporteDespachosController;
 use App\Http\Controllers\Reportes\ReporteIngresosController;
 use App\Models\Equipment;
 use App\Models\OrdenDeServicio;
@@ -132,6 +134,15 @@ Route::get('inventarios',[InventoryController::class,'index'])->name('inventario
 Route::get('reportes/ingresos',[ReporteIngresosController::class,'index'])->name('reportes.ingresos.index')->middleware('auth');
 Route::post('reportes/ingresos',[ReporteIngresosController::class,'search'])->name('reportes.ingresos.search')->middleware('auth');
 Route::post('reportes/ingresos/export/{format}',[ReporteIngresosController::class,'export'])->name('reportes.ingresos.export')->middleware('auth');
+
+
+Route::get('reportes/despachos',[ReporteDespachosController::class,'index'])->name('reportes.despachos.index')->middleware('auth');
+Route::post('reportes/despachos',[ReporteDespachosController::class,'search'])->name('reportes.despachos.search')->middleware('auth');
+Route::post('reportes/despachos/export/{format}',[ReporteDespachosController::class,'export'])->name('reportes.despachos.export')->middleware('auth');
+
+Route::get('reportes/cuentas-por-cobrar',[ReporteCuentasPorPagarController::class,'index'])->name('reportes.cuentas-por-cobrar.index')->middleware('auth');
+Route::post('reportes/cuentas-por-cobrar',[ReporteCuentasPorPagarController::class,'search'])->name('reportes.cuentas-por-cobrar.search')->middleware('auth');
+Route::post('reportes/cuentas-por-cobrar/export/{format}',[ReporteCuentasPorPagarController::class,'export'])->name('reportes.cuentas-por-cobrar.export')->middleware('auth');
 
 
 
