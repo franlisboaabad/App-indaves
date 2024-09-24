@@ -103,7 +103,7 @@
 
 
                         <div class="form-group">
-                            <button type="button" id="saveClientBtn" class="btn btn-success">Editar</button>
+                            <button type="button" id="saveClientBtn" class="btn btn-success mr-2">Editar</button>
                             <a href="{{ route('clientes.index') }}" class="btn btn-primary">Lista de clientes</a>
                         </div>
 

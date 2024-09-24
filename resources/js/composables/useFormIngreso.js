@@ -79,6 +79,20 @@ export function useFormIngreso(presentations, types) {
     }
 
     function sendForm(url) {
+
+        //validar que la tabla no este vacia.
+        if (!form.items.length) {
+            proxy.$swal({
+                icon: "warning",
+                title: "Información",
+                text: 'La tabla no tiene datos.',
+                animation: false,
+                position: "center",
+                confirmButtonText: "Aceptar",
+            });
+            return;
+        }
+
         axios
             .post(url, form)
             .then(({ data }) => {

@@ -23,7 +23,7 @@ class Venta extends Model
         'deuda_anterior',
         'comentario'.
         'saldo',
-        'estado',
+        'estado'
     ];
 
 

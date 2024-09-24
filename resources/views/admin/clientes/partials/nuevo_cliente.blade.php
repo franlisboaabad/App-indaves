@@ -61,9 +61,7 @@
 
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="checkDatosAvanzados">
-                        <label class="form-check-label" for="flexCheckDefault">
-                            Datos Avanzados
-                        </label>
+                        <label class="form-check-label" for="flexCheckDefault"> Datos Avanzados </label>
                     </div>
 
 

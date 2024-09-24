@@ -26,6 +26,7 @@ return new class extends Migration
             $table->boolean('estado_despacho')->default(0);
             $table->decimal('subtotal');
             $table->boolean('estado')->default(1);
+            $table->boolean('check_beneficiado')->nullable();
             $table->string('type','50')->default('salida');
             $table->timestamps();
         });

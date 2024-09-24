@@ -423,7 +423,6 @@
                 var presentacion_pollo = $('#presentacion_pollo').val();
                 var tipo_pollo_id = $('#tipo_pollo_id').val();
 
-
                 // Validar el cliente_id
                 if (!clienteId) {
                     Swal.fire({

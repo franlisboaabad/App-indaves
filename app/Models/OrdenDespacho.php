@@ -21,6 +21,7 @@ class OrdenDespacho extends Model
         'estado_despacho',
         'subtotal',
         'estado',
+        'check_beneficiado',
         'type',
     ];
 

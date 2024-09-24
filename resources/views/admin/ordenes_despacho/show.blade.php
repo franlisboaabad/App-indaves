@@ -27,6 +27,7 @@
                 <p><strong>Tara:</strong> {{ number_format($orden->tara, 2) }}</p>
                 <p><strong>Peso Total Neto:</strong> {{ number_format($orden->peso_total_neto, 2) }}</p>
                 <p><strong>Estado:</strong> {{ $orden->estado_despacho ? 'Despachado' : 'Por despachar' }}</p>
+                <p><strong>Nota de Ingreso a beneficiado: </strong> {{ $orden->check_beneficiado ? 'Si' : 'No' }} </p>
             </div>
 
             <!-- Detalles de la Orden -->

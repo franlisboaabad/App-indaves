@@ -100,6 +100,7 @@ class OrdenDespachoController extends Controller
                 'peso_total_neto' => $request->peso_total_neto,
                 'presentacion_pollo' => $request->presentacion_pollo,
                 'estado_despacho' => OrdenDespacho::ESTADO_DESPACHADO,
+                'check_beneficiado' => $createNotaIngreso,
                 'subtotal' => $subTotal
             ]);
 
@@ -200,13 +201,25 @@ class OrdenDespachoController extends Controller
 
             DB::beginTransaction();
             $ordenDespacho->load('detalles');
+            $presentacionPolloBeneficiado = PresentacionPollo::query()->findOrFail(TipoPollo::POLLO_BENEFICIADO_ID);
+
             foreach ($ordenDespacho->detalles as $detalle) {
+
                 InventoryService::increment(
                     $detalle->presentacion_pollo_id,
                     $detalle->tipo_pollo_id,
                     $detalle->peso_neto,
                     $detalle->cantidad_pollos,
                 );
+
+                if($ordenDespacho->check_beneficiado){
+                    InventoryService::decrement(
+                        $presentacionPolloBeneficiado->getKey(),
+                        $detalle['tipo_pollo_id'],
+                        $detalle['peso_neto'],
+                        $detalle['cantidad_pollos']
+                    );
+                }
             }
 
             $ordenDespacho->estado = OrdenDespacho::ESTADO_INACTIVE;
