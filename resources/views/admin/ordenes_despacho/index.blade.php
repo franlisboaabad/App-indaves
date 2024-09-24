@@ -28,7 +28,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($ordenes as $orden)
+                    @foreach ($ordenes as $orden)
                         <tr>
                             <td>{{ $orden->id }}</td>
                             <td>{{ $orden->cliente->razon_social }}</td>
@@ -42,33 +42,45 @@
                                 @if ($orden->estado_despacho)
                                     <span class="badge badge-success">Despachado</span>
                                 @else
-                                <span class="badge badge-warning">Por Despachar</span>
+                                    <span class="badge badge-warning">Por Despachar</span>
                                 @endif
                             </td>
 
                             <td>
                                 <!-- Example single danger button -->
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
                                         Acciones
                                     </button>
                                     <div class="dropdown-menu">
                                         <!-- Aquí puedes añadir botones para ver, editar o eliminar -->
-                                        <a class="dropdown-item" href="{{ route('ordenes-de-despacho.show', $orden->id) }}">Ver</a>
-                                        {{-- <a href="{{ route('ordenes-de-despacho.edit', $orden->id) }}" class="btn btn-warning btn-sm">Editar</a> --}}
+                                        <a class="dropdown-item"
+                                            href="{{ route('ordenes-de-despacho.show', $orden->id) }}">Ver</a>
 
-                                        @if( !$orden->ventas->isNotEmpty())
-                                        <a class="dropdown-item"  href="{{ route('ordenes-de-despacho.venta', ['id'=> $orden->id] ) }}" > Generar venta </a>
+                                        {{-- <a href="{{ route('ordenes-de-despacho.edit', $orden->id) }}" class="dropdown-item">Editar</a> --}}
+
+                                        @if (!$orden->ventas->isNotEmpty())
+                                            <a class="dropdown-item"
+                                                href="{{ route('ordenes-de-despacho.venta', ['id' => $orden->id]) }}">
+                                                Generar venta </a>
                                         @endif
 
 
-                                        <a class="dropdown-item"  href="{{ route('ordenes-de-despacho.print', ['id'=> $orden->id, 'format' => 'a4'] ) }}" target="_Blank"> PDF </a>
+                                        <a class="dropdown-item"
+                                            href="{{ route('ordenes-de-despacho.print', ['id' => $orden->id, 'format' => 'a4']) }}"
+                                            target="_Blank"> PDF </a>
 
-                                        @if (!$orden->estado_despacho)
-                                            <!-- Botón para eliminar -->
+                                        <form id="delete-form-{{ $orden->id }}"
+                                            action="{{ route('ordenes-de-despacho.destroy', $orden) }}" method="POST"
+                                            style="display: inline;">
                                             @csrf
-                                            <button type="button" class="btn btn-danger btn-sm delete-button" data-id="{{ $orden->id }}">Eliminar</button>
-                                        @endif
+                                            @method('DELETE')
+                                            <button type="button" class="dropdown-item"
+                                                onclick="confirmDelete({{ $orden->id }})">Eliminar</button>
+                                        </form>
+
+
                                     </div>
                                 </div>
                             </td>
@@ -121,7 +133,8 @@
                             url: `/ordenes-de-despacho/${id}`,
                             type: 'DELETE',
                             headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Incluye el token CSRF
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                    'content') // Incluye el token CSRF
                             },
                             success: function(response) {
                                 Swal.fire(
@@ -130,7 +143,8 @@
                                     'success'
                                 ).then(() => {
                                     // Eliminar la fila de la tabla
-                                    $(`button[data-id="${id}"]`).closest('tr').remove();
+                                    $(`button[data-id="${id}"]`).closest('tr')
+                                        .remove();
                                 });
                             },
                             error: function(xhr) {
@@ -148,4 +162,51 @@
 
         });
     </script>
+
+
+    <script>
+        function confirmDelete(userId) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminarlo!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Realizar la solicitud AJAX para eliminar el usuario
+                    $.ajax({
+                        url: '{{ url('ordenes-de-despacho') }}/' + userId,
+                        type: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Eliminado!',
+                                text: 'Orden despacho eliminado con éxito',
+                                timer: 3000,
+                                showConfirmButton: false
+                            }).then(function() {
+                                location
+                            .reload(); // Recargar la página para ver el nuevo usuario
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire(
+                                'Error!',
+                                'No se pudo eliminar la orden de despacho',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+
 @stop

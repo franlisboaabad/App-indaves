@@ -24225,7 +24225,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }),
     "class": "form-control",
     required: ""
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.date_end]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <div class=\"col-md-2\">\n                    <div class=\"form-group\">\n                        <label for=\"fecha_despacho\">Presentación de Pollo</label>\n                        <select class=\"form-control\" v-model=\"form.presentacion_pollo_id\">\n                            <option v-for=\"type in props.types \" v-text=\"type.descripcion\" :value=\"type.id\"></option>\n                        </select>\n                    </div>\n                </div>\n                <div class=\"col-md-2\">\n                    <div class=\"form-group\">\n                        <label for=\"fecha_despacho\">Tipo de pollo</label>\n                        <select class=\"form-control\" v-model=\"form.tipo_pollo_id\">\n                            <option v-for=\"type in props.types \" v-text=\"type.descripcion\" :value=\"type.id\"></option>\n                        </select>\n                    </div>\n                </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.date_end]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                <div class=\"col-md-2\">\r\n                    <div class=\"form-group\">\r\n                        <label for=\"fecha_despacho\">Presentación de Pollo</label>\r\n                        <select class=\"form-control\" v-model=\"form.presentacion_pollo_id\">\r\n                            <option v-for=\"type in props.types \" v-text=\"type.descripcion\" :value=\"type.id\"></option>\r\n                        </select>\r\n                    </div>\r\n                </div>\r\n                <div class=\"col-md-2\">\r\n                    <div class=\"form-group\">\r\n                        <label for=\"fecha_despacho\">Tipo de pollo</label>\r\n                        <select class=\"form-control\" v-model=\"form.tipo_pollo_id\">\r\n                            <option v-for=\"type in props.types \" v-text=\"type.descripcion\" :value=\"type.id\"></option>\r\n                        </select>\r\n                    </div>\r\n                </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
     "class": "btn btn-success mt-2 ml-2",
     onClick: _cache[2] || (_cache[2] = function ($event) {
@@ -68176,13 +68176,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _NotaIngreso_vue_vue_type_template_id_73a6c448__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./NotaIngreso.vue?vue&type=template&id=73a6c448 */ "./resources/js/components/NotaIngreso.vue?vue&type=template&id=73a6c448");
 /* harmony import */ var _NotaIngreso_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./NotaIngreso.vue?vue&type=script&setup=true&lang=js */ "./resources/js/components/NotaIngreso.vue?vue&type=script&setup=true&lang=js");
-/* harmony import */ var C_laragon_www_app_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_laragon_www_App_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_laragon_www_app_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_NotaIngreso_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_NotaIngreso_vue_vue_type_template_id_73a6c448__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/NotaIngreso.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_laragon_www_App_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_NotaIngreso_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_NotaIngreso_vue_vue_type_template_id_73a6c448__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/NotaIngreso.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -68204,13 +68204,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _ReporteIngresos_vue_vue_type_template_id_60751398__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ReporteIngresos.vue?vue&type=template&id=60751398 */ "./resources/js/components/ReporteIngresos.vue?vue&type=template&id=60751398");
 /* harmony import */ var _ReporteIngresos_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReporteIngresos.vue?vue&type=script&setup=true&lang=js */ "./resources/js/components/ReporteIngresos.vue?vue&type=script&setup=true&lang=js");
-/* harmony import */ var C_laragon_www_app_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_laragon_www_App_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_laragon_www_app_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_ReporteIngresos_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ReporteIngresos_vue_vue_type_template_id_60751398__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/ReporteIngresos.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_laragon_www_App_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_ReporteIngresos_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ReporteIngresos_vue_vue_type_template_id_60751398__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/ReporteIngresos.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -68232,13 +68232,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Venta_vue_vue_type_template_id_a7d2461e__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Venta.vue?vue&type=template&id=a7d2461e */ "./resources/js/components/Venta.vue?vue&type=template&id=a7d2461e");
 /* harmony import */ var _Venta_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Venta.vue?vue&type=script&setup=true&lang=js */ "./resources/js/components/Venta.vue?vue&type=script&setup=true&lang=js");
-/* harmony import */ var C_laragon_www_app_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_laragon_www_App_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_laragon_www_app_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Venta_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Venta_vue_vue_type_template_id_a7d2461e__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/Venta.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_laragon_www_App_indaves_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_Venta_vue_vue_type_script_setup_true_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_Venta_vue_vue_type_template_id_a7d2461e__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/js/components/Venta.vue"]])
 /* hot reload */
 if (false) {}
 

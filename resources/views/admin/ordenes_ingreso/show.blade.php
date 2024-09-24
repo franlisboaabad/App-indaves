@@ -26,7 +26,7 @@
 
             <h3>Detalles:</h3>
             <table class="table">
-                <thead>
+                <thead class="thead-dark">
                     <tr>
                         <th>Tipo de Pollo</th>
                         <th>Presentación</th>

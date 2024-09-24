@@ -175,7 +175,17 @@ class OrdenDespachoController extends Controller
 
     public function edit(OrdenDespacho $ordenDespacho)
     {
-        //
+
+        $serie = Serie::query()->where('number', 'OD01')->first();
+        $cajas = Caja::get();
+        $clientes = Cliente::query()->where('estado', 1)->get();
+        $stockPollo = Inventory::query()->get();
+        $tipoPollos = TipoPollo::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
+        $presentacionPollos = PresentacionPollo::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
+
+        $prices = ListaPrecio::query()->where('estado', GlobalStateEnum::STATUS_ACTIVE)->get();
+
+        return view('admin.ordenes_despacho.edit', compact('clientes', 'cajas', 'serie', 'stockPollo', 'tipoPollos', 'presentacionPollos', 'prices'));
     }
 
     public function update(Request $request, OrdenDespacho $ordenDespacho)

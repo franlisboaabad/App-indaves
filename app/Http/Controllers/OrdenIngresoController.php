@@ -91,17 +91,17 @@ class OrdenIngresoController extends Controller
 
     public function destroy(OrdenIngreso $ordenIngreso)
     {
-        $ordenIngreso->load('detalles');
+        $ordenIngreso->load('detalle');
         // Cambiar el estado a 'inactivo'
         $ordenIngreso->estado = false;
         $ordenIngreso->save();
 
-        foreach ($ordenIngreso->detalle as $item){
-            InventoryService::increment(
-                array_get($item,'presentacion_pollo_id'),
-                array_get($item,'tipo_pollo_id'),
-                array_get($item,'peso_neto'),
-                array_get($item,'total_pollos'),
+        foreach ($ordenIngreso->detalle as $detalle) {
+            InventoryService::decrement(
+                $detalle->presentacion_pollo_id,
+                $detalle->tipo_pollo_id,
+                $detalle->peso_neto,
+                $detalle->cantidad_pollos,
             );
         }
 
