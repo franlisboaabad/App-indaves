@@ -168,7 +168,8 @@ class CajaController extends Controller
             FROM orden_despachos de
             INNER JOIN clientes cli on de.cliente_id = cli.id
             LEFT JOIN ventas ven on de.id = ven.orden_despacho_id
-            where de.fecha_despacho = ?;
+            where de.fecha_despacho = ?
+            and de.estado = 1;
         ", [$caja->fecha_apertura->format('Y-m-d')]);
     }
 }

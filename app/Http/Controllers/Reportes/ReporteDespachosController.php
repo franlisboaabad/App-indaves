@@ -74,6 +74,7 @@ class ReporteDespachosController extends Controller
             ->when($dateInit && $dateEnd, fn(Builder $query) => $query->whereBetween('fecha_despacho', [$dateInit, $dateEnd]))
             ->when($cliente_id , fn(Builder $query) => $query->where('cliente_id',$cliente_id))
             ->withAggregate('cliente', 'razon_social')
+            ->where('estado',OrdenDespacho::ESTADO_DESPACHADO)
             ->get()
             ->map(function (OrdenDespacho $ordenIngreso) {
                 $ordenIngreso->fecha_despacho = Carbon::parse($ordenIngreso->fecha_despacho)?->format('d-m-Y');
