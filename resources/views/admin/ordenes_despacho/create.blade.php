@@ -168,7 +168,17 @@
                             @enderror
                         </div>
                     </div>
-
+                    <!-- Peso Bruto -->
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="peso_promedio">Promedio Ave</label>
+                            <input type="number" step="0.01" id="peso_promedio" name="peso_promedio"
+                                   class="form-control" min="0" readonly>
+                            @error('peso_promedio')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
 
                     <!-- Botón para agregar detalles -->
                     <div class="col-md-3 pt-2">
@@ -191,6 +201,7 @@
                                 <th class="d-none">Precio</th>
                                 <th>Peso Neto</th>
                                 <th class="d-none">Sub Total</th>
+                                <th>Peso Promedio</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -208,6 +219,7 @@
                                 <th id="totalTara">0.00</th>
                                 <th id="precio" class="d-none">0.00</th>
                                 <th id="totalNetWeight">0.00</th>
+                                <th id="pesoPromedio">0.00</th>
                                 <th id="subtotal" class="d-none">0.00</th>
 
                                 <th></th>
@@ -296,13 +308,28 @@
                 });
             });
 
+            $('#peso_bruto').change(function(){
+                calcularPromedioAve();
+            })
+
             $('#cantidad_pollos').focus(function(e) {
                 e.preventDefault();
                 const cantidad_jabas = $('#cantidad_jabas').val();
                 const pollos_jaba = $('#pollos_jaba').val();
                 $('#cantidad_pollos').val(cantidad_jabas * pollos_jaba);
+
+                calcularPromedioAve();
             });
 
+            function calcularPromedioAve(){
+                const pesoBruto = document.getElementById('peso_bruto').value;
+                const tara = document.getElementById('tara').value;
+                const cantidadPollos = $('#cantidad_pollos').val();
+                const numeroJabas = document.getElementById('cantidad_jabas').value;
+                const  taraFinal = numeroJabas * tara;
+                const pesoNeto = pesoBruto - taraFinal;
+                $('#peso_promedio').val( (pesoNeto/ cantidadPollos).toFixed(2));
+            }
             function getLocalDateString() {
                 const today = new Date();
                 const year = today.getFullYear();
@@ -355,6 +382,8 @@
                     .dataset.presentacion_pollo_id);
                 const type = tipo_pollos.find(type => type.id == newRow.dataset.tipo_pollo_id);
                 // Insertar celdas en la nueva fila
+
+                const pesoPromedio = pesoNeto/ cantidadPollos ;
                 newRow.insertCell(0).textContent = presentation.descripcion;
                 newRow.insertCell(1).textContent = type.descripcion;
                 newRow.insertCell(2).textContent = cantidadPollos;
@@ -362,19 +391,21 @@
                 newRow.insertCell(4).textContent = numeroJabas;
                 newRow.insertCell(5).textContent = tara.toFixed(2);
                 newRow.insertCell(6).textContent = pesoNeto.toFixed(2);
+                newRow.insertCell(7).textContent = pesoPromedio.toFixed(2);
 
                 const deleteBtn = document.createElement('button');
                 deleteBtn.textContent = 'Eliminar';
                 deleteBtn.className = 'btn btn-danger btn-sm btn-delete';
                 deleteBtn.setAttribute('type', 'button');
 
-                newRow.insertCell(7).appendChild(deleteBtn);
+                newRow.insertCell(8).appendChild(deleteBtn);
 
                 // Limpiar los campos del formulario
                 document.getElementById('cantidad_pollos').value = '';
                 document.getElementById('peso_bruto').value = '';
                 document.getElementById('cantidad_jabas').value = '';
                 document.getElementById('pollos_jaba').value = '';
+                document.getElementById('peso_promedio').value = '';
                 document.getElementById('cantidad_jabas').select();
 
                 // Actualizar los totales
@@ -404,7 +435,7 @@
                     totalWeight += parseFloat(cells[3].textContent);
                     totalBoxes += parseInt(cells[4].textContent);
                     totalTara += parseFloat(cells[5].textContent);
-                    totalNetWeight += parseFloat(cells[6].textContent);
+                    totalNetWeight += parseFloat(cells[7].textContent);
                 }
 
                 // Mostrar los totales en el pie de la tabla
@@ -462,7 +493,8 @@
                         tipo_pollo_id: $(this).data('tipo_pollo_id'),
                         presentacion_pollo_id: $(this).data('presentacion_pollo_id'),
                         precio: precio,
-                        subtotal: subtotalItem
+                        subtotal: subtotalItem,
+                        peso_promedio :  $(this).find('td:eq(7)').text()
                     });
                 });
 

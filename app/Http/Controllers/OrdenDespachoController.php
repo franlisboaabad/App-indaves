@@ -118,6 +118,7 @@ class OrdenDespachoController extends Controller
                     'subtotal' => $detalle['subtotal'] ?? 0,
                     'tipo_pollo_id' => $detalle['tipo_pollo_id'],
                     'presentacion_pollo_id' => $detalle['presentacion_pollo_id'],
+                    'peso_promedio' => $detalle['peso_promedio'],
                 ]);
 
                 InventoryService::decrement(
