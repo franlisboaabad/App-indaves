@@ -98,7 +98,7 @@
 <body>
     <!-- Cabecera -->
     <div class="header">
-        <img src="{{ public_path('logo.png') }}" alt="Logo">
+        <img src="{{ $empresa->imagen_url }}" alt="Logo" class="img-fluid">
         <h1>{{ $empresa->name }}</h1>
         <p>{{ $empresa->address }}</p>
         <p>Pedidos: {{ $empresa->phone }}</p>
@@ -108,7 +108,7 @@
     <!-- Información de la Venta -->
     <div>
         <h2>DATOS DE DESPACHO</h2>
-        <p><strong>ID de Venta:</strong> {{ $venta->serie_orden }} | <strong>Cliente:</strong> {{ $venta->cliente->razon_social }} | <strong>Fecha:</strong> {{ $venta->created_at->format('d/m/Y') }}</p>
+        <p><strong>N° Despacho:</strong> {{ $venta->serie_orden }} | <strong>Cliente:</strong> {{ $venta->cliente->razon_social }} | <strong>Fecha Despacho:</strong> {{ $venta->created_at->format('d/m/Y') }}</p>
     </div>
 
 
@@ -118,36 +118,39 @@
         <table>
             <thead>
                 <tr>
-                    <th>Presentación</th>
-                    <th>Tipo</th>
-                    <th>C.Pollos</th>
+                    <th>Producto</th>
+                    {{-- <th>Tipo</th> --}}
+                    <th># Aves</th>
                     <th>P.Bruto</th>
-                    <th>C.Jabas</th>
+                    <th># Jabas</th>
                     <th>Tara</th>
                     <th>P.Neto</th>
+                    <th>P.Promedio</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($venta->detalles as $detalle)
                     <tr>
-                        <td>{{ $detalle->presentacion_pollo_descripcion }}</td>
-                        <td>{{ $detalle->tipo_pollo_descripcion }}</td>
+                        <td>{{ $detalle->presentacion_pollo_descripcion }} / {{ $detalle->tipo_pollo_descripcion }} </td>
+                        {{-- <td></td> --}}
                         <td>{{ $detalle->cantidad_pollos }}</td>
                         <td>{{ number_format($detalle->peso_bruto, 2) }}</td>
                         <td>{{ $detalle->cantidad_jabas }}</td>
                         <td>{{ number_format($detalle->tara, 2) }}</td>
                         <td>{{ number_format($detalle->peso_neto, 2) }}</td>
+                        <td>{{ number_format($detalle->peso_promedio,2) }}</td>
                     </tr>
                 @endforeach
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="2">Total</th>
+                    <th colspan="1">Total</th>
                     <th>{{ number_format($venta->cantidad_pollos, 2) }}</th>
                     <th>{{ number_format($venta->peso_total_bruto, 2) }}</th>
                     <th>{{ $venta->cantidad_jabas }}</th>
                     <th>{{ number_format($venta->tara, 2) }}</th>
                     <th>{{ number_format($venta->peso_total_neto, 2) }}</th>
+                    <th></th>
                 </tr>
             </tfoot>
         </table>
@@ -155,8 +158,8 @@
 
     <!-- Footer -->
     <div class="footer">
-        <h3>La empresa no acepta devoluciones</h3>
-        <p>Gracias por su preferencia.</p>
+        <h3>LA EMPRESA NO ACEPTA DEVOLUCIONES</h3>
+        <p>INDAVES - Gracias por su preferencia.</p>
     </div>
 </body>
 

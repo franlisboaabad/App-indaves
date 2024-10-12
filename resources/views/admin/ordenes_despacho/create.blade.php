@@ -220,7 +220,7 @@
                                 <th id="precio" class="d-none">0.00</th>
                                 <th id="totalNetWeight">0.00</th>
                                 <th id="pesoPromedio">0.00</th>
-                                <th id="subtotal" class="d-none">0.00</th>
+                                {{-- <th id="subtotal" class="d-none">0.00</th> --}}
 
                                 <th></th>
                             </tr>
@@ -427,6 +427,8 @@
                 let totalNetWeight = 0;
                 let totalBoxes = 0;
                 let subtotal = 0;
+                let pesoPromedio = 0;
+
 
                 // Sumar los valores de cada fila
                 for (let i = 0; i < rows.length; i++) {
@@ -435,7 +437,8 @@
                     totalWeight += parseFloat(cells[3].textContent);
                     totalBoxes += parseInt(cells[4].textContent);
                     totalTara += parseFloat(cells[5].textContent);
-                    totalNetWeight += parseFloat(cells[7].textContent);
+                    totalNetWeight += parseFloat(cells[6].textContent);
+                    pesoPromedio += parseFloat(cells[7].textContent);
                 }
 
                 // Mostrar los totales en el pie de la tabla
@@ -444,6 +447,7 @@
                 document.getElementById('totalTara').textContent = totalTara.toFixed(2);
                 document.getElementById('totalNetWeight').textContent = totalNetWeight.toFixed(2);
                 document.getElementById('totalBoxes').textContent = totalBoxes.toFixed(2);
+                document.getElementById('pesoPromedio').textContent = pesoPromedio.toFixed(2);
             }
 
             $('#saveOrderBtn').click(function() {

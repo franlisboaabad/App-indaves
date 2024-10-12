@@ -1,3 +1,8 @@
+/*!
+* sweetalert2 v11.4.4
+* Released under the MIT License.
+*/
+
 /*! #__NO_SIDE_EFFECTS__ */
 
 /**
@@ -26,3 +31,7 @@
 * (c) 2018-present Yuxi (Evan) You and Vue contributors
 * @license MIT
 **/
+
+//! moment.js
+
+//! moment.js locale configuration
