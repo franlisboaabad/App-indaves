@@ -25,13 +25,16 @@ use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\ActividadController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\DetallePedidoController;
 use App\Http\Controllers\ListaPrecioController;
 use App\Http\Controllers\OrdenDeServicioController;
 use App\Http\Controllers\OrdenDespachoController;
 use App\Http\Controllers\OrdenIngresoController;
 use App\Http\Controllers\PagoController;
+use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PresentacionPolloController;
 use App\Http\Controllers\VentaController;
+use App\Models\DetallePedido;
 use App\Models\OrdenDespacho;
 use App\Models\OrdenIngreso;
 
@@ -67,8 +70,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-
 Route::resource('usuarios',UserController::class)->middleware('auth');
 Route::resource('invitados', InvitadoController::class)->middleware('auth');
 Route::resource('roles', RoleController::class)->middleware('auth');
@@ -79,24 +80,18 @@ Route::get('/clientes/list', [ClienteController::class, 'getClientes'])->name('c
 
 
 /** rutas soft v2.0 */
-
 Route::resource('proyectos', ProyectoController::class)->middleware('auth');
 Route::resource('actividades', ActividadController::class)->middleware('auth')->parameters(['actividades' => 'actividad']);
 Route::resource('tareas', TareaController::class)->middleware('auth');
 
 
 /* routes v3.0 Eventos */
-
 Route::resource('artistas', ArtistaController::class);
 Route::post('/artista/{id}', [ArtistaController::class, 'getArtistaData'])->name('artista.data');
 
 // routes v4.0 El Triki app
 Route::resource('sorteos', SorteoController::class)->middleware('auth');
 Route::resource('registros', RegistroController::class)->middleware('auth');
-
-
-
-
 
 /** soft v1.0  */
 Route::resource('equipos',EquipoController::class)->middleware('auth');
@@ -127,6 +122,10 @@ Route::get('ordenes-de-despacho/{id}/{format}', [OrdenDespachoController::class,
 Route::resource('lista-de-precios',ListaPrecioController::class)->middleware('auth')->parameters(['lista-de-precios' => 'listaPrecio']);
 Route::resource('pagos',PagoController::class)->middleware('auth');
 Route::resource('presentacion-pollo',PresentacionPolloController::class)->middleware('auth')->parameters(['presentacion-pollo' => 'presentacionPollo']);
+
+Route::resource('pedidos',PedidoController::class)->middleware('auth');
+Route::delete('/detalle-pedidos/{pedidoID}/clientes/{clienteID}', [DetallePedidoController::class, 'destroy'] )->middleware('auth');
+Route::get('pedidos/{id}/{format}', [PedidoController::class,'print'])->name('pedidos.print')->middleware('auth');
 
 
 Route::get('inventarios',[InventoryController::class,'index'])->name('inventarios.index')->middleware('auth');

@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>INDAVES</b>',
+    'logo' => '<b>PIURA AVES</b>',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -107,7 +107,7 @@ return [
     */
 
     'preloader' => [
-        'enabled' => false,
+        'enabled' => true,
         'img' => [
             'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
             'alt' => 'AdminLTE Preloader Image',
@@ -130,7 +130,7 @@ return [
     */
 
     'usermenu_enabled' => true,
-    'usermenu_header' => false,
+    'usermenu_header' => true,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => false,
     'usermenu_desc' => false,
@@ -150,7 +150,7 @@ return [
 
     'layout_topnav' => null,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
+    'layout_fixed_sidebar' => true,
     'layout_fixed_navbar' => null,
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
@@ -320,7 +320,7 @@ return [
         ],
 
         [
-            'text'        => 'Orden Ingreso',
+            'text'        => 'Ingresos',
             'route'         => 'ordenes-ingreso.index', //apunta a ruta url route
             'icon'        => 'fa fa-truck',
             'can'  => 'admin.ordenes-ingreso.index',
@@ -335,7 +335,7 @@ return [
         ],
 
         [
-            'text' => 'Orden Despacho',
+            'text' => 'Despachos',
             'icon' => 'fa fa-cart-plus',
             'submenu' => [
                 [
@@ -348,6 +348,12 @@ return [
                     'route'  => 'ordenes-de-despacho.index',
                     'can' => 'admin.ordenes-despacho.index'
                 ],
+                [
+                    'text' => 'Lista de Pedidos',
+                    'route'  => 'pedidos.index',
+                    'can' => 'admin.pedidos.index'
+                ],
+
             ],
 
 

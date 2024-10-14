@@ -40,5 +40,16 @@
             </tr>
         @endforelse
         </tbody>
+        <tfoot>
+            <tr style="font-weight: bold">
+                <td colspan="3">TOTALES</td>
+                <td>{{ $totals->total_cantidad_pollos }}</td>
+                <td>{{ $totals->total_peso_bruto }}</td>
+                <td>{{ $totals->total_tara }}</td>
+                <td>{{ $totals->total_peso_neto }}</td>
+            </tr>
+        </tfoot>
     </table>
 </div>
+
+

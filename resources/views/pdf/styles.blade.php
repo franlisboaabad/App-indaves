@@ -78,7 +78,7 @@
     }
 
     .text-center {
-        text-align: center;
+        text-align: justify;
     }
 
     .sub-head {

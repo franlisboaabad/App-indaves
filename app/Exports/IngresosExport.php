@@ -15,6 +15,7 @@ class IngresosExport extends BaseExport implements FromView
         return view($this->excel_view, [
             'records' => $this->records,
             'empresa' => $this->company,
+            'totals' => $this->totals
         ]);
     }
 }

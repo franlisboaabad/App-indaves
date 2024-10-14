@@ -35,6 +35,14 @@ class BaseExport
     }
 
 
+    public function totals($records): self
+    {
+        $this->totals = $records;
+
+        return $this;
+    }
+
+
     public function setStartDate($startDate): self
     {
         $this->startDate = $startDate;
@@ -48,4 +56,6 @@ class BaseExport
 
         return $this;
     }
+
+
 }

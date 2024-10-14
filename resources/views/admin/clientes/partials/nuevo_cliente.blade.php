@@ -242,10 +242,38 @@
             }
         });
 
+        //validaciones de datos de entrada
+
+        $('#tipo_documento').change(function() {
+            validarDocumento();
+        });
+
+        $('#documento').on('input', function() {
+            validarDocumento();
+        });
+
+        function validarDocumento() {
+            const tipoDocumento = $('#tipo_documento').val();
+            const $documentoInput = $('#documento');
+
+            let maxLength = 8; // Valor por defecto para SIN DOCUMENTO y DNI
+
+            if (tipoDocumento === "2") { // RUC
+                maxLength = 11;
+            }
+
+            $documentoInput.attr('maxlength', maxLength);
+
+            // Validar si la longitud es correcta
+            if ($documentoInput.val().length > maxLength) {
+                alert("El documento debe tener " + maxLength + " dígitos.");
+                $documentoInput.val(''); // Limpiar el campo
+            }
+        }
+
 
         //function modal
-
-        $('#createClientModal').on('shown.bs.modal', function () {
+        $('#createClientModal').on('shown.bs.modal', function() {
             $('#documento').focus();
         });
 
