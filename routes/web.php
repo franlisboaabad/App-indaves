@@ -25,8 +25,10 @@ use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\ActividadController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\DetalleMermasController;
 use App\Http\Controllers\DetallePedidoController;
 use App\Http\Controllers\ListaPrecioController;
+use App\Http\Controllers\MermaController;
 use App\Http\Controllers\OrdenDeServicioController;
 use App\Http\Controllers\OrdenDespachoController;
 use App\Http\Controllers\OrdenIngresoController;
@@ -34,6 +36,7 @@ use App\Http\Controllers\PagoController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\PresentacionPolloController;
 use App\Http\Controllers\VentaController;
+use App\Models\DetalleMermas;
 use App\Models\DetallePedido;
 use App\Models\OrdenDespacho;
 use App\Models\OrdenIngreso;
@@ -129,6 +132,8 @@ Route::get('pedidos/{id}/{format}', [PedidoController::class,'print'])->name('pe
 
 
 Route::get('inventarios',[InventoryController::class,'index'])->name('inventarios.index')->middleware('auth');
+Route::resource('mermas',MermaController::class)->middleware('auth')->only('store');
+Route::resource('detalle-mermas',DetalleMermasController::class)->middleware('auth');
 
 Route::get('reportes/ingresos',[ReporteIngresosController::class,'index'])->name('reportes.ingresos.index')->middleware('auth');
 Route::post('reportes/ingresos',[ReporteIngresosController::class,'search'])->name('reportes.ingresos.search')->middleware('auth');
