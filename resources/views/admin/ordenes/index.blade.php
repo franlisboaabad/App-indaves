@@ -42,6 +42,7 @@
                                     <td>{{ $orden->estado_del_servicio }}</td>
                                     <td>{{ $orden->costo_estimado }}</td>
                                     <td>
+
                                         <form action="{{ route('ordenes-de-servicio.destroy', $orden ) }}" method="POST">
 
                                             {{-- @can('admin.ordenes.show')

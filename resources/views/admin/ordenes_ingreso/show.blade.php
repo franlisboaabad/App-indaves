@@ -3,7 +3,7 @@
 @section('title', 'Detalle Orden de Ingreso')
 
 @section('content_header')
-    <h1>Detalle Orden de Ingreso</h1>
+    <h1>Orden de Ingreso</h1>
 @endsection
 
 @section('content')
@@ -57,6 +57,8 @@
                     </tr>
                 </tfoot>
             </table>
+
+            <a href="{{ route('ordenes-ingreso.index') }}" class="btn btn-warning">Lista de Ingreso</a>
         </div>
     </div>
 @endsection

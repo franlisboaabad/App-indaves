@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\GlobalStateEnum;
-use App\Http\Requests\StoreOrdenIngresoRequest;
 use App\Models\Caja;
+use App\Models\Serie;
 use App\Models\Cliente;
+use App\Models\Inventory;
+use App\Models\TipoPollo;
 use App\Models\ListaPrecio;
 use App\Models\OrdenIngreso;
-use App\Models\PresentacionPollo;
-use App\Models\Serie;
-use App\Models\TipoPollo;
-use App\Services\InventoryService;
 use Illuminate\Http\Request;
+use App\Enums\GlobalStateEnum;
+use App\Models\PresentacionPollo;
+use App\Services\InventoryService;
+use Illuminate\Support\Facades\DB;
+use App\Models\DetalleOrdenIngreso;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreOrdenIngresoRequest;
 
 class OrdenIngresoController extends Controller
 {
@@ -32,7 +35,7 @@ class OrdenIngresoController extends Controller
     {
         $ordenes_ingreso = OrdenIngreso::query()
             ->where('estado', GlobalStateEnum::STATUS_ACTIVE)
-            ->withSum('detalle','cantidad_pollos')
+            ->withSum('detalle', 'cantidad_pollos')
             ->get();
 
         $cantidad_pollos_pendientes = $ordenes_ingreso->sum('cantidad_pollos_stock');
@@ -54,11 +57,11 @@ class OrdenIngresoController extends Controller
 
     public function store(StoreOrdenIngresoRequest $request)
     {
-       /** @var OrdenIngreso $order */
+        /** @var OrdenIngreso $order */
         $order = OrdenIngreso::query()->create($request->validated() +
-            ['user_id' => Auth::id() , 'fecha_ingreso' => now()]);
+            ['user_id' => Auth::id(), 'fecha_ingreso' => now()]);
 
-        foreach ($request->collect('items') as $item){
+        foreach ($request->collect('items') as $item) {
             $order->detalle()->create($item);
 
             InventoryService::increment(
@@ -81,12 +84,52 @@ class OrdenIngresoController extends Controller
 
     public function edit(OrdenIngreso $ordenIngreso)
     {
-        //
+        $orden = OrdenIngreso::with('detalle')->find($ordenIngreso->id);
+        return view('admin.ordenes_ingreso.edit', compact('orden'));
     }
 
     public function update(Request $request, OrdenIngreso $ordenIngreso)
     {
-        //
+
+        DB::beginTransaction(); // Iniciar la transacción
+
+        try {
+            // Encuentra la orden
+            $orden = OrdenIngreso::findOrFail($ordenIngreso->id);
+
+            // Actualiza la orden con los datos del request
+            $orden->update($request->only(['peso_bruto', 'peso_tara', 'peso_neto']));
+
+            // Actualiza los detalles de la orden
+            foreach ($request->detalle as $detalleData) {
+                $detalle = DetalleOrdenIngreso::findOrFail($detalleData['id']);
+
+                // Guardamos los valores anteriores para actualizar el inventario correctamente
+                $anteriorCantidadPollos = $detalle->cantidad_pollos;
+                $anteriorPesoNeto = $detalle->peso_neto;
+
+                // Actualiza el detalle
+                $detalle->update($detalleData);
+
+                // Actualizar el inventario
+                $inventory = Inventory::where('presentacion_pollo_id', $detalle->presentacion_pollo_id)
+                    ->where('tipo_pollo_id', $detalle->tipo_pollo_id)
+                    ->first();
+
+                if ($inventory) {
+                    // Ajustar el inventario
+                    $inventory->total_pollos += ($detalleData['cantidad_pollos'] - $anteriorCantidadPollos); // Ajusta por la diferencia
+                    $inventory->total_peso += ($detalleData['peso_neto'] - $anteriorPesoNeto); // Ajusta por la diferencia
+                    $inventory->save();
+                }
+            }
+
+            DB::commit(); // Confirmar la transacción
+            return response()->json(['success' => true, 'message' => 'Orden actualizada correctamente.']);
+        } catch (\Exception $e) {
+            DB::rollBack(); // Revertir la transacción en caso de error
+            return response()->json(['success' => false, 'message' => 'Error al actualizar la orden: ' . $e->getMessage()], 500);
+        }
     }
 
     public function destroy(OrdenIngreso $ordenIngreso)

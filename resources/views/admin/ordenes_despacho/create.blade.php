@@ -64,7 +64,8 @@
                     </div>
                     <div class="col-md-5">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" name="generar-nota-ingreso" id="generateNotaIngreso">
+                            <input class="form-check-input" type="checkbox" value="" name="generar-nota-ingreso"
+                                id="generateNotaIngreso">
                             <label class="form-check-label" for="generateNotaIngreso">
                                 Generar nota de ingreso automáticamente para pollo beneficiado
                             </label>
@@ -128,7 +129,8 @@
                     <div class="col-md-2 mb-3">
                         <div class="form-group">
                             <label for="cantidad_jabas">Número de Jabas</label>
-                            <input type="number" id="cantidad_jabas" name="cantidad_jabas" class="form-control" min="0">
+                            <input type="number" id="cantidad_jabas" name="cantidad_jabas" class="form-control"
+                                min="0">
                             @error('cantidad_jabas')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -139,7 +141,8 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="pollos_jaba">Pollos por jaba</label>
-                            <input type="number" id="pollos_jaba" name="pollos_jaba" class="form-control" min="0">
+                            <input type="number" id="pollos_jaba" name="pollos_jaba" class="form-control"
+                                min="0">
                             @error('pollos_jaba')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -150,7 +153,8 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="cantidad_pollos">Cantidad de Pollos</label>
-                            <input type="number" id="cantidad_pollos" name="cantidad_pollos" class="form-control" min="0">
+                            <input type="number" id="cantidad_pollos" name="cantidad_pollos" class="form-control"
+                                min="0">
                             @error('cantidad_pollos')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -161,8 +165,8 @@
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="peso_bruto">Peso Bruto</label>
-                            <input type="number" step="0.01" id="peso_bruto" name="peso_bruto"
-                                class="form-control" min="0">
+                            <input type="number" step="0.01" id="peso_bruto" name="peso_bruto" class="form-control"
+                                min="0">
                             @error('peso_bruto')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -173,9 +177,9 @@
                         <div class="form-group">
                             <label for="peso_promedio">Promedio Ave</label>
                             <input type="number" step="0.01" id="peso_promedio" name="peso_promedio"
-                                   class="form-control" min="0" readonly>
+                                class="form-control" min="0" readonly>
                             @error('peso_promedio')
-                            <span class="text-danger">{{ $message }}</span>
+                                <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -190,7 +194,7 @@
                 <!-- Tabla de Detalles -->
                 <div class="mt-4">
                     <table class="table table-bordered" id="detailsTable">
-                        <thead>
+                        <thead class="table-dark">
                             <tr>
                                 <th>Presentación de Pollo</th>
                                 <th>Tipo de Pollo</th>
@@ -221,7 +225,6 @@
                                 <th id="totalNetWeight">0.00</th>
                                 <th id="pesoPromedio">0.00</th>
                                 {{-- <th id="subtotal" class="d-none">0.00</th> --}}
-
                                 <th></th>
                             </tr>
                         </tfoot>
@@ -289,10 +292,12 @@
             obtenerPrecio();
             obtenerTara();
             obtenerDisponibilidad();
+            loadDetailsFromLocalStorage();
+
             //peso api
             $('#peso_bruto').on('focus', function() {
                 $.ajax({
-                    url: "{{env('APP_URL')}}/api/peso", // URL del endpoint
+                    url: "{{ env('APP_URL') }}/api/peso", // URL del endpoint
                     method: 'GET',
                     success: function(response) {
                         // Asigna el peso al campo de texto
@@ -308,7 +313,7 @@
                 });
             });
 
-            $('#peso_bruto').change(function(){
+            $('#peso_bruto').change(function() {
                 calcularPromedioAve();
             })
 
@@ -317,19 +322,19 @@
                 const cantidad_jabas = $('#cantidad_jabas').val();
                 const pollos_jaba = $('#pollos_jaba').val();
                 $('#cantidad_pollos').val(cantidad_jabas * pollos_jaba);
-
                 calcularPromedioAve();
             });
 
-            function calcularPromedioAve(){
+            function calcularPromedioAve() {
                 const pesoBruto = document.getElementById('peso_bruto').value;
                 const tara = document.getElementById('tara').value;
                 const cantidadPollos = $('#cantidad_pollos').val();
                 const numeroJabas = document.getElementById('cantidad_jabas').value;
-                const  taraFinal = numeroJabas * tara;
+                const taraFinal = numeroJabas * tara;
                 const pesoNeto = pesoBruto - taraFinal;
-                $('#peso_promedio').val( (pesoNeto/ cantidadPollos).toFixed(2));
+                $('#peso_promedio').val((pesoNeto / cantidadPollos).toFixed(2));
             }
+
             function getLocalDateString() {
                 const today = new Date();
                 const year = today.getFullYear();
@@ -337,22 +342,15 @@
                 const day = String(today.getDate()).padStart(2, '0');
                 return `${year}-${month}-${day}`;
             }
-
-            // Establecer la fecha actual en el campo de entrada de fecha
             document.getElementById('fecha_despacho').value = getLocalDateString();
 
 
-            //funcionalidad para detalle de pedido
             document.getElementById('addDetailBtn').addEventListener('click', function() {
-                // Obtener los valores de los inputs
-                var cantidadPollos = document.getElementById('cantidad_pollos').value;
-                var pesoBruto = document.getElementById('peso_bruto').value;
-                var numeroJabas = document.getElementById('cantidad_jabas').value;
-                var tara = document.getElementById('tara').value;
+                const cantidadPollos = document.getElementById('cantidad_pollos').value;
+                const pesoBruto = document.getElementById('peso_bruto').value;
+                const numeroJabas = document.getElementById('cantidad_jabas').value;
+                const taraPorDefecto = document.getElementById('tara').value;
                 const precio = document.getElementById('precio').value;
-
-                // Tara por defecto
-                var taraPorDefecto = tara; // 6 kg por jaba
 
                 // Validar que los campos no estén vacíos
                 if (!cantidadPollos || !pesoBruto || !numeroJabas) {
@@ -360,19 +358,16 @@
                     return;
                 }
 
-                // Calcular la tara
-                var tara = numeroJabas * taraPorDefecto;
-
-                // Calcular el peso neto
-                var pesoNeto = pesoBruto - tara;
-
-                //calcular sub total
-                var subtotal = precio * pesoNeto;
+                // Calcular la tara y el peso neto
+                const tara = numeroJabas * taraPorDefecto;
+                const pesoNeto = pesoBruto - tara;
+                const subtotal = precio * pesoNeto;
 
                 // Crear una nueva fila para la tabla de detalles
                 const tableBody = document.getElementById('detailsTable').getElementsByTagName('tbody')[0];
                 const newRow = tableBody.insertRow();
 
+                // Asignar datos a la nueva fila
                 newRow.dataset.tipo_pollo_id = $('#tipo_pollo_id').val();
                 newRow.dataset.presentacion_pollo_id = $('#presentacion_pollo_id').val();
                 newRow.dataset.precio = precio;
@@ -381,73 +376,157 @@
                 const presentation = presentacion_pollos.find(presentation => presentation.id == newRow
                     .dataset.presentacion_pollo_id);
                 const type = tipo_pollos.find(type => type.id == newRow.dataset.tipo_pollo_id);
+
+                const pesoPromedio = pesoNeto / cantidadPollos;
+
                 // Insertar celdas en la nueva fila
+                const cellValues = [
+                    presentation.descripcion,
+                    type.descripcion,
+                    cantidadPollos,
+                    pesoBruto,
+                    numeroJabas,
+                    tara.toFixed(2),
+                    pesoNeto.toFixed(2),
+                    pesoPromedio.toFixed(2),
+                ];
 
-                const pesoPromedio = pesoNeto/ cantidadPollos ;
-                newRow.insertCell(0).textContent = presentation.descripcion;
-                newRow.insertCell(1).textContent = type.descripcion;
-                newRow.insertCell(2).textContent = cantidadPollos;
-                newRow.insertCell(3).textContent = pesoBruto;
-                newRow.insertCell(4).textContent = numeroJabas;
-                newRow.insertCell(5).textContent = tara.toFixed(2);
-                newRow.insertCell(6).textContent = pesoNeto.toFixed(2);
-                newRow.insertCell(7).textContent = pesoPromedio.toFixed(2);
+                cellValues.forEach((value, index) => newRow.insertCell(index).textContent = value);
 
+                // Crear el botón de eliminación
                 const deleteBtn = document.createElement('button');
                 deleteBtn.textContent = 'Eliminar';
                 deleteBtn.className = 'btn btn-danger btn-sm btn-delete';
                 deleteBtn.setAttribute('type', 'button');
-
                 newRow.insertCell(8).appendChild(deleteBtn);
 
                 // Limpiar los campos del formulario
+                clearFormFields();
+
+                // Actualizar los totales
+                updateTotals();
+
+                // Guardar todos los detalles en localStorage
+                saveDetailsToLocalStorage();
+
+            });
+
+            // Función para guardar los detalles en localStorage
+            function saveDetailsToLocalStorage() {
+                const detalles = [];
+                const rows = document.getElementById('detailsTable').getElementsByTagName('tbody')[0]
+                    .getElementsByTagName('tr');
+
+                for (let row of rows) {
+                    const detalle = {
+                        cantidad_pollos: row.cells[2].textContent,
+                        peso_bruto: row.cells[3].textContent,
+                        cantidad_jabas: row.cells[4].textContent,
+                        tara: row.cells[5].textContent,
+                        peso_neto: row.cells[6].textContent,
+                        tipo_pollo_id: row.dataset.tipo_pollo_id,
+                        presentacion_pollo_id: row.dataset.presentacion_pollo_id,
+                        precio: row.dataset.precio,
+                        subtotal: row.dataset.subtotal,
+                        peso_promedio: row.cells[7].textContent,
+                    };
+                    detalles.push(detalle);
+                }
+
+                localStorage.setItem('detalles', JSON.stringify(detalles));
+            }
+
+
+            // Función para cargar los detalles desde localStorage
+            function loadDetailsFromLocalStorage() {
+                const detalles = JSON.parse(localStorage.getItem('detalles')) || [];
+                detalles.forEach(detalle => {
+                    const tableBody = document.getElementById('detailsTable').getElementsByTagName('tbody')[0];
+                    const newRow = tableBody.insertRow();
+
+                    // Asignar datos a la nueva fila
+                    newRow.dataset.tipo_pollo_id = detalle.tipo_pollo_id;
+                    newRow.dataset.presentacion_pollo_id = detalle.presentacion_pollo_id;
+                    newRow.dataset.precio = detalle.precio;
+                    newRow.dataset.subtotal = detalle.subtotal;
+
+                    const presentation = presentacion_pollos.find(presentation => presentation.id == detalle.presentacion_pollo_id);
+                    const type = tipo_pollos.find(type => type.id == detalle.tipo_pollo_id);
+
+                    const pesoPromedio = detalle.peso_neto / detalle.cantidad_pollos;
+
+                    // Insertar celdas en la nueva fila
+                    const cellValues = [
+                        presentation.descripcion,
+                        type.descripcion,
+                        detalle.cantidad_pollos,
+                        detalle.peso_bruto,
+                        detalle.cantidad_jabas,
+                        detalle.tara,
+                        detalle.peso_neto,
+                        pesoPromedio.toFixed(2),
+                    ];
+
+                    cellValues.forEach((value, index) => newRow.insertCell(index).textContent = value);
+
+                    // Crear el botón de eliminación
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = 'Eliminar';
+                    deleteBtn.className = 'btn btn-danger btn-sm btn-delete';
+                    deleteBtn.setAttribute('type', 'button');
+                    newRow.insertCell(8).appendChild(deleteBtn);
+                });
+
+                updateTotals();
+            }
+
+
+
+            // Función para limpiar los campos del formulario
+            function clearFormFields() {
                 document.getElementById('cantidad_pollos').value = '';
                 document.getElementById('peso_bruto').value = '';
                 document.getElementById('cantidad_jabas').value = '';
                 document.getElementById('pollos_jaba').value = '';
                 document.getElementById('peso_promedio').value = '';
                 document.getElementById('cantidad_jabas').select();
+            }
 
-                // Actualizar los totales
-                updateTotals();
-            });
-
+            //remove filas de la tabla detalle despacho
             $(document).on('click', '.btn-delete', function() {
                 $(this).parents('tr').remove();
                 updateTotals();
             })
 
+            //actualizar los totales de la tabla details despacho
             function updateTotals() {
                 const tableBody = document.getElementById('detailsTable').getElementsByTagName('tbody')[0];
-                const rows = tableBody.getElementsByTagName('tr');
+                const rows = Array.from(tableBody.getElementsByTagName('tr'));
 
-                let totalChiken = 0;
-                let totalWeight = 0;
-                let totalTara = 0;
-                let totalNetWeight = 0;
-                let totalBoxes = 0;
-                let subtotal = 0;
-                let pesoPromedio = 0;
-
+                let totals = {
+                    totalChiken: 0,
+                    totalWeight: 0,
+                    totalTara: 0,
+                    totalNetWeight: 0,
+                    totalBoxes: 0,
+                    pesoPromedio: 0
+                };
 
                 // Sumar los valores de cada fila
-                for (let i = 0; i < rows.length; i++) {
-                    const cells = rows[i].getElementsByTagName('td');
-                    totalChiken += parseInt(cells[2].textContent);
-                    totalWeight += parseFloat(cells[3].textContent);
-                    totalBoxes += parseInt(cells[4].textContent);
-                    totalTara += parseFloat(cells[5].textContent);
-                    totalNetWeight += parseFloat(cells[6].textContent);
-                    pesoPromedio += parseFloat(cells[7].textContent);
-                }
+                rows.forEach(row => {
+                    const cells = row.getElementsByTagName('td');
+                    totals.totalChiken += parseInt(cells[2].textContent) || 0;
+                    totals.totalWeight += parseFloat(cells[3].textContent) || 0;
+                    totals.totalBoxes += parseInt(cells[4].textContent) || 0;
+                    totals.totalTara += parseFloat(cells[5].textContent) || 0;
+                    totals.totalNetWeight += parseFloat(cells[6].textContent) || 0;
+                    totals.pesoPromedio += parseFloat(cells[7].textContent) || 0;
+                });
 
                 // Mostrar los totales en el pie de la tabla
-                document.getElementById('totalChiken').textContent = totalChiken.toFixed(2);
-                document.getElementById('totalWeight').textContent = totalWeight.toFixed(2);
-                document.getElementById('totalTara').textContent = totalTara.toFixed(2);
-                document.getElementById('totalNetWeight').textContent = totalNetWeight.toFixed(2);
-                document.getElementById('totalBoxes').textContent = totalBoxes.toFixed(2);
-                document.getElementById('pesoPromedio').textContent = pesoPromedio.toFixed(2);
+                Object.keys(totals).forEach(key => {
+                    document.getElementById(key).textContent = totals[key].toFixed(2);
+                });
             }
 
             $('#saveOrderBtn').click(function() {
@@ -498,7 +577,7 @@
                         presentacion_pollo_id: $(this).data('presentacion_pollo_id'),
                         precio: precio,
                         subtotal: subtotalItem,
-                        peso_promedio :  $(this).find('td:eq(7)').text()
+                        peso_promedio: $(this).find('td:eq(7)').text()
                     });
                 });
 
@@ -543,11 +622,11 @@
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: '{{ route('ordenes-de-despacho.store') }}', // Utiliza el nombre de la ruta
-                            method: 'POST',
-                            data: data
-                        })
-                            .then(function(response){
+                                url: '{{ route('ordenes-de-despacho.store') }}', // Utiliza el nombre de la ruta
+                                method: 'POST',
+                                data: data
+                            })
+                            .then(function(response) {
                                 console.log(response);
                                 Swal.fire({
                                     icon: 'success',
@@ -558,10 +637,12 @@
                                 }).then(() => {
                                     setPrint(response.data);
                                     $('#selectDocumentTypeModal').modal('show');
+                                    localStorage.removeItem(
+                                    'detalles'); // Limpiar localStorage después de guardar la orden
                                 });
                             })
-                            .fail(function(error){
-                                if(error.responseJSON){
+                            .fail(function(error) {
+                                if (error.responseJSON) {
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Error',
@@ -574,8 +655,6 @@
 
                     }
                 });
-
-
             });
 
             function setPrint(orden) {
@@ -624,11 +703,12 @@
             function obtenerDisponibilidad() {
                 const type = $('#tipo_pollo_id').val();
                 const presentation = $('#presentacion_pollo_id').val();
-                const stock = stocks.find(stock => stock.tipo_pollo_id == type && stock.presentacion_pollo_id == presentation);
+                const stock = stocks.find(stock => stock.tipo_pollo_id == type && stock.presentacion_pollo_id ==
+                    presentation);
                 if (stock) {
                     $('#cantidad_disponible_tipo').val(stock.total_pollos);
                     $('#peso_disponible_tipo').val(stock.total_peso);
-                }else{
+                } else {
                     $('#cantidad_disponible_tipo').val(0);
                     $('#peso_disponible_tipo').val(0);
                 }

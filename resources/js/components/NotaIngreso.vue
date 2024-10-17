@@ -70,18 +70,24 @@ const { form, formItem,addItem,deleteItem, sendForm}  = useFormIngreso(props.pre
                         </select>
                     </div>
                 </div>
+
                 <div class="col-md-2 mb-3">
                     <div class="form-group" >
                         <label for="cantidad_jabas">Número de Jabas</label>
                         <input type="number" v-model="formItem.cantidad_jabas" class="form-control">
                     </div>
                 </div>
+
+
                 <div class="col-md-2">
                     <div class="form-group">
                         <label for="cantidad_pollos">Número de Aves</label>
                         <input type="number"  v-model="formItem.cantidad_pollos" class="form-control">
                     </div>
                 </div>
+
+
+
 
                 <div class="col-md-2">
                     <div class="form-group">
@@ -98,13 +104,13 @@ const { form, formItem,addItem,deleteItem, sendForm}  = useFormIngreso(props.pre
             <!-- Tabla de Detalles -->
             <div class="mt-4">
                 <table class="table table-bordered" id="detailsTable">
-                    <thead>
+                    <thead class="table-dark">
                     <tr>
                         <th>Presentación</th>
                         <th>Tipo</th>
                         <th>Número de Jabas</th>
                         <th>Número de Aves</th>
-                        <th>Peso Bruto</th>
+                        <th>Peso Neto</th>
                         <th>Acciones</th>
                     </tr>
                     </thead>

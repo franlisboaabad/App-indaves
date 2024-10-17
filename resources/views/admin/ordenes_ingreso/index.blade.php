@@ -3,7 +3,7 @@
 @section('title', 'Ordenes de ingreso')
 @section('plugins.Datatables', true)
 @section('content_header')
-    <h1>Orden de Ingreso</h1>
+    <h1>Lista de Ingresos</h1>
 @stop
 
 @section('content')
@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            <a href="{{ route('ordenes-ingreso.create') }}" class="btn btn-primary mb-3" >Nueva Orden</a>
+            <a href="{{ route('ordenes-ingreso.create') }}" class="btn btn-primary mb-3">Nueva Orden</a>
 
 
             <div class="card">
@@ -48,14 +48,31 @@
                                     <td>{{ $orden->created_at }}</td>
                                     <td>
 
+                                        <div class="btn-group">
 
-                                        <form action="{{ route('ordenes-ingreso.destroy', $orden) }}" method="POST" class="delete-form" id="delete-form-{{ $orden->id }}">
-                                            @csrf
-                                            @method('DELETE')
+                                            <button type="button" class="btn btn-danger btn-sm dropdown-toggle"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Acciones
+                                            </button>
 
-                                            <a href="{{ route('ordenes-ingreso.show', $orden) }}" class="btn btn-primary btn-primary btn-sm mr-2">Ver</a>
-                                            <button type="button" class="btn btn-danger btn-sm btn-delete" data-id="{{ $orden->id }}">Eliminar</button>
-                                        </form>
+                                            <div class="dropdown-menu">
+
+                                                <a href="{{ route('ordenes-ingreso.show', $orden) }}" class="dropdown-item">Ver</a>
+
+                                                <a href="{{ route('ordenes-ingreso.edit', $orden) }}" class="dropdown-item">Editar</a>
+
+
+                                                <form action="{{ route('ordenes-ingreso.destroy', $orden) }}" method="POST"
+                                                    class="delete-form" id="delete-form-{{ $orden->id }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <a type="button" class="dropdown-item btn-delete" data-id="{{ $orden->id }}">Eliminar</a>
+                                                </form>
+                                            </div>
+                                        </div>
+
+
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -93,11 +110,8 @@
                         </div>
                         <div class="form-group">
                             <label for="cantidad_pollos_pendientes">Cantidad de Pollos Pendientes</label>
-                            <input type="number" readonly
-                                   class="form-control" id="cantidad_pollos_pendientes"
-                                   name="cantidad_pollos_pendientes"
-                                   value="{{$cantidad_pollos_pendientes}}"
-                            >
+                            <input type="number" readonly class="form-control" id="cantidad_pollos_pendientes"
+                                name="cantidad_pollos_pendientes" value="{{ $cantidad_pollos_pendientes }}">
                         </div>
                         <div class="form-group">
                             <label for="cantidad_pollos">Cantidad de Pollos</label>
@@ -210,7 +224,7 @@
                                     'success'
                                 ).then(() => {
                                     location
-                                .reload(); // Recargar la página para reflejar los cambios
+                                        .reload(); // Recargar la página para reflejar los cambios
                                 });
                             },
                             error: function(xhr) {
