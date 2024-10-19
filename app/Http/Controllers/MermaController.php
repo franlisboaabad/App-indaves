@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Merma;
 use App\Models\Inventory;
+use Exception;
 use Illuminate\Http\Request;
 use App\Models\DetalleMermas;
 use Illuminate\Support\Facades\DB;
@@ -33,10 +34,12 @@ class MermaController extends Controller
             'detalles.*.peso' => 'required|numeric',
         ]);
 
-        // Iniciar una transacción
-        DB::transaction(function () use ($request) {
+        DB::beginTransaction();
+
+        try {
+
             // Crear una nueva Merma
-            $merma = Merma::create([
+            $merma = Merma::query()->create([
                 'total_peso' => $request->total_peso,
             ]);
 
@@ -45,15 +48,21 @@ class MermaController extends Controller
                 $merma->detalles()->create($detalle);
             }
 
-            // Actualizar el inventario
             Inventory::query()->update(['total_peso' => 0]);
 
-            // Limpiar el modelo Peso
-            \App\Models\Peso::truncate();
-        });
+            DB::commit();
 
-        // Si todo va bien, devolver la respuesta
-        return response()->json(['message' => 'Merma registrada correctamente.']);
+            \App\Models\Peso::truncate();
+
+            // Si todo va bien, devolver la respuesta
+            return response()->json(['message' => 'Merma registrada correctamente.']);
+        }
+        catch(Exception $exception){
+            DB::rollBack();
+
+            return response()->json(['message' => 'Ocurrió un error al registrar la merma.'], 404);
+        }
+
     }
 
 

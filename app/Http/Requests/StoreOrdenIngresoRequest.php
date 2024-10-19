@@ -18,7 +18,8 @@ class StoreOrdenIngresoRequest extends FormRequest
             'peso_bruto' => 'required|numeric',
             'peso_tara' => 'required|numeric',
             'peso_neto' => 'required|numeric',
-            'numero_guia' => 'required'
+            'numero_guia' => 'required',
+            'tipo_ingreso' => 'nullable'
         ];
     }
 }

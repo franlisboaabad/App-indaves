@@ -18,7 +18,8 @@ class OrdenIngreso extends Model
         'peso_bruto',
         'peso_tara',
         'peso_neto',
-        'estado'
+        'estado',
+        'tipo_ingreso'
     ];
 
     public function user(): BelongsTo

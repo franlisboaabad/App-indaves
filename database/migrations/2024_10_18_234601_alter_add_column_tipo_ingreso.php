@@ -13,22 +13,37 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('inventories', function ($table){
-            $table->unsignedBigInteger('tipo_ingreso')->nullable();
+        Schema::table('inventories', function ( Blueprint $table){
+            $table->unsignedSmallInteger('tipo_ingreso')
+                ->default(1)
+                ->nullable();
         });
 
-        Schema::table('detalle_mermas', function ($table){
-            $table->unsignedBigInteger('tipo_ingreso')->nullable();
+        Schema::table('detalle_mermas', function ( Blueprint $table){
+            $table->unsignedSmallInteger('tipo_ingreso')
+                ->default(1)
+                ->nullable();
+        });
+
+        Schema::table('orden_ingresos', function ( Blueprint$table){
+            $table->unsignedSmallInteger('tipo_ingreso')
+                ->default(1)
+                ->nullable();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        //
+        Schema::table('inventories', function ( Blueprint $table){
+            $table->dropColumn('tipo_ingreso');
+        });
+
+        Schema::table('detalle_mermas', function (Blueprint $table){
+            $table->dropColumn('tipo_ingreso');
+        });
+
+        Schema::table('orden_ingresos', function (Blueprint $table){
+            $table->dropColumn('tipo_ingreso');
+        });
     }
 };
