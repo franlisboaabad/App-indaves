@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title> RESUMEN | INDAVES</title>
     @include('pdf.styles')
 </head>
+
 <body>
+
 @include('pdf.partials.header-pdf',['empresa' => $empresa,'title' => 'RESUMEN DIARIO'])
+
+
 <div>
     <table class="table table-bordered">
         <thead>
@@ -34,7 +39,7 @@
             $totalMontoPagado = 0;
             $totalPendiente = 0;
         @endphp
-        @forelse($reports as $pago)
+        @forelse($records as $pago)
             <tr>
                 <td>{{ $pago->cliente }}</td>
                 <td class="text-center">{{ $pago->cantidad_pollos }}</td>
@@ -43,10 +48,11 @@
                 <td class="text-center">{{ $pago->precio }}</td>
                 <td class="text-center">{{ $pago->total_venta }}</td>
                 <td class="text-center">{{ $pago->saldo }}</td>
-                <td class="text-center">{{ $pago->total }}</td>
+                <td class="text-center">{{ $pago->total}}</td>
                 <td class="text-center">{{ $pago->monto_pagado }}</td>
                 <td class="text-center">{{ $pago->pendiente }}</td>
             </tr>
+
             @php
                 $totalCantidadPollos  += $pago->cantidad_pollos;
                 $totalPesoNeto  += $pago->peso_total_neto;
@@ -64,16 +70,16 @@
             </tr>
         @endforelse
         <tr>
-            <td class="text-center">TOTALES</td>
-            <td class="text-center" style="background: #9ed0f3;">{{$totalCantidadPollos}}</td>
-            <td class="text-center" style="background: #9ed0f3;">{{$totalPesoNeto}}</td>
-            <td class="text-center" style="background: #9ed0f3;">{{$totalPromedio}}</td>
-            <td class="text-center" style="background: #9ed0f3;">{{$totalPrecio}}</td>
-            <td class="text-center" style="background: #9ed0f3;">{{$totalTotalVenta}}</td>
-            <td class="text-center" style="background: #9ed0f3;">{{$totalSaldo}}</td>
-            <td class="text-center" style="background: #9ed0f3;">{{$total}}</td>
-            <td class="text-center" style="background: #9ed0f3;">{{$totalMontoPagado}}</td>
-            <td class="text-center" style="background: #9ed0f3;">{{$totalPendiente}}</td>
+            <td>TOTALES</td>
+            <td style="{{$sub_header_style}}">{{$totalCantidadPollos}}</td>
+            <td style="{{$sub_header_style}}">{{$totalPesoNeto}}</td>
+            <td style="{{$sub_header_style}}">{{$totalPromedio}}</td>
+            <td style="{{$sub_header_style}}">{{$totalPrecio}}</td>
+            <td style="{{$sub_header_style}}">{{$totalTotalVenta}}</td>
+            <td style="{{$sub_header_style}}">{{$totalSaldo}}</td>
+            <td style="{{$sub_header_style}}">{{$total}}</td>
+            <td style="{{$sub_header_style}}">{{$totalMontoPagado}}</td>
+            <td style="{{$sub_header_style}}">{{$totalPendiente}}</td>
         </tr>
         </tbody>
     </table>

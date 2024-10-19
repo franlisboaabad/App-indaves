@@ -112,7 +112,7 @@ Route::get('invitados/generar-pdf/{invitado}', [InvitadoController::class, 'gene
 /**
  * App indaves
  */
-Route::get('resumen/cajas/{caja}', [CajaController::class,'summary'])->middleware('auth')->name('cajas.resumen');
+Route::get('resumen/cajas/{caja}/{format}', [CajaController::class,'summary'])->middleware('auth')->name('cajas.resumen');
 Route::resource('cajas', CajaController::class)->middleware('auth');
 Route::resource('empresas', EmpresaController::class)->middleware('auth');
 Route::resource('ordenes-ingreso', OrdenIngresoController::class )->middleware('auth')->parameters(['ordenes-ingreso' => 'ordenIngreso']);

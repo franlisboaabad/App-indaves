@@ -6,11 +6,9 @@ use App\Models\Empresa;
 
 class BaseExport
 {
-
-
     public string $header_style = 'background: forestgreen; color: white; font-weight: bold; width: 90px; height: 22px;';
 
-    public string $sub_header_style = 'font-family:Courier New; background: #d9d9d9; color: black; font-weight: bold; width: 90px; height: 22px;';
+    public string $sub_header_style = 'background: #d9d9d9; color: black; font-weight: bold; width: 90px; height: 22px;';
 
     public function excel_view($excel_view): self
     {

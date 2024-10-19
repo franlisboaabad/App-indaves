@@ -104,7 +104,7 @@
                         <td>{{ $pago->precio }}</td>
                         <td>{{ $pago->total_venta }}</td>
                         <td>{{ $pago->saldo }}</td>
-                        <td>{{ $pago->total }}</td>
+                        <td>{{ $pago->total_venta - $pago->saldo }}</td>
                         <td>{{ $pago->monto_pagado }}</td>
                         <td>{{ $pago->pendiente }}</td>
                     </tr>
@@ -115,7 +115,12 @@
                 @endforelse
                 </tbody>
             </table>
-            <a href="{{ route('cajas.resumen', $caja->id) }}" class="btn btn-info btn-sm mt-2 float-right ml-3" target="_blank"><i class="fa fa-print pr-2"></i>Imprimir Resumen</a>
+            <a href="{{ route('cajas.resumen',[ 'caja' => $caja->id,'format'=> 'pdf']) }}"
+               class="btn btn-danger btn-sm mt-2 float-right ml-3" target="_blank">
+                <i class="fa fa-print pr-2"></i>Imprimir PDF</a>
+            <a href="{{ route('cajas.resumen',[ 'caja' => $caja->id,'format'=> 'excel']) }}"
+               class="btn btn-info btn-sm mt-2 float-right ml-3" target="_blank">
+                <i class="fa fa-file-excel pr-2"></i>Imprimir Excel</a>
         </div>
         <div class="card-footer">
             <!-- Botón para cerrar la caja -->
