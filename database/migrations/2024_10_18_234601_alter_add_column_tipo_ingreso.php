@@ -30,6 +30,12 @@ return new class extends Migration
                 ->default(1)
                 ->nullable();
         });
+
+        Schema::table('detalle_orden_despachos', function ( Blueprint$table){
+            $table->unsignedSmallInteger('tipo_ingreso')
+                ->default(1)
+                ->nullable();
+        });
     }
 
     public function down()
@@ -43,6 +49,10 @@ return new class extends Migration
         });
 
         Schema::table('orden_ingresos', function (Blueprint $table){
+            $table->dropColumn('tipo_ingreso');
+        });
+
+        Schema::table('detalle_orden_despachos', function (Blueprint $table){
             $table->dropColumn('tipo_ingreso');
         });
     }

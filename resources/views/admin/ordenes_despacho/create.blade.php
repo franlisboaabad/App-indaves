@@ -362,6 +362,7 @@
                 const numeroJabas = document.getElementById('cantidad_jabas').value;
                 const taraPorDefecto = document.getElementById('tara').value;
                 const precio = document.getElementById('precio').value;
+                const tipo_ingreso = document.getElementById('tipo_ingreso').value;
 
                 // Validar que los campos no estén vacíos
                 if (!cantidadPollos || !pesoBruto || !numeroJabas) {
@@ -383,6 +384,7 @@
                 newRow.dataset.presentacion_pollo_id = $('#presentacion_pollo_id').val();
                 newRow.dataset.precio = precio;
                 newRow.dataset.subtotal = subtotal;
+                newRow.dataset.tipo_ingreso= tipo_ingreso;
 
                 const presentation = presentacion_pollos.find(presentation => presentation.id == newRow
                     .dataset.presentacion_pollo_id);
@@ -410,6 +412,7 @@
                 deleteBtn.className = 'btn btn-danger btn-sm btn-delete';
                 deleteBtn.setAttribute('type', 'button');
                 newRow.insertCell(8).appendChild(deleteBtn);
+
 
                 // Limpiar los campos del formulario
                 clearFormFields();
@@ -578,6 +581,7 @@
                     let pesoNeto = $(this).find('td:eq(6)').text();
                     let precio = $(this).data('precio');
                     let subtotalItem = $(this).data('subtotal');
+                    let tipo_ingreso = $(this).data('tipo_ingreso');
                     detalles.push({
                         cantidad_pollos: cantidadPollos,
                         peso_bruto: pesoBruto,
@@ -588,7 +592,8 @@
                         presentacion_pollo_id: $(this).data('presentacion_pollo_id'),
                         precio: precio,
                         subtotal: subtotalItem,
-                        peso_promedio: $(this).find('td:eq(7)').text()
+                        peso_promedio: $(this).find('td:eq(7)').text(),
+                        tipo_ingreso: tipo_ingreso
                     });
                 });
 

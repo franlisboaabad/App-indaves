@@ -121,6 +121,7 @@ class OrdenIngresoController extends Controller
                 // Actualizar el inventario
                 $inventory = Inventory::where('presentacion_pollo_id', $detalle->presentacion_pollo_id)
                     ->where('tipo_pollo_id', $detalle->tipo_pollo_id)
+                    ->where('tipo_ingreso', $orden->tipo_ingreso)
                     ->first();
 
                 if ($inventory) {
@@ -152,6 +153,7 @@ class OrdenIngresoController extends Controller
                 $detalle->tipo_pollo_id,
                 $detalle->peso_neto,
                 $detalle->cantidad_pollos,
+                $ordenIngreso->tipo_ingreso
             );
         }
 

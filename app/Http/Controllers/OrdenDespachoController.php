@@ -125,7 +125,8 @@ class OrdenDespachoController extends Controller
                     $detalle['presentacion_pollo_id'],
                     $detalle['tipo_pollo_id'],
                     $detalle['peso_neto'],
-                    $detalle['cantidad_pollos']
+                    $detalle['cantidad_pollos'],
+                    $detalle['tipo_ingreso'],
                 );
 
                 if($createNotaIngreso){
@@ -133,7 +134,8 @@ class OrdenDespachoController extends Controller
                         $presentacionPolloBeneficiado->getKey(),
                         $detalle['tipo_pollo_id'],
                         $detalle['peso_neto'],
-                        $detalle['cantidad_pollos']
+                        $detalle['cantidad_pollos'],
+                        $detalle['tipo_ingreso'],
                     );
                 }
             }
@@ -218,7 +220,8 @@ class OrdenDespachoController extends Controller
                         $presentacionPolloBeneficiado->getKey(),
                         $detalle['tipo_pollo_id'],
                         $detalle['peso_neto'],
-                        $detalle['cantidad_pollos']
+                        $detalle['cantidad_pollos'],
+                        $detalle['tipo_ingreso'],
                     );
                 }
             }
