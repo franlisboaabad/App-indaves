@@ -9,39 +9,60 @@
             font-size: 14px;
             margin: 0;
             padding: 0;
-            color: #333; /* Color de texto principal */
+            color: #333;
+            /* Color de texto principal */
         }
 
+
         .header {
-            text-align: center;
+            display: flex;
+            /* Usar flexbox */
+            justify-content: space-between;
+            /* Espaciado entre elementos */
+            align-items: center;
+            /* Alinear verticalmente al centro */
             margin-bottom: 20px;
-            border-bottom: 2px solid #007bff; /* Color del borde inferior de la cabecera */
+            border-bottom: 2px solid #007bff;
+            /* Color del borde inferior de la cabecera */
             padding-bottom: 10px;
-            /* background-color: #f8f9fa;  */
-            /* Color de fondo de la cabecera */
         }
 
         .header img {
             width: 100px;
+            /* Ajusta el tamaño del logo */
+            margin-right: 20px;
+            /* Espacio entre el logo y la información */
+        }
+
+        .header .info {
+            margin-top: -80px;
+            text-align: right;
+            /* Alinear texto a la derecha */
         }
 
         .header h1 {
-            margin: 5px 0;
+            margin: 0;
+            /* Eliminar margen para alineación */
             font-size: 18px;
-            color: #007bff; /* Color del título de la cabecera */
+            color: #007bff;
+            /* Color del título de la cabecera */
         }
 
         .header p {
             margin: 2px 0;
-            color: #555; /* Color del texto en la cabecera */
+            /* Margen para los párrafos */
+            color: #555;
+            /* Color del texto en la cabecera */
         }
 
         h2 {
-            border-bottom: 1px solid #007bff; /* Color del borde inferior de los encabezados h2 */
+            border-bottom: 1px solid #007bff;
+            /* Color del borde inferior de los encabezados h2 */
             padding-bottom: 5px;
             margin-bottom: 10px;
             font-size: 14px;
-            color: #007bff; /* Color del texto de los encabezados h2 */
+            color: #007bff;
+            /* Color del texto de los encabezados h2 */
         }
 
         table {
@@ -51,11 +72,15 @@
             font-size: 14px;
         }
 
-        table, th, td {
-            border: 1px solid #dee2e6; /* Color del borde de la tabla */
+        table,
+        th,
+        td {
+            border: 1px solid #dee2e6;
+            /* Color del borde de la tabla */
         }
 
-        th, td {
+        th,
+        td {
             padding: 8px;
             text-align: left;
         }
@@ -75,7 +100,8 @@
         .footer {
             text-align: center;
             margin-top: 20px;
-            border-top: 2px solid #007bff; /* Color del borde superior del pie de página */
+            border-top: 2px solid #007bff;
+            /* Color del borde superior del pie de página */
             padding-top: 10px;
             /* background-color: #f8f9fa;  */
             /* Color de fondo del pie de página */
@@ -83,8 +109,9 @@
 
         .footer h3 {
             margin: 0;
-            font-size: 14px;
-            color: #e74c3c; /* Color del título en el pie de página */
+            font-size: 16px;
+            color: #e74c3c;
+            /* Color del título en el pie de página */
         }
 
         .footer p {
@@ -98,22 +125,25 @@
 <body>
     <!-- Cabecera -->
     <div class="header">
-        <img src="{{ public_path('logo.png') }}" alt="Logo">
-        <h1>{{ $empresa->name }}</h1>
-        <p>{{ $empresa->address }}</p>
-        <p>Pedidos: {{ $empresa->phone }}</p>
-        <p>{{ $empresa->email }}</p>
+        <img src="{{ public_path('images/logo-empresa.png') }}" alt="Logo" class="img-fluid">
+        <div class="info">
+            <h1>{{ $empresa->name }}</h1>
+            <p>{{ $empresa->address }}</p>
+            <p>Pedidos: {{ $empresa->phone }}</p>
+            <p>{{ $empresa->email }}</p>
+        </div>
     </div>
 
     <!-- Información de la Venta -->
     <div>
         <h2>Información de la Venta</h2>
-        <p><strong>ID de Venta:</strong> {{ $venta->serie_venta }} | <strong>Cliente:</strong> {{ $venta->cliente->razon_social }} | <strong>Fecha:</strong> {{ $venta->created_at->format('d/m/Y') }}</p>
+        <p><strong>ID de Venta:</strong> {{ $venta->serie_venta }} | <strong>Cliente:</strong>
+            {{ $venta->cliente->razon_social }} | <strong>Fecha:</strong> {{ $venta->created_at->format('d/m/Y') }}</p>
         <p><strong>Forma de pago:</strong> {{ $venta->forma_de_pago ? 'Crédito' : 'Contado' }}</p>
         <p><strong>Monto a pagar:</strong> {{ number_format($venta->monto_total, 2) }} </p>
 
-        <h5>PAGOS</h5>
-        @foreach($venta->pagos as $pago)
+        <h5>PAGOS: </h5>
+        @foreach ($venta->pagos as $pago)
             <p><strong> {{ $pago->metodo_pago->descripcion }}:</strong> {{ number_format($pago->monto, 2) }} </p>
         @endforeach
 
@@ -162,8 +192,8 @@
 
     <!-- Footer -->
     <div class="footer">
-        <h3>La empresa no acepta devoluciones</h3>
-        <p>Gracias por su preferencia.</p>
+        <h3>LA EMPRESA NO ACEPTA DEVOLUCIONES</h3>
+        <p>GRUPO TUÑOQUE - Gracias por su preferencia.</p>
     </div>
 </body>
 

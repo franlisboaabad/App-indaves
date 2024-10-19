@@ -59,9 +59,13 @@
 
                                                 <a href="{{ route('ordenes-ingreso.show', $orden) }}" class="dropdown-item">Ver</a>
 
-                                                <a href="{{ route('ordenes-ingreso.edit', $orden) }}" class="dropdown-item">Editar</a>
+                                                @php
+                                                    $fecha_actual = date('Y-m-d');
+                                                @endphp
 
-
+                                                @if ($orden->fecha_ingreso == $fecha_actual)
+                                                    <a href="{{ route('ordenes-ingreso.edit', $orden) }}" class="dropdown-item">Editar</a>
+                                                @endif
                                                 <form action="{{ route('ordenes-ingreso.destroy', $orden) }}" method="POST"
                                                     class="delete-form" id="delete-form-{{ $orden->id }}">
                                                     @csrf

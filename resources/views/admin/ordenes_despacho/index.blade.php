@@ -110,6 +110,10 @@
                 language: {
                     "url": "/js/spanish.json"
                 },
+                order: [
+                    [3, 'desc']
+                ],
+                pageLength: 25
             });
 
             // Maneja el clic en el botón de eliminación
@@ -193,7 +197,7 @@
                                 showConfirmButton: false
                             }).then(function() {
                                 location
-                            .reload(); // Recargar la página para ver el nuevo usuario
+                                    .reload(); // Recargar la página para ver el nuevo usuario
                             });
                         },
                         error: function(xhr) {

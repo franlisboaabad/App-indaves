@@ -51,7 +51,7 @@ class OrdenDespachoController extends Controller
     public function index()
     {
         // Obtener todas las órdenes de despacho
-        $ordenes = OrdenDespacho::where('estado', 1)->get();
+        $ordenes = OrdenDespacho::where('estado', 1)->latest('fecha_despacho')->get();
 
         // Convertir fechas a instancias de Carbon (si es necesario)
         foreach ($ordenes as $orden) {

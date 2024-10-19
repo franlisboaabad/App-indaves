@@ -28,8 +28,8 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
-                        <th>Tipo de Pollo</th>
                         <th>Presentación</th>
+                        <th>Tipo de Pollo</th>
                         <th>Cantidad Pollos</th>
                         <th>Cantidad Jabas</th>
                         <th>Peso Neto</th>
@@ -38,8 +38,8 @@
                 <tbody>
                     @foreach($ordenIngreso->detalle as $detalle)
                         <tr>
-                            <td>{{ $detalle->tipo_pollo->descripcion }}</td>
                             <td>{{ $detalle->presentacion_pollo->descripcion }}</td>
+                            <td>{{ $detalle->tipo_pollo->descripcion }}</td>
                             <td>{{ $detalle->cantidad_pollos }}</td>
                             <td>{{ $detalle->cantidad_jabas }}</td>
                             <td>{{ $detalle->peso_neto }}</td>

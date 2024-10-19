@@ -97,6 +97,12 @@ class OrdenIngresoController extends Controller
             // Encuentra la orden
             $orden = OrdenIngreso::findOrFail($ordenIngreso->id);
 
+             // Validar si la fecha de la orden es del día de hoy
+            if ($orden->created_at->toDateString() !== now()->toDateString()) {
+                return response()->json(['success' => false, 'message' => 'No se puede actualizar una orden de ingreso de una fecha pasada.'], 400);
+            }
+
+
             // Actualiza la orden con los datos del request
             $orden->update($request->only(['peso_bruto', 'peso_tara', 'peso_neto']));
 
