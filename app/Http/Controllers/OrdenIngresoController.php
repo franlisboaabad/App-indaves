@@ -68,7 +68,8 @@ class OrdenIngresoController extends Controller
                 $item['presentacion_pollo_id'],
                 $item['tipo_pollo_id'],
                 $item['peso_neto'],
-                $item['cantidad_pollos']
+                $item['cantidad_pollos'],
+                $request->input('tipo_ingreso')
             );
         }
 

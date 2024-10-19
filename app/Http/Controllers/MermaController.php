@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DetalleMermas;
 use App\Models\Merma;
 use App\Models\Inventory;
 use Illuminate\Http\Request;
+use App\Models\DetalleMermas;
+use Illuminate\Support\Facades\DB;
 
 class MermaController extends Controller
 {
@@ -32,28 +33,26 @@ class MermaController extends Controller
             'detalles.*.peso' => 'required|numeric',
         ]);
 
-        // Crear una nueva Merma
-        $merma = Merma::create([
-            'total_peso' => $request->total_peso,
-        ]);
-
-        // Registrar los detalles de la merma
-        foreach ($request->detalles as $detalle) {
-            DetalleMermas::create([
-                'merma_id' => $merma->id,
-                'presentacion' => $detalle['presentacion'],
-                'tipo' => $detalle['tipo'],
-                'peso' => $detalle['peso'],
+        // Iniciar una transacción
+        DB::transaction(function () use ($request) {
+            // Crear una nueva Merma
+            $merma = Merma::create([
+                'total_peso' => $request->total_peso,
             ]);
-        }
 
-        // Actualizar el inventario
-        Inventory::query()->update(['total_peso' => 0]);
+            // Registrar los detalles de la merma
+            foreach ($request->detalles as $detalle) {
+                $merma->detalles()->create($detalle);
+            }
 
-        // Limpiar el modelo Peso
-        // Asegúrate de tener el modelo Peso configurado
-        \App\Models\Peso::truncate();
+            // Actualizar el inventario
+            Inventory::query()->update(['total_peso' => 0]);
 
+            // Limpiar el modelo Peso
+            \App\Models\Peso::truncate();
+        });
+
+        // Si todo va bien, devolver la respuesta
         return response()->json(['message' => 'Merma registrada correctamente.']);
     }
 

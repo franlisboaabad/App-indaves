@@ -132,7 +132,7 @@ Route::get('pedidos/{id}/{format}', [PedidoController::class,'print'])->name('pe
 
 
 Route::get('inventarios',[InventoryController::class,'index'])->name('inventarios.index')->middleware('auth');
-Route::resource('mermas',MermaController::class)->middleware('auth')->only('store');
+Route::resource('mermas',MermaController::class)->middleware('auth')->only('store','index','show');
 Route::resource('detalle-mermas',DetalleMermasController::class)->middleware('auth');
 
 Route::get('reportes/ingresos',[ReporteIngresosController::class,'index'])->name('reportes.ingresos.index')->middleware('auth');

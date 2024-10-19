@@ -11,5 +11,9 @@ class Merma extends Model
 
     protected $fillable = ['total_peso','estado'];
 
+    public function detalles()
+    {
+        return $this->hasMany(DetalleMermas::class,'merma_id');
+    }
 
 }

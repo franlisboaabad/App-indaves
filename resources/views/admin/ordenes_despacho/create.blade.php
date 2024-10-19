@@ -75,8 +75,20 @@
 
                 <hr>
 
-                <div class="row mt-5">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="form-group">
+                            <label for="fecha_despacho">Tipo de Ingreso</label>
+                           <select class="form-control" id="tipo_ingreso">
+                            <option value="1">CAMION</option>
+                            <option value="2">POR STOCK</option>
+                            <option value="3">MERMA</option>
+                           </select>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="row">
                     <div class="col-md-2 mb-5">
                         <div class="form-grup">
                             <label for="presentacion_pollo_id">Presentacion de Pollo:</label>
@@ -185,7 +197,7 @@
                     </div>
 
                     <!-- Botón para agregar detalles -->
-                    <div class="col-md-3 pt-2">
+                    <div class="col-md-2 pt-2">
                         <button type="button" id="addDetailBtn" class="btn btn-primary mt-4">Agregar al Detalle</button>
                     </div>
 
@@ -230,7 +242,6 @@
                         </tfoot>
                     </table>
                 </div>
-
 
                 <!-- Botón de Submit -->
                 <br>
@@ -675,6 +686,14 @@
                 obtenerDisponibilidad();
             });
 
+            $('#tipo_ingreso').change(function(el) {
+                obtenerDisponibilidad();
+            });
+
+
+
+
+
             $('#tipo_pollo_id').change(function(el) {
                 obtenerPrecio();
                 obtenerDisponibilidad();
@@ -703,8 +722,9 @@
             function obtenerDisponibilidad() {
                 const type = $('#tipo_pollo_id').val();
                 const presentation = $('#presentacion_pollo_id').val();
+                const tipoIngreso = $('#tipo_ingreso').val();
                 const stock = stocks.find(stock => stock.tipo_pollo_id == type && stock.presentacion_pollo_id ==
-                    presentation);
+                    presentation && stock.tipo_ingreso == tipoIngreso );
                 if (stock) {
                     $('#cantidad_disponible_tipo').val(stock.total_pollos);
                     $('#peso_disponible_tipo').val(stock.total_peso);
@@ -713,6 +733,9 @@
                     $('#peso_disponible_tipo').val(0);
                 }
             }
+
+
+
         });
     </script>
 @stop

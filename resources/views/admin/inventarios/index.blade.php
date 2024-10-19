@@ -15,7 +15,8 @@
             <table id="inventoriesTable" class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>ID
+                        <th>ID</th>
+                        <th>Tipo Ingreso</th>
                         <th>Presentación</th>
                         <th>Tipo</th>
                         <th>Cantidad Pollos</th>
@@ -26,6 +27,7 @@
                     @foreach ($inventarios as $inventory)
                         <tr>
                             <td>{{ $inventory->id }}</td>
+                            <td>{{ $inventory->tipo_ingreso_description() }}</td>
                             <td>{{ $inventory->presentacion_pollo_descripcion }}</td>
                             <td>{{ $inventory->tipo_pollo_descripcion }}</td>
                             <td>{{ $inventory->total_pollos }}</td>
@@ -60,13 +62,23 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
+                                    <th>Tipo Ingreso</th>
                                     <th>Presentación</th>
                                     <th>Tipo</th>
+                                    <th>Cantidad Pollos</th>
                                     <th>Total Peso</th>
                                 </tr>
                             </thead>
                             <tbody id="mermasBody">
-                                <!-- Las filas se agregarán dinámicamente aquí -->
+                                @foreach ($inventarios as $inventory)
+                                <tr>
+                                    <td data-tipo_ingreso_id="{{ $inventory->tipo_ingreso }}" >{{ $inventory->tipo_ingreso_description() }}</td>
+                                    <td>{{ $inventory->presentacion_pollo_descripcion }}</td>
+                                    <td>{{ $inventory->tipo_pollo_descripcion }}</td>
+                                    <td>{{ $inventory->total_pollos }}</td>
+                                    <td>{{ $inventory->total_peso }}</td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
 
@@ -114,26 +126,8 @@
 
             //modal show
             $('#mermaModal').on('show.bs.modal', function() {
-                $('#mermasBody').empty(); // Limpiar la tabla del modal
-
                 const totalPeso = calcularTotalPeso();
-
-                // Recorrer los inventarios y agregar filas al modal
-                $('#inventoriesTable tbody tr').each(function() {
-                    const presentacion = $(this).find('td:eq(1)').text();
-                    const tipo = $(this).find('td:eq(2)').text();
-                    const peso = $(this).find('td:eq(4)').text();
-                    const nuevaFila = `
-                            <tr>
-                                <td>${presentacion}</td>
-                                <td>${tipo}</td>
-                                <td>${peso}</td>
-                            </tr> `;
-                    $('#mermasBody').append(nuevaFila);
-                });
-
                 $('#totalPeso').val(calcularTotalPeso().toFixed(2)); // Mostrar con 2 decimales
-
             });
 
 
@@ -151,11 +145,13 @@
                 const detalles = [];
 
                 $('#mermasBody tr').each(function() {
-                    const presentacion = $(this).find('td:eq(0)').text();
-                    const tipo = $(this).find('td:eq(1)').text();
-                    const peso = parseFloat($(this).find('td:eq(2)').text());
+                    const tipo_ingreso = $(this).find('td:eq(0)').data("tipo_ingreso_id");
+                    const presentacion = $(this).find('td:eq(1)').text();
+                    const tipo = $(this).find('td:eq(2)').text();
+                    const peso = parseFloat($(this).find('td:eq(3)').text());
 
                     detalles.push({
+                        tipo_ingreso,
                         presentacion,
                         tipo,
                         peso

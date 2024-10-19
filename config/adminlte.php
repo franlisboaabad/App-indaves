@@ -375,6 +375,13 @@ return [
             'icon'        => 'fa fa-star',
         ],
 
+        [
+            'text'        => 'Mermas',
+            'route'         => 'mermas.index',
+            'icon'        => 'fa fa-star',
+        ],
+
+
         ['header' => 'account_settings'],
         [
             'text' => 'Reportes',

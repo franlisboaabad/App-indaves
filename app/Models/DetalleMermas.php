@@ -9,6 +9,6 @@ class DetalleMermas extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['merma_id','presentacion','tipo','peso'];
+    protected $fillable = ['merma_id','presentacion','tipo','peso','tipo_ingreso'];
 
 }

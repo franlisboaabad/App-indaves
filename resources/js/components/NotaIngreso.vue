@@ -50,6 +50,18 @@ const { form, formItem,addItem,deleteItem, sendForm}  = useFormIngreso(props.pre
                     </div>
                 </div>
 
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="fecha_despacho">Tipo de Ingreso</label>
+                       <select name="" id="" class="form-control" v-model="form.tipo_ingreso">
+                        <option value="1">CAMION</option>
+                        <option value="2">POR STOCK</option>
+                        <option value="3">MERMA</option>
+                       </select>
+                    </div>
+                </div>
+
+
 
             </div>
             <hr>
@@ -98,6 +110,7 @@ const { form, formItem,addItem,deleteItem, sendForm}  = useFormIngreso(props.pre
                 <div class="col-md-2 pt-4">
                     <button type="button" id="addDetailBtn" class="btn btn-primary mt-2" @click.prevent="addItem">Agregar al Detalle</button>
                 </div>
+
 
             </div>
 

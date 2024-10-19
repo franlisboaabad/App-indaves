@@ -7,11 +7,12 @@ use Exception;
 
 class InventoryService
 {
-    public static function increment($presentacionPollo,$tipoPollo,$totalPeso = 0,$totalPollos = 0): void
+    public static function increment($presentacionPollo,$tipoPollo,$totalPeso = 0,$totalPollos = 0, $tipo_ingreso=1): void
     {
         $inventory = Inventory::query()->firstOrNew([
             'presentacion_pollo_id' => $presentacionPollo,
-            'tipo_pollo_id' => $tipoPollo
+            'tipo_pollo_id' => $tipoPollo,
+            'tipo_ingreso' => $tipo_ingreso
         ]);
 
         $inventory->total_peso += $totalPeso;
@@ -20,11 +21,12 @@ class InventoryService
     }
 
 
-    public static function decrement($presentacionPollo,$tipoPollo,$totalPeso = 0,$totalPollos = 0): void
+    public static function decrement($presentacionPollo,$tipoPollo,$totalPeso = 0,$totalPollos = 0,$tipo_ingreso=1): void
     {
         $inventory = Inventory::query()->firstOrNew([
             'presentacion_pollo_id' => $presentacionPollo,
-            'tipo_pollo_id' => $tipoPollo
+            'tipo_pollo_id' => $tipoPollo,
+            'tipo_ingreso' => $tipo_ingreso
         ]);
 
         if($inventory->total_peso < $totalPeso){

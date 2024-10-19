@@ -11,6 +11,7 @@ export function useFormIngreso(presentations, types) {
         peso_bruto: 0,
         peso_tara: 0,
         peso_neto: 0,
+        tipo_ingreso:1,
         items: [],
     });
 
