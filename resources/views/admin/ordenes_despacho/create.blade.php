@@ -443,6 +443,7 @@
                         precio: row.dataset.precio,
                         subtotal: row.dataset.subtotal,
                         peso_promedio: row.cells[7].textContent,
+                        tipo_ingreso: row.dataset.tipo_ingreso
                     };
                     detalles.push(detalle);
                 }
@@ -463,6 +464,7 @@
                     newRow.dataset.presentacion_pollo_id = detalle.presentacion_pollo_id;
                     newRow.dataset.precio = detalle.precio;
                     newRow.dataset.subtotal = detalle.subtotal;
+                    newRow.dataset.tipo_ingreso = detalle.tipo_ingreso;
 
                     const presentation = presentacion_pollos.find(presentation => presentation.id == detalle.presentacion_pollo_id);
                     const type = tipo_pollos.find(type => type.id == detalle.tipo_pollo_id);
@@ -643,7 +645,6 @@
                                 data: data
                             })
                             .then(function(response) {
-                                console.log(response);
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Éxito',

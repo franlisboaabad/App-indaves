@@ -19,7 +19,7 @@
                     <h3 class="card-title">Ordenes</h3>
                 </div>
                 <div class="card-body">
-                    <table class="table" id="table-ordenes">
+                    <table class="table table-bordered" id="table-ordenes">
                         <thead>
                             <th>#</th>
                             <th>N° guía</th>

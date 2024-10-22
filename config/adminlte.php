@@ -372,13 +372,13 @@ return [
         [
             'text'        => 'Stock',
             'route'         => 'inventarios.index',
-            'icon'        => 'fa fa-star',
+            'icon'        => 'fa fa-cubes',
         ],
 
         [
             'text'        => 'Mermas',
             'route'         => 'mermas.index',
-            'icon'        => 'fa fa-star',
+            'icon'        => 'fa fa-balance-scale',
         ],
 
 

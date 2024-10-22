@@ -20,6 +20,7 @@ class DetalleOrdenIngreso extends Model
         'cantidad_jabas',
         'tara',
         'peso_neto',
+        'peso_promedio',
         'precio',
         'subtotal',
         'estado'

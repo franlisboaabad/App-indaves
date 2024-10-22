@@ -14,7 +14,8 @@ class MermaController extends Controller
 
     public function index()
     {
-        //
+        $mermas = Merma::latest()->get();
+        return view('admin.mermas.index', compact('mermas'));
     }
 
     public function create()
@@ -68,7 +69,7 @@ class MermaController extends Controller
 
     public function show(Merma $merma)
     {
-        //
+        return view('admin.mermas.show',compact('merma'));
     }
 
 

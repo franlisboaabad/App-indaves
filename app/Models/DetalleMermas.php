@@ -11,4 +11,6 @@ class DetalleMermas extends Model
 
     protected $fillable = ['merma_id','presentacion','tipo','peso','tipo_ingreso'];
 
+
+
 }
