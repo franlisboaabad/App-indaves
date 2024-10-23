@@ -44,7 +44,7 @@
 
             </div>
 
-            <a href="{{ route('mermas.index') }}" class="btn btn-warning">Lista Mermas</a>
+            <a href="{{ route('mermas.index') }}" class="btn btn-primary">Lista Mermas</a>
 
         </div>
 

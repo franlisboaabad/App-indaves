@@ -85,15 +85,6 @@
                                 id="geolocalizacion" class="form-control" value="{{ old('geolocalizacion') }}">
                         </div>
 
-                        {{-- <iframe
-  width="600"
-  height="450"
-  frameborder="0"
-  style="border:0"
-  src="https://www.google.com/maps?q=-5.2090647,-80.6437798&output=embed"
-  allowfullscreen
-></iframe> --}}
-
                         <div class="form group mt-3">
                             @csrf
                             <button type="button" id="btn_Register" class="btn btn-success btn-xs"

@@ -8,7 +8,7 @@
 
 @section('content')
 
-    <a href="#" class="btn btn-danger mb-3" data-toggle="modal" data-target="#mermaModal">Registrar Merma</a>
+    <a href="#" class="btn btn-success mb-3" data-toggle="modal" data-target="#mermaModal">Registrar Merma</a>
 
     <div class="card">
         <div class="card-body">
@@ -114,7 +114,7 @@
                 let totalPeso = 0;
 
                 $('#inventoriesTable tbody tr').each(function() {
-                    const peso = parseFloat($(this).find('td:eq(4)')
+                    const peso = parseFloat($(this).find('td:eq(5)')
                         .text()); // Columna Total Peso (índice 4)
                     if (!isNaN(peso)) {
                         totalPeso += peso;

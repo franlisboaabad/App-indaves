@@ -43,8 +43,8 @@
                         <div class="form-group">
                             @csrf
                             @method('PUT')
-                            <button type="submit" class="btn btn-success">Editar Rol</button>
-                            <a href="{{ route('roles.index') }}" class="btn btn-danger">Lista de Roles</a>
+                            <button type="submit" class="btn btn-success mr-2">Editar Rol</button>
+                            <a href="{{ route('roles.index') }}" class="btn btn-primary">Lista de Roles</a>
                         </div>
                     </form>
                 </div>

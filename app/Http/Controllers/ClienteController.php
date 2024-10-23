@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
@@ -50,26 +51,32 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         // Validación de los datos del formulario
-        $request->validate([
+        $validatedData = $request->validate([
             'tipo_documento' => 'required|integer',
             'documento' => 'required|string|max:255',
             'nombre_comercial' => 'required|string|max:255',
             'razon_social' => 'required|string|max:255'
         ]);
-
-        // Verificar si ya existe un cliente con el mismo documento
-        $existingCliente = Cliente::where('documento', $request->input('documento'))->first();
-
-        if ($existingCliente) {
-            // Si el cliente ya existe, responder con un error
-            return response()->json(['success' => false, 'message' => 'Cliente con el mismo documento ya existe.'], 400);
+        // Iniciar una transacción
+        DB::beginTransaction();
+        try {
+            // Verificar si ya existe un cliente con el mismo documento
+            $existingCliente = Cliente::where('documento', $validatedData['documento'])->first();
+            if ($existingCliente) {
+                // Si el cliente ya existe, responder con un error
+                return response()->json(['success' => false, 'message' => 'Cliente ya se encuentra registrado'], 400);
+            }
+            // Crear el cliente
+            $cliente = Cliente::create($validatedData);
+            // Confirmar la transacción
+            DB::commit();
+            // Responder con el cliente creado
+            return response()->json(['success' => true, 'cliente' => $cliente]);
+        } catch (\Exception $e) {
+            // Revertir la transacción en caso de error
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => 'Error al crear el cliente.'], 500);
         }
-
-        // Crear el cliente
-        $cliente = Cliente::create($request->all());
-
-        // Responder con el cliente creado
-        return response()->json(['success' => true, 'cliente' => $cliente]);
     }
 
     /**
@@ -104,34 +111,29 @@ class ClienteController extends Controller
      */
     public function update(Request $request, Cliente $cliente)
     {
-        // Validación
-        $validator = Validator::make($request->all(), [
-            'nombre_empresa' => 'required',
-            'nombre' => 'required',
-            'apellidos' => 'required',
-            'dni' => 'required|unique:clientes,dni,' . $cliente->id, // Verifica la unicidad del DNI excluyendo el cliente actual
-            'celular' => 'required',
-            'email' => 'required|email|unique:clientes,email,' . $cliente->id, // Corregido para email
-            'direccion' => 'required',
-        ]);
 
-        if ($validator->fails()) {
-            // Si la validación falla, devuelve un estado HTTP 422 (Entidad No Procesable)
-            // junto con los mensajes de error.
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
+        $validatedData = $request->validate([
+            'nombre_comercial' => 'required|string|max:255',
+            'razon_social' => 'required|string|max:255',
+        ]);
+        // Iniciar una transacción
+        DB::beginTransaction();
+        try {
+            // Buscar el cliente por ID
+            $cliente = Cliente::find($cliente->id);
+            if (!$cliente) {
+                return response()->json(['success' => false, 'message' => 'Cliente no encontrado.'], 404);
+            }
+            // Actualizar el cliente
+            $cliente->update($request->all());
+            // Confirmar la transacción
+            DB::commit();
+            return response()->json(['success' => true, 'message' => 'Cliente editado correctamente.']);
+        } catch (\Exception $e) {
+            // Revertir la transacción en caso de error
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => 'Error al editar el cliente.'], 500);
         }
-
-        $cliente->update($request->all());
-
-        // Devuelve una respuesta JSON con un mensaje de éxito.
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Cliente editado correctamente.',
-            'data' => $cliente // Opcionalmente, puedes enviar los datos del cliente creado.
-        ]);
     }
 
     /**

@@ -13,8 +13,10 @@
 
                 <div class="card-body">
 
-                    <form id="createClientForm">
+                    <form id="editFormCliente" method="POST">
                         @csrf
+
+                        <input type="hidden" id="cliente_id" value="{{ $cliente->id }}">
 
                         <div class="row">
                             <div class="col">
@@ -31,7 +33,8 @@
                                 <div class="form-group">
                                     <label for="documento">Documento</label>
                                     <div class="input-group">
-                                        <input type="text" id="documento" name="documento" class="form-control" required value="{{ $cliente->documento }}">
+                                        <input type="text" id="documento" name="documento" class="form-control" required
+                                            value="{{ $cliente->documento }}">
                                         <div class="input-group-append">
                                             <button type="button" id="searchDocumentBtn" class="btn btn-outline-secondary">
                                                 <i class="fa fa-search"></i> Buscar
@@ -47,7 +50,8 @@
 
                                 <div class="form-group">
                                     <label for="nombre_comercial">Nombre Comercial</label>
-                                    <input type="text" id="nombre_comercial" name="nombre_comercial" class="form-control" required value="{{ $cliente->nombre_comercial }}">
+                                    <input type="text" id="nombre_comercial" name="nombre_comercial" class="form-control"
+                                        required value="{{ $cliente->nombre_comercial }}">
                                 </div>
                             </div>
 
@@ -55,7 +59,8 @@
 
                                 <div class="form-group">
                                     <label for="razon_social">Razón Social</label>
-                                    <input type="text" id="razon_social" name="razon_social" class="form-control" required value="{{ $cliente->razon_social }}">
+                                    <input type="text" id="razon_social" name="razon_social" class="form-control"
+                                        required value="{{ $cliente->razon_social }}">
                                 </div>
                             </div>
                         </div>
@@ -63,22 +68,26 @@
 
                         <div class="form-group">
                             <label for="direccion">Dirección</label>
-                            <input type="text" id="direccion" name="direccion" class="form-control" required value="{{ $cliente->direccion }}">
+                            <input type="text" id="direccion" name="direccion" class="form-control" required
+                                value="{{ $cliente->direccion }}">
                         </div>
 
                         <div class="form-group">
                             <label for="departamento">Departamento</label>
-                            <input type="text" id="departamento" name="departamento" class="form-control" required value="{{ $cliente->departamento }}">
+                            <input type="text" id="departamento" name="departamento" class="form-control" required
+                                value="{{ $cliente->departamento }}">
                         </div>
 
                         <div class="form-group">
                             <label for="provincia">Provincia</label>
-                            <input type="text" id="provincia" name="provincia" class="form-control" required value="{{ $cliente->provincia }}">
+                            <input type="text" id="provincia" name="provincia" class="form-control" required
+                                value="{{ $cliente->provincia }}">
                         </div>
 
                         <div class="form-group">
                             <label for="distrito">Distrito</label>
-                            <input type="text" id="distrito" name="distrito" class="form-control" required value="{{ $cliente->distrito }}">
+                            <input type="text" id="distrito" name="distrito" class="form-control" required
+                                value="{{ $cliente->distrito }}">
                         </div>
 
 
@@ -87,23 +96,24 @@
                             <div class="col">
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="email" id="email" name="email" class="form-control" required value="{{ $cliente->email }}">
+                                    <input type="email" id="email" name="email" class="form-control" required
+                                        value="{{ $cliente->email }}">
                                 </div>
                             </div>
 
                             <div class="col">
                                 <div class="form-group">
                                     <label for="celular">Celular</label>
-                                    <input type="text" id="celular" name="celular" class="form-control" required value="{{ $cliente->celular }}">
+                                    <input type="text" id="celular" name="celular" class="form-control" required
+                                        value="{{ $cliente->celular }}">
                                 </div>
 
                             </div>
                         </div>
 
-
-
                         <div class="form-group">
-                            <button type="button" id="saveClientBtn" class="btn btn-success mr-2">Editar</button>
+                            @method('PUT')
+                            <button type="button" id="btnEditCliente" class="btn btn-success mr-2">Editar</button>
                             <a href="{{ route('clientes.index') }}" class="btn btn-primary">Lista de clientes</a>
                         </div>
 
@@ -122,12 +132,56 @@
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
 
+            $('#btnEditCliente').click(function(e) {
+                e.preventDefault();
+                const formData = new FormData($('#editFormCliente')[0]);
+                let clienteId = $('#cliente_id').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('clientes.update', ['cliente' => '__CLIENTE_ID__']) }}".replace(
+                        '__CLIENTE_ID__', clienteId),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: "json",
+                    success: function(response) {
+
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Éxito!',
+                                text: 'Cliente editado correctamente.',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = "{{ route('clientes.index') }}"; // Redirigir a la lista de clientes
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: response.message || 'Ocurrió un error al editar el cliente.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        alert('Ocurrió un error: ' + xhr.responseText);
+                    }
+                });
+
+
+            });
 
             $('#searchDocumentBtn').on('click', function() {
-                var documento = $('#documento').val();
-                var tipoDocumento = $('#tipo_documento').val();
+                let documento = $('#documento').val();
+                let tipoDocumento = $('#tipo_documento').val();
 
                 $.ajax({
                     url: "{{ route('clientes.search') }}",
@@ -171,7 +225,7 @@
                     }
                 });
             });
-            //end search
+
 
         });
     </script>
